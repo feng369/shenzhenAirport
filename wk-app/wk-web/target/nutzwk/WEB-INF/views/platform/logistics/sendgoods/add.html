@@ -1,0 +1,446 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/logistics/sendgoods" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate="validate">
+                  <!--action="${base}/platform/logistics/sendgoods/addDo" method="post">-->
+                <div class="panel-group" id="accordion">
+                <div class="panel panel-default">
+                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion"
+                     href="#collapseOne">
+                    <h4 class="panel-title">
+                        <a>
+                            基础信息<input type="hidden" id="id" name="id"><input type="hidden" id="airportID" name="airportID" value="${session.airportid}">
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div class="row mb10">
+                    <div class="col-lg-12">
+                        <div style="width: 100%;border-bottom: 1px solid #C9C5C5;opacity: 0.6  ">收货信息 </div><br>
+                        <div class="form-group">
+                            <label for="receivename" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.receivename']}</label>
+                            <div class="col-sm-5">
+                                <input type="text" id="receivename" class="form-control" name="receivename" data-parsley-required="true" placeholder="${msg['logistics.sendgoods.column.receivename']}">
+                            </div>
+                            <label for="tel" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.tel']}</label>
+                            <div class="col-sm-3">
+                                <input type="text" id="tel" class="form-control" name="tel"  placeholder="${msg['logistics.sendgoods.column.tel']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="receiveaddress" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.receiveaddress']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="receiveaddress" class="form-control" name="receiveaddress" data-parsley-required="true" placeholder="${msg['logistics.sendgoods.column.receiveaddress']}">
+                            </div>
+                        </div>
+                        <div style="width: 100%;border-bottom: 1px solid #C9C5C5;opacity: 0.6 ">合同信息 </div><br>
+                        <div class="form-group">
+                            <label for="contractcode" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.contractcode']}<span style="color: red">*</span></label>
+                            <div class="col-sm-2">
+                            <input type="text" id="contractcode" class="form-control" name="contractcode" data-parsley-required="true" placeholder="${msg['logistics.sendgoods.column.contractcode']}">
+                            </div>
+                            <label for="partnum" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.partnum']}<span style="color: red">*</span></label>
+                            <div class="col-sm-2">
+                                <input type="text" id="partnum" class="form-control" name="partnum" data-parsley-required="true" placeholder="${msg['logistics.sendgoods.column.partnum']}">
+                            </div>
+                            <label for="serialnum" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.serialnum']}</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="serialnum" class="form-control" name="serialnum" data-parsley-required="true" placeholder="${msg['logistics.sendgoods.column.serialnum']}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="number" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.number']}</label>
+                            <div class="col-sm-2">
+                            <input type="text" id="number" class="form-control" name="number" value="0" data-parsley-required="true" placeholder="${msg['logistics.sendgoods.column.number']}">
+                            </div>
+                            <label for="prioritylvname" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.prioritylv']}</label>
+                            <div class="col-sm-2">
+                                <!--<input type="text" id="prioritylv" class="form-control" name="prioritylv" data-parsley-required="true" placeholder="${msg['logistics.sendgoods.column.prioritylv']}">-->
+                                <select id="prioritylvname" data-parsley-required="true"  name="prioritylv" class="form-control" placeholder="请选择优先级">
+
+                                </select>
+                                <input type="hidden" id="prioritylv" name="prioritylv" value="">
+                            </div>
+
+                            <label for="batchnum" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.batchnum']}</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="batchnum" class="form-control" name="batchnum" data-parsley-required="true" placeholder="${msg['logistics.sendgoods.column.batchnum']}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="issuetype" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.issuetype']}</label>
+                            <div class="col-sm-4">
+                            <input type="text" id="issuetype" class="form-control" name="issuetype" data-parsley-required="true" placeholder="${msg['logistics.sendgoods.column.issuetype']}">
+                                <!--<select id="issuetype" data-parsley-required="true"  name="issuetype" class="form-control" placeholder="请选择发料类型">-->
+
+                                <!--</select>-->
+                                <!--<input type="hidden" id="issue" name="issue" value="">-->
+                            </div>
+                            <!--<label for="tansporttype" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.tansporttype']}</label>-->
+                            <!--<div class="col-sm-2">-->
+                                <!--<input type="text" id="tansporttype" class="form-control" name="tansporttype"  placeholder="${msg['logistics.sendgoods.column.tansporttype']}">-->
+                            <!--</div>-->
+                            <label for="rough" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.rough']}</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="rough" class="form-control" name="rough" placeholder="${msg['logistics.sendgoods.column.rough']}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="has-feedback">
+                                <label for="warehouse" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.warehouseID']}</label>
+                                <div class="col-sm-4">
+                                    <div class="input-group">
+                                        <input id="warehouse" readonly   type="text" class="form-control" data-provide="typeahead"  placeholder="选择库存地"
+                                               value="" />
+                                        <span class="input-group-btn">
+                                                            <button id="startbutton" type="button" class="btn btn-primary" data-toggle="modal"
+                                                                    data-target="#dialogWhSelect" ><i class="ti-plus"></i>选择
+                                                            </button>
+			                             		        </span>
+                                    </div>
+                                    <input type="hidden" id="warehouseID" name="warehouseID" value="">
+                                </div>
+                            </div>
+                            <label for="shelf" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.shelf']}</label>
+                            <div class="col-sm-3">
+                                <input type="text" id="shelf" class="form-control" name="shelf" data-parsley-required="true" placeholder="${msg['logistics.sendgoods.column.shelf']}">
+                            </div>
+
+                        </div>
+                        <!--<div class="form-group">-->
+                            <!--<label for="pstatus" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.pstatus']}</label>-->
+                            <!--<div class="col-sm-8">-->
+                            <input type="hidden" id="pstatus" class="form-control" name="pstatus" data-parsley-required="true" value="1">
+                            <!--</div>-->
+                        <!--</div>-->
+                        <div class="form-group">
+                            <label for="note" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.note']}</label>
+                            <div class="col-sm-8">
+                                <textarea  type="text" id="note" class="form-control" name="note" rows="3"  placeholder="备注"></textarea>
+                            </div>
+                        </div>
+
+
+                        <!--<div class="form-group">-->
+                            <!--<label for="senddate" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.senddate']}</label>-->
+                            <!--<div class="col-sm-8">-->
+                            <!--<input type="text" id="senddate" class="form-control" name="senddate" data-parsley-required="true" placeholder="${msg['logistics.sendgoods.column.senddate']}">-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="form-group">-->
+                            <!--<label for="sender" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.sender']}</label>-->
+                            <!--<div class="col-sm-8">-->
+                            <!--<input type="text" id="sender" class="form-control" name="sender" data-parsley-required="true" placeholder="${msg['logistics.sendgoods.column.sender']}">-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="form-group">-->
+                            <!--<label for="billnum" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.billnum']}</label>-->
+                            <!--<div class="col-sm-8">-->
+                            <!--<input type="text" id="billnum" class="form-control" name="billnum" data-parsley-required="true" placeholder="${msg['logistics.sendgoods.column.billnum']}">-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="form-group">-->
+                            <!--<label for="packID" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.packID']}</label>-->
+                            <!--<div class="col-sm-8">-->
+                            <!--<input type="text" id="packID" class="form-control" name="packID" data-parsley-required="true" placeholder="${msg['logistics.sendgoods.column.packID']}">-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="form-group">-->
+                            <!--<label for="planID" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.planID']}</label>-->
+                            <!--<div class="col-sm-8">-->
+                            <!--<input type="text" id="planID" class="form-control" name="planID" data-parsley-required="true" placeholder="${msg['logistics.sendgoods.column.planID']}">-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+                    </div>
+                </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion"
+                         href="#collapseTwo">
+                        <h4 class="panel-title">
+                            <a>
+                                其他信息
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="sendnum" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.sendnum']}</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="sendnum" class="form-control" name="sendnum"  placeholder="保存后自动生成" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="personid" class="col-sm-2 control-label">登记人</label>
+                                <div class="col-sm-2">
+                                    <input type="hidden" id="personid" name="personid" readonly class="form-control" value="${session.personid}">
+                                    <input type="text" id="personname" name="personname" readonly class="form-control" value="${@shiro.getPrincipalProperty('username')}">
+                                    <!--<input type="text" id="personid" name="personid" class="form-control"  data-parsley-required="true" disabled value="${@shiro.getPrincipalProperty('username')}">-->
+                                </div>
+                                <label for="intime" class="col-sm-2 control-label">登记时间</label>
+                                <div class="col-sm-2">
+                                    <input type="text" id="intime" name="intime" readonly class="form-control" value="${@date.getDateTime()}">
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                </div>
+            </form>
+            <div class="col-lg-3"></div>
+            <div class="col-lg-6">
+                <div class="form-group text-center">
+                    <label></label>
+
+                    <div>
+                        <button  id="divInsert" onclick="submitFrom()" class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<!-- 选择库存地 -->
+<div id="dialogWhSelect" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 800px;">
+        <div class="modal-content" style="width: 800px;">
+            <section class="content-wrap bg-white">
+                <header class="header navbar bg-white shadow">
+                    <div class="pull-left offscreen-left" style="padding-top:15px;">
+                        <div class="form-group">
+                            <input id="whnum" type="text" onclick="this.value='';" placeholder="请输入库存地编号">
+                        </div>
+                    </div>
+                    <div class="pull-right offscreen-right btn-group tool-button">
+                        <a class="btn btn-primary navbar-btn" onclick="_selectOnWarehouse()">确定</a>
+                    </div>
+                </header>
+                <div class=panel-body style="padding-top: 50px;">
+                    <div class="table-responsive no-border" style="padding-top: 5px;" >
+                        <!--<input id="whid" type="hidden" value="">-->
+                        <table id="datatable_select_Warehouse" class="table table-bordered table-striped mg-t datatable">
+                            <thead>
+                            <tr>
+                                <th>库存地编号</th>
+                                <th>库存地</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+
+<script language="JavaScript">
+    var datatable_select_Warehouse;
+    function removeTableClass() {
+        var datatable_select_Warehouse = $('#datatable_select_Warehouse').DataTable();
+        datatable_select_Warehouse.$('tr.selected').removeClass('selected');
+    }
+
+    $("#startbutton").click(function(){
+
+        removeTableClass();
+    });
+
+    function initdatatable_select_Warehouse() {
+        datatable_select_Warehouse = $('#datatable_select_Warehouse').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/plugins/datatables/cn.json"
+            },
+            "ajax": {
+                "url": "${base}/platform/base/warehouse/data",
+                "type": "post",
+                "data": function (d) {
+                    d.whnum=$('#whnum').val();
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "whnum", "bSortable": true,"render": function (data, type, row, meta) {
+                    data = data || "";
+                    if(data == ""){return "";}else{return data;}
+                }},
+                {"data": "warehousename", "bSortable": true,"render": function (data, type, row, meta) {
+                    data = data || "";
+                    if(data == ""){return "";}else{return data;}
+                }}
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        data = data || "";
+                        if(data == ""){return "";}else{return data;}
+                    },
+                    "targets": 1
+                }
+            ]
+        });
+        datatable_select_Warehouse.on('click', 'tr', function () {
+            if ($(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            } else {
+                datatable_select_Warehouse.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        $("#whnum").on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                datatable_select_Warehouse.ajax.reload();
+            }
+        });
+    }
+
+    function _selectOnWarehouse() {
+        var chks = datatable_select_Warehouse.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable_select_Warehouse.rows('.selected').data(), function (i, n) {
+                ids.push(this["id"]);
+//                ids.push(this["warehousename"]);
+                ids.push(this["whnum"])
+            });
+
+                $("#addForm #warehouseID").val(ids[0]);
+                $("#addForm #warehouse").val(ids[1]);
+//                alert($("#whid").val());
+            $('#dialogWhSelect').modal('hide');
+        } else {
+            Toast.warning("请先选择地点！");
+        }
+    }
+
+
+
+    $(document).ready(function () {
+        initdatatable_select_Warehouse();
+
+        bindVehicleDDL("优先级","priority","prioritylvname","prioritylv");
+        $("#prioritylvname").on("change",function(){
+            $("#prioritylv").val($(this).val());
+        });
+
+
+
+
+
+//        $('#addForm').ajaxForm({
+//            dataType: 'json',
+//            beforeSubmit: function (arr, form, options) {
+//                form.find("button:submit").button("loading");
+//            },
+//            success: function (data, statusText, xhr, form) {
+//                if (data.code == 0) {
+//                    Toast.success(data.msg);
+//                    form.resetForm();
+//                } else {
+//                    Toast.error(data.msg);
+//                }
+//                form.find("button:submit").button("reset");
+//            }
+//        });
+    });
+
+    function checkform(){
+        var contractcode = $('#contractcode').parsley().isValid();
+        if(contractcode==false){
+            Toast.warning("请填写合同号");
+            return false;
+        }
+//        var prioritylvname = $('#prioritylvname').parsley().isValid();
+//        if(prioritylvname==false){
+//            Toast.warning("请选择优先级");
+//            return false;
+//        }
+//        var warehouse = $('#warehouse').parsley().isValid();
+//        if(warehouse==false){
+//            Toast.warning("请填写库存地");
+//            return false;
+//        }
+        var receivename = $('#receivename').parsley().isValid();
+        if(receivename==false){
+            Toast.warning("请填写收货方");
+            return false;
+        }
+        var receiveaddress = $('#receiveaddress').parsley().isValid();
+        if(receiveaddress==false){
+            Toast.warning("请填写收货地址");
+            return false;
+        }
+
+        return true;
+    }
+
+    function submitFrom(){
+        var airportid ="${session.airportid}"
+        if(airportid==""){
+            Toast.warning("当前登录用户未关联机场，无法新增合同")
+            return false;
+        }
+        if(!checkform()){
+            return false;
+        }
+
+        var arr = $('#addForm').serialize();
+        arr= decodeURIComponent(arr,true);//防止中文乱码
+        arr=DataDeal.formToJson(arr);//转化为json
+//        alert(arr);
+        $("#divInsert").ajaxSubmit({
+            url:'${base}/platform/logistics/sendgoods/addDo',
+            dataType:'json',
+            data:{logisticsSendgoods:arr},
+            type:"post",
+            beforeSubmit: function (arr, form, options) {
+                $('#divInsert').button("loading");
+            },
+            success:function(data){
+//                alert(data.code);
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+            },
+            error:function (a,b,c) {
+                alert(c);
+            }
+        });
+    }
+</script>
+<%}%>
+
+

@@ -1,0 +1,909 @@
+<%
+layout("/layouts/platform.html"){
+%>
+
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/logistics/order/jsindex" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate>
+                <input type="hidden" id="otype"  name="otype" value="36a3a69fab514290bd4256c5def05a48">
+                <input type="hidden" id="id" name="id" value="${obj.id!}"><input type="hidden" id="airportid" name="airportid" value="${obj.airportid!}"><input type="hidden" id="pstatus" name="pstatus" class="form-control"  value="${obj.pstatus}"><input type="hidden" id="deliveryorderid" name="deliveryorderid" class="form-control"  value="${obj.deliveryorderid}">
+                <input type="hidden" id="creater" name="creater" value="${obj.creater!}"><input type="hidden" id="createTime" name="createTime" value="${obj.createTime!}"><input type="hidden" id="vehicleid" name="vehicleid" value="${obj.vehicleid!}">
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion"
+                             href="#collapseOne">
+                            <h4 class="panel-title">
+                                <a>
+                                    基础信息
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                <div class="row mb10">
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <label for="ordernum" class="col-sm-2 control-label">${msg['logistics.order.column.ordernum']}</label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="ordernum" class="form-control" name="ordernum"  value="${obj.ordernum}">
+                                            </div>
+                                            <div class="form-group has-feedback">
+                                                <label for="customerid" class="col-sm-2 control-label">客户名称</label>
+
+                                                <div class="col-sm-5">
+                                                    <div class="input-group">
+                                                        <input type="text" id="customername" name="customername"  readonly class="form-control" placeholder="选择客户"  value="<%if(!isEmpty(obj.customer)){%>${obj.customer.customername}<%}%>">
+                                                        <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-primary"
+                                                            data-toggle="modal"
+                                                            data-target="#dialogCusSelect"><i class="ti-plus"></i>选择
+                                                    </button>
+			                             		</span>
+                                                    </div>
+                                                    <input type="hidden" id="customerid" name="customerid" value="${obj.customerid}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="btype" class="col-sm-2 control-label">业务类型</label>
+                                            <div class="col-sm-2">
+                                                <select id="btypename" name="btypename" class="form-control" placeholder="请选择业务类型">
+
+                                                </select>
+                                                <input type="hidden" id="btype" name="btype" value="">
+                                            </div>
+                                            <label for="airwaybillno" class="col-sm-2 control-label">航班号</label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="airwaybillno" class="form-control" name="airwaybillno" value="${obj.airwaybillno!}"  placeholder="${msg['logistics.order.column.airwaybillno']}">
+                                            </div>
+                                            <label for="contractnum" class="col-sm-2 control-label">${msg['logistics.order.column.contractnum']}</label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="contractnum" class="form-control" name="contractnum"  value="${obj.contractnum!}" placeholder="${msg['logistics.order.column.contractnum']}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="has-feedback">
+                                                <label for="startstock" class="col-sm-2 control-label">出发地</label>
+                                                <div class="col-sm-4">
+                                                    <div class="input-group">
+                                                        <input id="startstockname"   type="text" class="form-control" data-provide="typeahead" autocomplete="off" placeholder="选择出发地"
+                                                               value="<%if(!isEmpty(obj.place_startstock)){%>${obj.place_startstock.placename}<%}%>" />
+                                                        <span class="input-group-btn">
+                                                            <button id="startbutton" type="button" class="btn btn-primary" data-toggle="modal"
+                                                                    data-target="#dialogStockSelect" ><i class="ti-plus"></i>选择
+                                                            </button>
+			                             		        </span>
+                                                    </div>
+                                                    <input type="hidden" id="startstock" name="startstock" value="${obj.startstock}">
+                                                </div>
+                                            </div>
+                                            <label for="startstockphone" class="col-sm-2 control-label">出发地联系电话</label>
+                                            <div class="col-sm-3">
+                                                <input type="text" id="startstockphone" class="form-control"  name="startstockphone" value="${obj.startstockphone}"  placeholder="${msg['logistics.order.column.startstockphone']}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="has-feedback">
+                                                <label for="endstock" class="col-sm-2 control-label">目的地</label>
+                                                <div class="col-sm-4">
+                                                    <div class="input-group">
+                                                        <input id="endstockname"  type="text" class="form-control" class="form-control" data-provide="typeahead" autocomplete="off" placeholder="选择出发地"
+                                                               value="<%if(!isEmpty(obj.place_endstock)){%>${obj.place_endstock.placename}<%}%>" />
+                                                        <span class="input-group-btn">
+                                                    <button id="endbutton" type="button" class="btn btn-primary" data-toggle="modal"
+                                                            data-target="#dialogStockSelect"><i class="ti-plus"></i>选择
+                                                    </button>
+			                             		</span>
+                                                    </div>
+                                                    <input type="hidden" id="endstock" name="endstock" value="${obj.endstock}">
+                                                </div>
+                                            </div>
+                                            <label for="endstockphone" class="col-sm-2 control-label">${msg['logistics.order.column.endstockphone']}</label>
+                                            <div class="col-sm-3">
+                                                <input type="text" id="endstockphone" class="form-control" name="endstockphone" value="${obj.endstockphone}"  placeholder="${msg['logistics.order.column.endstockphone']}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="hbtime" class="col-sm-2 control-label">航班时间</label>
+                                            <div class="col-sm-8 input-group date form_datetime"  style="padding-left: 16px;padding-right: 16px;"  data-date-format="yyyy-mm-dd  HH:ii" data-link-field="at">
+                                                <input type="text" id="hbtime" name="hbtime" readonly class="form-control" value="${obj.hbtime!}">
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="timerequest" class="col-sm-2 control-label">时限要求</label>
+                                            <div class="col-sm-8 input-group date form_datetime"  style="padding-left: 16px;padding-right: 16px;"  data-date-format="dd MM yyyy - HH:ii" data-link-field="at">
+                                                <input type="text" id="timerequest" name="timerequest" readonly class="form-control" value="${obj.timerequest!}">
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="devicenum" class="col-sm-2 control-label">机号</label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="devicenum" class="form-control" name="devicenum"  placeholder="机号">
+                                            </div>
+                                            <label for="stockspace" class="col-sm-2 control-label">仓位</label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="stockspace" value="${obj.stockspace!}" class="form-control" name="stockspace"  placeholder="仓位">
+                                            </div>
+                                            <label for="packagesnum" class="col-sm-2 control-label">件数</label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="packagesnum" value="${obj.packagesnum!}" class="form-control" name="packagesnum"  placeholder="件数">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="note" class="col-sm-2 control-label">备注</label>
+                                            <div class="col-sm-8">
+                                                <textarea  type="text" id="note" class="form-control" name="note" rows="3"   placeholder="备注">${obj.note!}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="personid" class="col-sm-2 control-label">登记人</label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="personname" name="personname" readonly class="form-control" value="<%if(!isEmpty(obj.person)){%>${obj.person.personname}<%}%>">
+                                                <input type="hidden" id="personid" name="personid" class="form-control"  data-parsley-required="true" disabled value="${obj.personid}">
+                                            </div>
+                                            <label for="intime" class="col-sm-2 control-label">登记时间</label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="intime" name="intime" readonly class="form-control" value="${obj.intime!}">
+
+                                            </div>
+                                          <!--  <label for="estimatetime" class="col-sm-2 control-label">预计送达时间</label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="estimatetime" name="estimatetime" readonly class="form-control" value="${obj.estimatetime!}" placeholder="预计送达时间">
+                                                &lt;!&ndash;<input type="text" id="estimatetime" name="estimatetime" readonly class="form-control"  disabled placeholder="预计送达时间">&ndash;&gt;
+                                            </div>-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion"
+                             href="#collapseTwo">
+                            <h4 class="panel-title">
+                                <a>
+                                    其他信息
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div class="form-group">
+
+                                    <label for="weight" class="col-sm-2 control-label">重量(KG)</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="weight" value="${obj.weight!}" class="form-control" name="weight"  placeholder="重量">
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="packagetype" class="col-sm-2 control-label">包装方式</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="packagetype" name="packagetype" value="${obj.packagetype!}"  class="form-control"  placeholder="包装方式">
+                                    </div>
+                                    <label for="isAOG" class="col-sm-2 control-label">是否有AOG标签</label>
+                                    <div class="col-sm-2">
+                                        <input type="checkbox" id="isAOG"  name="isAOG" >
+                                    </div>
+                                    <label for="isSpecial" class="col-sm-2 control-label">是否有特殊标志</label>
+                                    <div class="col-sm-2">
+                                        <input type="checkbox" id="isSpecial"  name="isSpecial" >
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form id="Formentry" role="form" class="form-horizontal parsley-form" data-parsley-validate>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            物料清单
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="heading">
+                            <button id="build" type="button" class="btn  btn-success" data-toggle="modal" data-target="" onclick="append()">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>添加
+                            </button>
+                        </div>
+                        <div class="widget-content padded clearfix">
+                            <table id="AddFormEntry" class="table table-bordered table-striped" width="1000px" border="0" cellspacing="0" cellpadding="0" style="margin: 0 auto">
+                                <thead>
+                                <th>删除</th>
+                                <th >单号/名称</th>
+                                <th>件号/自编号</th>
+                                <th>序号/计量编号</th>
+                                <th>批次号 </th>
+                                <th>数量</th>
+                                <th>出库架位 </th>
+                                <th>目的架位</th>
+                                </thead>
+                                <tbody id="mainbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <div>
+                            <button  id="divInsert" type="button" onclick="submitFrom()" class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="保存">保存</button>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+
+<!-- 选择客户 -->
+<div id="dialogCusSelect" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 700px;">
+        <div class="modal-content" style="width: 700px;">
+            <section class="content-wrap bg-white">
+                <header class="header navbar bg-white shadow">
+                    <div class="pull-left offscreen-left" style="padding-top:15px;">
+                        <div class="form-group">
+                            <input id="name" type="text" onclick="this.value='';" placeholder="请输入客户名称">
+                        </div>
+                    </div>
+                    <div class="pull-right offscreen-right btn-group tool-button">
+                        <a class="btn btn-primary navbar-btn" onclick="_selectOn()">确定</a>
+                    </div>
+                </header>
+                <div class=panel-body style="padding-top: 50px;">
+                    <div class="table-responsive no-border" style="padding-top: 5px;" >
+
+                        <table id="datatable_select_Cus" class="table table-bordered table-striped mg-t datatable">
+                            <thead>
+                            <tr>
+                                <th>客户编号</th>
+                                <th>客户名称</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<!-- 选择出发地点 -->
+<div id="dialogStockSelect" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 800px;">
+        <div class="modal-content" style="width: 800px;">
+            <section class="content-wrap bg-white">
+                <header class="header navbar bg-white shadow">
+                    <div class="pull-left offscreen-left" style="padding-top:15px;">
+                        <div class="form-group">
+                            <input id="Stockname" type="text" onclick="this.value='';" placeholder="请输入地点名称">
+                        </div>
+                    </div>
+                    <div class="pull-right offscreen-right btn-group tool-button">
+                        <a class="btn btn-primary navbar-btn" onclick="_selectOnPlace()">确定</a>
+                    </div>
+                </header>
+                <div class=panel-body style="padding-top: 50px;">
+                    <div class="table-responsive no-border" style="padding-top: 5px;" >
+                        <input id="Stockid" type="hidden" value="">
+                        <table id="datatable_select_Stock" class="table table-bordered table-striped mg-t datatable">
+                            <thead>
+                            <tr>
+                                <th>地点编号</th>
+                                <th>地点名称</th>
+                                <th>单位</th>
+                                <th>负责人</th>
+                                <th>联系电话</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+
+<script language="JavaScript">
+    var datatable_select_Cus;
+    var datatable_select_Stock;
+    var datatable_entry;
+
+    function submitFrom(){
+        var arr = $('#addForm').serialize();
+        arr= decodeURIComponent(arr,true);//防止中文乱码
+        arr=DataDeal.formToJson(arr);//转化为json
+        var arrentry=JSON.stringify($('#AddFormEntry').tableinputtoJson())
+
+        $("#divInsert").ajaxSubmit({
+            url:'${base}/platform/logistics/order/editDo',
+            dataType:'json',
+            data:{logisticsOrder:arr,logisticsOrderentry:arrentry},
+            type:"post",
+            beforeSubmit: function (arr, form, options) {
+                $('#divInsert').button("loading");
+            },
+            success:function(data){
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+            }
+        });
+    }
+    function initDatatable_Entry(tabledata) {
+        datatable_entry = $('#AddFormEntry').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "bPaginate": false, //翻页功能
+            "bInfo": false,//页脚信息
+            "processing": false,
+            "serverSide": false,
+            "select": false,
+            "ordering": false,
+            "data":  tabledata,
+            "columns": [
+                {"data": "id", "bSortable": true},
+                {"data": "materielname", "bSortable": true},
+                {"data": "materielnum", "bSortable": true},
+                {"data": "sequencenum", "bSortable": true},
+                {"data": "batch", "bSortable": true},
+                {"data": "quantity", "bSortable": true},
+                {"data": "outframe", "bSortable": true},
+                {"data": "inframe", "bSortable": true}
+            ],"columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" id="'+row.id+'" onclick="btdel(this)" class="btn btn-default"><i class="ti-minus"></i></button></div><input class="form-control" id="id"'+row.id+' type="hidden" name="id" value="'+row.id+'" size="8">';
+                    },
+                    "targets": 0
+                },
+                {
+                    "render": function (data, type, row) {
+                        data = data || "";
+                        if(data==""){
+                            return '<input class="form-control" id="materielname'+row.id+'" type="text" name="materielname" value="" size="8">'+'<input class="form-control" id="materielid'+row.id+'" type="hidden" name="materielid" value="" size="8">';
+
+                        }else{
+                            return '<input class="form-control" id="materielname'+row.id+'" type="text" name="materielname" value='+data+' size="8">'+'<input class="form-control" id="materielid'+row.id+'" type="hidden" name="materielid" value="'+row.materielid+'" size="8">'+'<input class="form-control" id="id"'+row.id+' type="hidden" name="id" value="'+row.id+'" size="8">';
+                        }
+                    },
+                    "targets": 1
+                },
+                {
+                    "render": function (data, type, row) {
+                        data = data || "";
+                        if(data==""){
+                            return '<input class="form-control append" id="materielnum'+row.id+'" type="text" name="materielnum" value="" size="8">'+'<input class="form-control append" id="orderid" type="hidden" name="orderid" value="'+row.orderid+'" size="8">'
+
+                        }else{
+                            return '<input class="form-control append" id="materielnum'+row.id+'" type="text" name="materielnum" value='+data+' size="8">'+'<input class="form-control append" id="orderid" type="hidden" name="orderid" value="'+row.orderid+'" size="8">'
+                        }
+                    },
+                    "targets": 2
+                },
+                {
+                    "render": function (data, type, row) {
+                        data = data || "";
+                        if(data==""){
+                            return '<input class="form-control" id="sequencenum"'+row.id+' type="text" name="sequencenum" value="" size="8">'
+
+                        }else{
+                            return '<input class="form-control" id="sequencenum"'+row.id+' type="text" name="sequencenum" value='+data+' size="8">'
+                        }
+                    },
+                    "targets": 3
+                },
+                {
+                    "render": function (data, type, row) {
+                        data = data || "";
+                        if(data==""){
+                            return '<input class="form-control" id="batch"'+row.id+' type="text" name="batch" value="" size="8">'
+                        }else{
+                            return '<input class="form-control" id="batch"'+row.id+' type="text" name="batch" value='+data+' size="8">'
+                        }
+                    },
+                    "targets": 4
+                },
+                {
+                    "render": function (data, type, row) {
+                        data = data || "";
+                        if(data==""){
+                            return '<input class="form-control" id="quantity"'+row.id+' type="text" name="quantity" value="" size="8">'
+                        }else{
+                            return '<input class="form-control" id="quantity"'+row.id+' type="text" name="quantity" value='+data+' size="8">'
+                        }
+                    },
+                    "targets": 5
+                },
+                {
+                    "render": function (data, type, row) {
+                        data = data || "";
+                        if(data==""){
+                            return '<input class="form-control" id="inframe"'+row.id+' type="text" name="inframe" value="" size="8">'
+                        }else{
+                            return '<input class="form-control" id="inframe"'+row.id+' type="text" name="inframe" value='+data+' size="8">'
+                        }
+                    },
+                    "targets": 6
+                },
+                {
+                    "render": function (data, type, row) {
+                        data = data || "";
+                        if(data==""){
+                            return '<input class="form-control" id="outframe"'+row.id+' type="text" name="outframe" value="" size="8">'
+                        }else{
+                            return '<input class="form-control" id="outframe"'+row.id+' type="text" name="outframe" value='+data+' size="8">'
+                        }
+                    },
+                    "targets": 7
+                }
+                ]
+
+        });
+    }
+    function getTable(tableID){
+        var args=$('#AddFormEntry').tableToJSON({
+            includeRowId: false,
+            headings:['materielname','materielnum','sequencenum','batch','quantity','outframe','inframe']
+        })
+        return JSON.stringify(args);
+    }
+    function removeTableClass() {
+        var datatable_select_Stock = $('#datatable_select_Stock').DataTable();
+        datatable_select_Stock.$('tr.selected').removeClass('selected');
+    }
+
+    $("#startbutton").click(function(){
+        $("#Stockid").val("start");
+
+    });
+    $("#endbutton").click(function(){
+        $("#Stockid").val("end");
+        removeTableClass();
+    });
+    function initdatatable_select_Cus() {
+        if ($('#datatable_select_Cus').hasClass('dataTable')) {
+            dttable = $('#datatable_select_Cus').dataTable();
+            dttable.fnClearTable(); //清空一下table
+            dttable.fnDestroy(); //还原初始化了的datatable
+        }
+        datatable_select_Cus = $('#datatable_select_Cus').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/plugins/datatables/cn.json"
+            },
+            "ajax": {
+                "url": "${base}/platform/base/customer/data",
+                "type": "post",
+                "data": function (d) {
+
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "customercode", "bSortable": true},
+                {"data": "customername", "bSortable": true}
+            ],
+            "columnDefs": [
+                {
+
+                }
+            ]
+        });
+        datatable_select_Cus.on('click', 'tr', function () {
+            if ($(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            } else {
+                datatable_select_Cus.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        $("#name").on('keyup', function () {
+            datatable_select_Cus.ajax.reload();
+        });
+    }
+
+    function initdatatable_select_Stock() {
+        if ($('#datatable_select_Stock').hasClass('dataTable')) {
+            dttable = $('#datatable_select_Stock').dataTable();
+            dttable.fnClearTable(); //清空一下table
+            dttable.fnDestroy(); //还原初始化了的datatable
+        }
+        $('#datatable_select_Stock').dataTable().fnDestroy();
+        datatable_select_Stock = $('#datatable_select_Stock').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/plugins/datatables/cn.json"
+            },
+            "ajax": {
+                "url": "${base}/platform/base/place/data",
+                "type": "post",
+                "data": function (d) {
+
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "placecode", "bSortable": true, "render" : function(data, type, row, meta){
+                    data = data || "";
+                    if(data == ""){return "";}else{return data;}
+                }},
+                {"data": "placename", "bSortable": true, "render" : function(data, type, row, meta){
+                    data = data || "";
+                    if(data == ""){return "";}else{return data;}
+                }},
+                {"data": "placename", "bSortable": true, "render" : function(data, type, row, meta){
+                    data = data || "";
+                    if(data == ""){return "";}else{return data;}
+                }},
+                {"data": "placename", "bSortable": true, "render" : function(data, type, row, meta){
+                    data = data || "";
+                    if(data == ""){return "";}else{return data;}
+                }},
+                {"data": "telephone", "bSortable": true, "render" : function(data, type, row, meta){
+                    data = data || "";
+                    if(data == ""){return "";}else{return data;}
+                }}
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        data = data || "";
+                        if(data == ""){return "";}else{return data;}
+                    },
+                    "targets": 3
+                }
+            ]
+        });
+        datatable_select_Stock.on('click', 'tr', function () {
+            if ($(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            } else {
+                datatable_select_Stock.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        $("#name").on('keyup', function () {
+            datatable_select_Stock.ajax.reload();
+        });
+    }
+
+    function _selectOn() {
+        var chks = datatable_select_Cus.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable_select_Cus.rows('.selected').data(), function (i, n) {
+                ids.push(this["id"]);
+                ids.push(this["customername"]);
+            });
+            $("#addForm #customerid").val(ids[0])
+            $("#addForm #customername").val(ids[1])
+            $('#dialogCusSelect').modal('hide');
+        } else {
+            Toast.warning("请先选择客户！");
+        }
+    }
+    function _selectOnPlace() {
+        var stockid= $("#Stockid").val();
+        var chks = datatable_select_Stock.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable_select_Stock.rows('.selected').data(), function (i, n) {
+                ids.push(this["id"]);
+                ids.push(this["placename"]);
+                ids.push(this["telephone"])
+            });
+            if(stockid == 'end'){
+                $("#addForm #endstock").val(ids[0]);
+                $("#addForm #endstockname").val(ids[1]);
+                $("#addForm #endstockphone").val(ids[2]);
+                $("#stockid").val("");
+            }else if(stockid == 'start'){
+                $("#addForm #startstock").val(ids[0]);
+                $("#addForm #startstockname").val(ids[1]);
+                $("#addForm #startstockphone").val(ids[2]);
+                $("#stockid").val("");
+            }
+            $('#dialogStockSelect').modal('hide');
+        } else {
+            Toast.warning("请先选择地点！");
+        }
+    }
+
+    function autosearch(id,rows) {
+        $('#materielnum'+rows).autocomplete("${base}/platform/base/airmeterial/autocomplete", {
+            dataType: "json",
+            mustMatch: false,
+            extraParams: {
+                meterialnum: function () {
+                    return $("#materielnum"+rows).val();
+                }
+            },
+            parse: function (data) {
+                return $.map(data, function (row) {
+                    return {
+                        data: row,
+                        value: row.id,
+                        result: row.meterialnum,
+                    }
+                });
+            },
+            formatItem: function (data, i, max) {
+                return data.meterialnum + "|" + data.meterialname ;
+            },
+            formatResult: function (data) {
+                return data.meterialnum;
+            },
+            formatMatch: function (data, i, max) {
+                return data.meterialnum + data.meterialname;
+            }
+        }).result(function (event, data, formatted) {
+            var row=$(this).attr("id");
+            row= row.replace($(this).attr("name"),"");
+            if (typeof(data) == "undefined") {
+                $('#materielid'+row).val("");
+            } else {
+                $('#materielid'+row).val(data.id);
+                $('#materielname'+row).val(data.meterialname);
+            }
+        })
+    }
+
+    var rows=0;
+    function append() {
+        var orderid="${obj.id!}"
+        var strAppend = '<tr id="rows'+rows+'"  style="background: rgb(255, 255, 255) none repeat scroll 0% 0%;">' +
+            '<td><div class="btn-group"><button type="button" id="btnDel" onclick="btdel(this)" class="btn btn-default"><i class="ti-minus"></i></button></div></td>'+
+            '<td><input class="form-control" id="materielname'+rows+'" type="text" name="materielname" value="" size="8"><input class="form-control" id="materielid'+rows+'" type="hidden" name="materielid" value="" size="8"><input class="form-control" id="orderid'+rows+'" type="hidden" name="orderid" value="'+orderid+'" size="8"></td>' +
+            '<td><input class="form-control append" id="materielnum'+rows+'" type="text" name="materielnum" value="" size="8"></td>' +
+            '<td><input class="form-control" id="sequencenum'+rows+'" type="text" name="sequencenum" value="" size="8"></td>' +
+            '<td><input class="form-control" id="batch'+rows+'" type="text" name="batch" value="" size="5"></td>' +
+            '<td><input class="form-control" id="quantity'+rows+'" type="text" name="quantity" value="" size="3"></td>' +
+            '<td><input class="form-control" id="outframe'+rows+'" type="text" name="outframe" value="" size="8"></td>' +
+            '<td><input class="form-control" id="inframe'+rows+'" type="text" name="inframe" value="" size="8"></td>' +
+            '<tr>';
+        $("#AddFormEntry tbody ").append(strAppend);
+        autosearch("append",rows);
+        rows++;
+    }
+    function btdel(clickTd) {
+
+        var id=$(clickTd).attr("id")
+        var tr = $(clickTd).parent().parent().parent();
+        if(id=="btnDel"){
+            tr.remove();
+        }else{
+            $.post("${base}/platform/logistics/orderentry/delete/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    tr.remove();
+                } else {
+                    Toast.error(data.msg);
+                }
+            }, "json");
+        }
+
+
+    }
+
+
+    $(document).ready(function () {
+    bindVehicleDDL("运输类型","transporttype","transportname","transporttype","${obj.transporttype}");
+    $("#transportname").on("change",function(){
+        $("#transporttype").val($(this).val());
+    });
+    bindVehicleDDL("接送航班","btype.jshb","btypename","btype","${obj.btype}");
+    $("#btypename").on("change",function(){
+        $("#btype").val($(this).val());
+    });
+    bindVehicleDDL("紧急程度","emergency","emergencyname","emergency","${obj.emergency}");
+    $("#emergencyname").on("change",function(){
+        $("#emergency").val($(this).val());
+    });
+    initdatatable_select_Cus();
+    initdatatable_select_Stock();
+    var tabledata='${obj.logistics_orderentry}'
+    tabledata=eval(tabledata);
+    var rows=tabledata.length;
+    if(rows != 0){
+        initDatatable_Entry(tabledata);
+        $.each(tabledata, function(i, data) {
+            autosearch("append",data.id);
+        });
+    }
+    var otype= "${obj.otype}";
+
+
+    var isPackage= "${obj.isPackage}";
+    if(isPackage == "true"){
+        $('#isPackage').attr("checked",true);
+    }else{
+        $('#isPackage').attr("checked",false);
+    }
+    var isAOG= "${obj.isAOG}";
+    if(isAOG == "true"){
+        $('#isAOG').attr("checked",true);
+    }else{
+        $('#isAOG').attr("checked",false);
+    }
+    var isSpecial= "${obj.isSpecial}";
+    if(isSpecial == "true"){
+        $('#isSpecial').attr("checked",true);
+    }else{
+        $('#isSpecial').attr("checked",false);
+    }
+
+    /*$('[name="otype"]').bootstrapSwitch({
+        onText:"内",
+        offText:"外",
+        onColor:"primary",
+        offColor:"danger",
+        size:"norma",
+        onSwitchChange:function(event,state){
+        }
+    });*/
+    $('[name="isPackage"]').bootstrapSwitch({
+        onText:"是",
+        offText:"否",
+        onColor:"primary",
+        offColor:"danger",
+        size:"norma",
+        onSwitchChange:function(event,state){
+        }
+    });
+    $('[name="isSpecial"]').bootstrapSwitch({
+        onText:"是",
+        offText:"否",
+        onColor:"primary",
+        offColor:"danger",
+        size:"norma",
+        onSwitchChange:function(event,state){
+        }
+    });
+    $('[name="isAOG"]').bootstrapSwitch({
+        onText:"是",
+        offText:"否",
+        onColor:"primary",
+        offColor:"danger",
+        size:"norma",
+        onSwitchChange:function(event,state){
+        }
+    });
+    $('.form_datetime').datetimepicker({
+        language:  'zh-CN',
+        format:'yyyy-mm-dd hh:ii',
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+        showMeridian: 1
+    });
+
+        $("#startstockname").autocomplete("${base}/platform/base/place/autocomplete", {
+            dataType: "json",
+            mustMatch: true,
+            matchSubset:true,
+            cacheLength: 10,
+            delay: 400,
+            extraParams: {
+                placename: function () {
+                    return $('#startstockname').val();
+                }
+            },
+            parse: function (data) {
+
+                return $.map(data, function (row) {
+                    return {
+                        data: row,
+                        value: row.placename,
+                        result: row.placename
+                    }
+                });
+            },
+            formatItem: function (data, i, max) {
+                return data.placecode + "|" + data.placename + "|" + data.telephone;
+            },
+            formatResult: function (data) {
+                return data.placename;
+            },
+            formatMatch: function (data, i, max) {
+                return data.id + data.placename;
+            }
+        }).result(function (event, data, formatted) {
+            if ((data.id) == "") {
+                $('#addForm #startstock').val("");
+                $('#addForm #startstockname').val("");
+                $('#addForm #startstockphone').val("");
+            } else {
+                $('#addForm #startstock').val(data.id);
+                $('#addForm #startstockphone').val(data.telephone);
+            }
+        });
+
+        $("#endstockname").autocomplete("${base}/platform/base/place/autocomplete", {
+            dataType: "json",
+            mustMatch: true,
+            matchSubset:true,
+            cacheLength: 10,
+            delay: 400,
+            extraParams: {
+                placename: function () {
+                    return $('#endstockname').val();
+                }
+            },
+            parse: function (data) {
+
+                return $.map(data, function (row) {
+                    return {
+                        data: row,
+                        value: row.placename,
+                        result: row.placename
+                    }
+                });
+
+            },
+            formatItem: function (data, i, max) {
+                return data.placecode + "|" + data.placename + "|" + data.telephone;
+            },
+            formatResult: function (data) {
+                return data.placename;
+            },
+            formatMatch: function (data, i, max) {
+                return data.id + data.placename;
+            }
+        }).result(function (event, data, formatted) {
+            if (data.id == "") {
+                $('#addForm #startstockname').val("");
+                $('#addForm #endstock').val("");
+                $('#addForm #endstockphone').val("");
+            } else {
+
+                $('#addForm #endstock').val(data.id);
+                $('#addForm #endstockphone').val(data.telephone);
+            }
+        });
+});
+
+
+</script>
+
+<%}%>
+
+

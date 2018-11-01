@@ -1,0 +1,370 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<section class="content-wrap bg-white" style="top: 5px">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button" style="top: 10px">
+            起始时间
+        </div>
+        <div class="btn-group tool-button" style="top: 10px">
+            <input type="text" id="startTime" class="form-control" placeholder="起始时间" value=""/>
+        </div>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <div class="btn-group tool-button" style="top: 10px">
+            截止时间
+        </div>
+        <div class="btn-group tool-button" style="top: 10px">
+            <input type="text" id="endTime" class="form-control" placeholder="截止时间" value=""/>
+        </div>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <div class="btn-group tool-button" style="top: 10px">
+            客户
+        </div>
+        <div class="btn-group tool-button" style="top: 10px">
+            <select class="form-control" name="customerid" id="myCustomer">
+                <script type="application/javascript">
+                    $.get("${base!}/platform/base/customer/getCustomers", function(data){
+                        data.forEach(function(ele){
+                            $("#myCustomer").append("<option value='"+ele.id+"'>"+ele.customername+"</option>");
+                        });
+                    });
+                </script>
+                <!--<option value="">深航</option>-->
+            </select>
+        </div>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <div class="btn-group tool-button" style="top: 10px">
+            <button class="btn btn-primary" data-toggle="modal" id="generateChart"><i class="ti-hand-point-up"></i>生成报表</button>
+        </div>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <div class="btn-group tool-button" style="top: 10px">
+            <% if(@shiro.hasPermission('platform.logistics.logisticChart.downloadOrderChart')){ %>
+            <button class="btn btn-primary" data-toggle="modal" id="exportExcel"><i class="ti-export"></i>导出报表</button>
+            <%}%>
+        </div>
+        <!--
+        <div class="pull-right offscreen-right">
+            <button class="btn btn-primary navbar-btn" onclick="sublime.toggleFilter('.cd-panel')"><i
+                    class="fa fa-sliders"></i> 筛选
+            </button>
+        </div>
+        -->
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border">
+            <div align="center" style="top: 15px">
+                <span style="font-size: 20px;">配送超时情况比例图</span>
+            </div>
+
+            <div class="row" id="tchart">
+
+            </div>
+
+
+            <!--<table class="table table-bordered table-striped mg-t datatable">-->
+                <!--<thead>-->
+                <!--<tr>-->
+                    <!--&lt;!&ndash;<th>序号</th>&ndash;&gt;-->
+                    <!--<th>目的地</th>-->
+                    <!--<th>配送次数</th>-->
+                    <!--<th>开始时间</th>-->
+                    <!--<th>结束时间</th>-->
+                <!--</tr>-->
+                <!--</thead>-->
+            <!--</table>-->
+        </div>
+    </div>
+</section>
+
+<script src="${base!}/assets/js/echarts.js" type="application/javascript" language="JavaScript"></script>
+<script src="${base!}/assets/js/shine.js" type="application/javascript" language="JavaScript"></script>
+
+<script language="JavaScript">
+    var generateChartClick = false;
+    var datatable;
+    var number=0;
+    var chartData;
+    function initDatatable() {
+        number=0;
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching": false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/plugins/datatables/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/logistics/order/logisticStockData",
+                "type": "post",
+                "data": function (d) {
+                    d.startTime=$("#startTime").val();
+                    d.endTime=$("#endTime").val();
+                    d.customerid=$("#myCustomer").val();
+                },
+                "complete":function(){
+                    initchart();
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                // {
+                //     "data": "", "bSortable": true, "render": function (data, type, row, meta) {
+                //         number++;
+                //         alert(number);
+                //         return number;
+                //     }
+                // },
+                {
+                    "data": "placename", "bSortable": true, "render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                },
+                {
+                    "data": "ct", "bSortable": true, "render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                },
+                {
+                    "data": "starttime", "bSortable": true, "render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                },
+                {
+                    "data": "endtime", "bSortable": true, "render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                }
+
+            ]
+        });
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        /*$("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });*/
+
+
+
+
+    }
+
+    $("#generateChart").click(function () {
+        number=0;
+        exportExcel = false
+        generateChartClick = true;
+
+        // datatable.ajax.reload();
+        // alert(1);
+        initchart();
+
+    });
+
+
+    $(function () {
+        var nowDate = new Date();
+        var oneday = 1000 * 60 * 60 * 24
+        var beginDate = new Date(nowDate.getTime() - oneday)
+        var endDate = new Date()
+        var format = "yyyy-MM-dd hh:mm"
+
+        beginDate.setHours(21)
+        beginDate.setMinutes(0)
+        $("#startTime").val(beginDate.format(format));
+
+        endDate.setHours(9)
+        endDate.setMinutes(0)
+        $("#endTime").val(endDate.format(format));
+        $("#startTime").datetimepicker({
+            format: 'yyyy-mm-dd hh:ii', /*此属性是显示顺序，还有显示顺序是mm-dd-yyyy*/
+            language: 'zh-CN',
+            autoclose: true
+        });
+        $("#endTime").datetimepicker({
+            format: 'yyyy-mm-dd hh:ii', /*此属性是显示顺序，还有显示顺序是mm-dd-yyyy*/
+            language: 'zh-CN',
+            autoclose: true
+        });
+
+        // initDatatable();
+        initchart();
+
+        $("#customername").autocomplete("${base}/platform/base/customer/autocomplete", {
+            dataType: "json",
+            mustMatch: true,
+            extraParams: {
+                customername: function () {
+                    return $('#customername').val();
+                }
+            },
+            parse: function (data) {
+                return $.map(data, function (row) {
+                    return {
+                        data: row,
+                        value: row.id,
+                        result: row.customername
+                    }
+                });
+            },
+            formatItem: function (data, i, max) {
+                return data.customercode + "|" + data.customername + "|" + data.customertel;
+            },
+            formatResult: function (data) {
+                return data.customername;
+            },
+            formatMatch: function (data, i, max) {
+                return data.id + data.customername;
+            }
+        }).result(function (event, data, formatted) {
+            if (typeof(data) == "undefined") {
+                $('#customerid').val("");
+            } else {
+                $('#customerid').val(data.id);
+
+            }
+        });
+
+    });
+    var normal=0;
+    var overtime=0;
+    function initchart(){
+        setTimeout(function(){
+            $.post("${base}/platform/logistics/order/logisticChartData",{"startTime":$("#startTime").val(),"endTime":$("#endTime").val(),"customerid":$("#myCustomer").val()},function(d){
+                // alert(JSON.stringify(d.data[0]));
+                if(d){
+                    normal=d.data[0].normal;
+                    overtime=d.data[0].overtime;
+                }
+            })
+
+//             if(chartData==null){
+//                 return false;
+//             }else{
+//                 places.splice(0,places.length);
+//                 placenumber.splice(0,placenumber.length);
+//                 for(var i=0;i<chartData.data.length;i++){
+// //                  alert(d.data[i].name+"|"+d.data[i].number);
+//                     places.push(chartData.data[i].placename);
+//                     placenumber.push(chartData.data[i].ct);
+//                 }
+//             }
+        },500);
+
+        // alert(places);
+        setTimeout(function(){
+            document.getElementById("tchart").style.height = "70%";
+            document.getElementById("tchart").style.width = "90%";
+            document.getElementById("tchart").style.position = "fixed";
+
+
+            var myChart = echarts.init(document.getElementById('tchart'));
+//            alert(unitnumber);
+            var option = {
+                title:{
+                    text:''
+                },
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    x: 'left',
+                    data:['配送超时','正常配送']
+                },
+                series: [
+                    {
+                        name:'状态',
+                        type:'pie',
+                        selectedMode: 'single',
+                        radius: [0, '42%'],
+                        label: {
+                            normal: {
+                                position: 'inner'
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data:[
+                            {value:overtime, name:'配送超时', selected:true},
+                            {value:normal, name:'正常配送'}
+                        ]
+                    },
+                    {
+                        name:'状态',
+                        type:'pie',
+                        radius: ['52%', '67%'],
+                        label: {
+                            normal: {
+                                formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
+                                backgroundColor: '#eee',
+                                borderColor: '#aaa',
+                                borderWidth: 1,
+                                borderRadius: 4,
+                                // shadowBlur:3,
+                                // shadowOffsetX: 2,
+                                // shadowOffsetY: 2,
+                                // shadowColor: '#999',
+                                // padding: [0, 7],
+                                rich: {
+                                    a: {
+                                        color: '#999',
+                                        lineHeight: 22,
+                                        align: 'center'
+                                    },
+                                    // abg: {
+                                    //     backgroundColor: '#333',
+                                    //     width: '100%',
+                                    //     align: 'right',
+                                    //     height: 22,
+                                    //     borderRadius: [4, 4, 0, 0]
+                                    // },
+                                    hr: {
+                                        borderColor: '#aaa',
+                                        width: '100%',
+                                        borderWidth: 0.5,
+                                        height: 0
+                                    },
+                                    b: {
+                                        fontSize: 16,
+                                        lineHeight: 33
+                                    },
+                                    per: {
+                                        color: '#eee',
+                                        backgroundColor: '#334455',
+                                        padding: [2, 4],
+                                        borderRadius: 5
+                                    }
+                                }
+                            }
+                        },
+                        data:[
+                            {value:overtime, name:'配送超时'},
+                            {value:normal, name:'正常配送'}
+                        ]
+                    }
+                ]
+            };
+
+            myChart.setOption(option);
+        },1500);
+    }
+
+
+
+
+</script>
+<%}%>

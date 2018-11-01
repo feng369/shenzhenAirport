@@ -1,0 +1,223 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/base/vehicle" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/base/vehicle/editDo" method="post">
+                <input name="id" type="hidden" value="${obj.id}">
+                <div class="row mb10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="vehiclenum" class="col-sm-2 control-label">${msg['base.vehicle.column.vehiclenum']}</label>
+                            <div class="col-sm-8" id="numDiv">
+                                <input type="text" id="vehiclenum" class="form-control" name="vehiclenum" data-parsley-required="true"
+                                       placeholder="${msg['base.vehicle.column.vehiclenum']}" value="${obj.vehiclenum}" >
+                                <span style="color: red" hidden>该编码已经存在</span>
+                            </div>
+                            <img src="/assets/img/loading.gif" hidden>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicletypeid" class="col-sm-2 control-label">${msg['base.vehicle.column.vehicletypeId']}</label>
+                            <div class="col-sm-8">
+                                <select id="vehicletypeid" name="vehicletypeid" class="form-control">
+
+                                </select>
+                            </div>
+                            <input type="hidden" id="vehicletypeId" name="vehicletypeId" value="<%if(!isEmpty(obj)){%>${obj.vehicletypeId}<%}%>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="vehiclestateid" class="col-sm-2 control-label">${msg['base.vehicle.column.vehiclestateId']}</label>
+                            <div class="col-sm-8">
+                                <select id="vehiclestateid" name="vehiclestateid" class="form-control">
+
+                                </select>
+                            </div>
+                            <input type="hidden" id="vehiclestateId" name="vehiclestateId" value="<%if(!isEmpty(obj)){%>${obj.vehiclestateId}<%}%>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="vehicleareaid" class="col-sm-2 control-label">${msg['base.vehicle.column.vehicleareaId']}</label>
+                            <div class="col-sm-8">
+                                <select id="vehicleareaid" name="vehicleareaid" class="form-control">
+
+                                </select>
+                            </div>
+                            <input type="hidden" id="vehicleareaId" name="vehicleareaId" value="<%if(!isEmpty(obj)){%>${obj.vehicleareaId}<%}%>">
+                        </div>
+                        <div class="form-group">
+                            <label for="containerlength" class="col-sm-2 control-label">${msg['base.vehicle.column.containerlength']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="containerlength" class="form-control" name="containerlength" data-parsley-pattern="/^[0-9]+([.]{1}[0-9]+){0,1}$/" data-parsley-pattern-message="请输入正整数或小数"
+                                       placeholder="${msg['base.vehicle.column.containerlength']}" value="${obj.containerlength}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="containerwidth" class="col-sm-2 control-label">${msg['base.vehicle.column.containerwidth']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="containerwidth" class="form-control" name="containerwidth" data-parsley-pattern="/^[0-9]+([.]{1}[0-9]+){0,1}$/" data-parsley-pattern-message="请输入正整数或小数"
+                                       placeholder="${msg['base.vehicle.column.containerwidth']}" value="${obj.containerwidth}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="containerheight" class="col-sm-2 control-label">${msg['base.vehicle.column.containerheight']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="containerheight" class="form-control" name="containerheight" data-parsley-pattern="/^[0-9]+([.]{1}[0-9]+){0,1}$/" data-parsley-pattern-message="请输入正整数或小数"
+                                       placeholder="${msg['base.vehicle.column.containerheight']}" value="${obj.containerheight}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="containerweight" class="col-sm-2 control-label">${msg['base.vehicle.column.containerweight']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="containerweight" class="form-control" name="containerweight" data-parsley-pattern="/^[0-9]+([.]{1}[0-9]+){0,1}$/" data-parsley-pattern-message="请输入正整数或小数"
+                                       placeholder="${msg['base.vehicle.column.containerweight']}" value="${obj.containerweight}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="describ" class="col-sm-2 control-label">${msg['base.vehicle.column.describ']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="describ" class="form-control" name="describ" data-parsley-required="false"
+                                       placeholder="${msg['base.vehicle.column.describ']}" value="${obj.describ}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="creater" class="col-sm-2 control-label">${msg['base.vehicle.column.creater']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="creatername" class="form-control" name="creatername" data-parsley-required="false"
+                                       placeholder="${msg['base.vehicle.column.creater']}" value="<%if(!isEmpty(user)){%>${user.username}<%}%>"  readonly>
+                            </div>
+                            <input type="hidden" id="creater" name="creater" value="<%if(!isEmpty(obj)){%>${obj.creater}<%}%>">
+                        </div>
+                        <div class="form-group">
+                            <label for="createT" class="col-sm-2 control-label">${msg['base.vehicle.column.createTime']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="createT" class="form-control" name="createT" data-parsley-required="false"
+                                       placeholder="${msg['base.vehicle.column.createTime']}" value="${obj.createTime}"  readonly>
+                            </div>
+                            <input type="hidden" id="createTime" name="createTime" value="<%if(!isEmpty(obj)){%>${obj.createTime}<%}%>">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+    </div>
+</div>
+<script language="JavaScript">
+    //20180402zhf1441
+    var editNum = "${obj.vehiclenum!}";
+    var flag = false;
+    $("#numDiv input").blur(function () {
+        var numVal = $(this).val();
+        $.ajax({
+            url:"${base}/platform/base/vehicle/countByNum",
+            data:{num:numVal},
+            type:"POST",
+            beforeSend:function () {
+                $("#numDiv").next("img").show()
+            },
+            success:function (data) {
+                if(data > 0 && numVal != editNum){
+                    flag = true;
+                    $("#numDiv").addClass("has-error");
+                    $("#numDiv span").show();
+                }else{
+                    flag = false;
+                    $("#numDiv span").hide();
+                    $("#numDiv").removeClass("has-error")
+                }
+            },
+            complete:function () {
+                $("#numDiv").next("img").hide()
+            }
+        });
+    });
+
+
+
+    $(document).ready(function () {
+        $("#createT").val(dataformatint("${obj.createTime}"));
+
+        bindVehicleDDL("车辆状态","vehicleState","vehiclestateid","vehiclestateId","${obj.vehiclestateId}");
+
+        bindVehicleDDL("区域","area","vehicleareaid","vehicleareaId","${obj.vehicleareaId}");
+
+        bindVehicleDDL("配送使用车辆类型","vehicleType","vehicletypeid","vehicletypeId","${obj.vehicletypeId}");
+
+        $("#vehiclestateid").on("change",function(){
+            $("#vehiclestateId").val($(this).val());
+        });
+
+        $("#vehicleareaid").on("change",function(){
+            $("#vehicleareaId").val($(this).val());
+        });
+
+        $("#vehicletypeid").on("change",function(){
+            $("#vehicletypeId").val($(this).val());
+        });
+
+        $(".parsley-form").validate({
+            errorPlacement: function (error) {
+                //$(".parsley-form").append("<div class='stepy-errors'></div>")
+                $(".stepy-errors").append(error);
+
+
+            },
+            rules: {
+                vehiclenum:"required"
+            },
+            messages: {
+                vehiclenum:{
+                    required:"车牌号必须填写"
+                }
+            }
+        });
+
+
+        $('#editForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                if(flag){
+                    $("#numDiv input").focus();
+                    $("#numDiv").addClass("has-error");
+                    $("#numDiv span").show();
+                    Toast.warning("该编码已经存在")
+                    return false;
+                }else{
+                    $("#numDiv").removeClass("has-error")
+                }
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+<%}%>

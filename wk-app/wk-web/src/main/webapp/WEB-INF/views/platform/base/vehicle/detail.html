@@ -1,0 +1,62 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <!--20181142zhf0227-->
+                        <!--<a href="javascript:;" class="h4 show no-m pt5">base_vehicle</a>-->
+                        <small>车辆信息</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                                                        <tr>
+                                <td>${msg['base.vehicle.column.vehiclenum']}</td><td><%if(!isEmpty(obj)){%>${obj.vehiclenum}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.vehicle.column.vehicletypeId']}</td><td><%if(!isEmpty(obj)){%>${obj.vehicletype.name}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.vehicle.column.vehiclestateId']}</td><td><%if(!isEmpty(obj)){%>${obj.vehiclestate.name}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.vehicle.column.vehicleareaId']}</td><td><%if(!isEmpty(obj)){%>${obj.vehiclearea.name}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.vehicle.column.containerlength']}</td><td><%if(!isEmpty(obj)){%>${obj.containerlength}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.vehicle.column.containerwidth']}</td><td><%if(!isEmpty(obj)){%>${obj.containerwidth}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.vehicle.column.containerheight']}</td><td><%if(!isEmpty(obj)){%>${obj.containerheight}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.vehicle.column.containerweight']}</td><td><%if(!isEmpty(obj)){%>${obj.containerweight}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.vehicle.column.describ']}</td><td><%if(!isEmpty(obj)){%>${obj.describ}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.vehicle.column.creater']}</td><td><%if(!isEmpty(user)){%>${user.username}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.vehicle.column.createTime']}</td><td id="createTime"><%if(!isEmpty(obj)){%>${obj.createTime}<%}%></td>
+                            </tr>
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>
+<script type="application/javascript">
+    $(document).ready(function () {
+        $("#createTime").html(dataformatint("${obj.createTime}"));
+    });
+</script>

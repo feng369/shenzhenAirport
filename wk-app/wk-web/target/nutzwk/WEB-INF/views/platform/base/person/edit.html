@@ -1,0 +1,792 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/base/person" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/base/person/editDo" method="post">
+                <input name="id" type="hidden" value="${obj.id}">
+                <div class="row mb10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="personnum" class="col-sm-2 control-label">${msg['base.person.column.personnum']}</label>
+                            <div class="col-sm-8" id="numDiv">
+                                <input type="text" id="personnum" class="form-control" name="personnum" data-parsley-required="true"
+                                       placeholder="${msg['base.person.column.personnum']}" value="${obj.personnum}" >
+                                <span style="color: red" hidden>该编码已经存在</span>
+                            </div>
+                            <img src="/assets/img/loading.gif" hidden>
+                        </div>
+                        <div class="form-group">
+                            <label for="personname" class="col-sm-2 control-label">${msg['base.person.column.personname']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="personname" class="form-control" name="personname" data-parsley-required="true"
+                                       placeholder="${msg['base.person.column.personname']}" value="${obj.personname}" >
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="tel" class="col-sm-2 control-label">电话</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="tel" class="form-control" name="tel" data-parsley-required="true"
+                                       placeholder="请输入电话号码" value="${obj.tel!}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="wx" class="col-sm-2 control-label">微信号</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="wx" class="form-control" name="wxNumber" data-parsley-required="true"
+                                       placeholder="请输入微信号码" value="${obj.wxNumber!}" >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="jobNumber" class="col-sm-2 control-label">工号</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="jobNumber" class="form-control" name="jobNumber" data-parsley-required="true"
+                                       placeholder="请输入工号" value="${obj.jobNumber!}" >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="personname" class="col-sm-2 control-label">人员类型</label>
+                            <div class="col-sm-8">
+                                <div class="radio radio-danger">
+                                    <div class="radio radio-info radio-inline">
+                                        <input type="radio" id="empTypeemployee" value="empType.employee" name="emptypeId" >
+                                        <label for="empTypeemployee"> 员工 </label>
+                                    </div>
+                                    <div class="radio radio-info radio-inline">
+                                        <input type="radio" id="empTypecustomer" value="empType.customer" name="emptypeId" >
+                                        <label for="empTypecustomer"> 客户 </label>
+                                    </div>
+                                    <div class="radio radio-info radio-inline">
+                                        <input type="radio" id="empTypestock" value="empType.stock" name="emptypeId" >
+                                        <label for="empTypestock"> 仓库 </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="unit" class="form-group has-feedback">
+                            <label for="parentId" class="col-sm-2 control-label">所属组织</label>
+
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input id="parentId" type="text" class="form-control" placeholder="选择组织" disabled
+                                           value="<%if(!isEmpty(unit)){%>${unit.name}<%}%>" />
+
+                                    <span class="input-group-btn">
+			                             			<button type="button" class="btn btn-primary" data-toggle="modal"
+                                                            data-target="#dialogSelectParentUnit"><i class="ti-plus"></i>选择
+                                                    </button>
+			                             		</span>
+                                </div>
+                                <input type="hidden" name="unitid" value="<%if(!isEmpty(unit)){%>${unit.id}<%}%>">
+                            </div>
+                        </div>
+                        <div id="place" class="form-group has-feedback">
+                            <label for="placename" class="col-sm-2 control-label">地点</label>
+
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input id="placename" type="text" class="form-control" placeholder="选择地点" disabled
+                                           value="<%if(!isEmpty(place)){%>${place.placename}<%}%>" />
+
+                                    <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                            data-target="#dialogPlaceSelect"><i class="ti-plus"></i>选择
+                                                    </button>
+			                             		</span>
+                                </div>
+                                <input type="hidden" id="placeid" name="placeid" value="<%if(!isEmpty(place)){%>${place.id}<%}%>">
+                            </div>
+                        </div>
+                        <div class="form-group has-feedback" id="customer">
+                            <label for="customerid" class="col-sm-2 control-label">客户名称</label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input type="text" id="customername" name="customername"   readonly class="form-control" placeholder="选择客户"  value="<%if(!isEmpty(customer)){%>${customer.customername}<%}%>">
+                                    <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                            data-target="#dialogCusSelect"><i class='ti-plus'></i> 选择
+                                                    </button>
+			                             		</span>
+                                </div>
+                                <input type="hidden" id="customerId" name="customerId" value="<%if(!isEmpty(customer)){%>${customer.Id}<%}%>">
+                            </div>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label for="airportName" class="col-sm-2 control-label">所属机场</label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input id="airportName" type="text" class="form-control" placeholder="选择机场" disabled
+                                           value="<%if(!isEmpty(airport)){%>${airport.airportname}<%}%>" />
+
+                                    <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                            data-target="#dialogAirportSelect"><i class="ti-plus"></i>选择
+                                                    </button>
+			                             		</span>
+                                </div>
+                                <input type="hidden" id="airportid" name="airportid" value="<%if(!isEmpty(airport)){%>${airport.id}<%}%>">
+
+                            </div>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label for="deptid" class="col-sm-2 control-label">所属部门</label>
+
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input id="deptid" type="text" class="form-control" placeholder="选择部门" disabled
+                                           value="<%if(!isEmpty(dept)){%>${dept.deptname}<%}%>" />
+
+                                    <span class="input-group-btn">
+			                             			<button type="button" class="btn btn-primary" data-toggle="modal"
+                                                            data-target="#dialogSelectParentDept"><i class="ti-plus"></i>选择
+                                                    </button>
+			                             		</span>
+                                </div>
+                                <input type="hidden" name="deptid" value="<%if(!isEmpty(dept)){%>${dept.id}<%}%>">
+
+                            </div>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label for="postid" class="col-sm-2 control-label">所属岗位</label>
+
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input id="postid" type="text" class="form-control" placeholder="所属岗位" disabled
+                                           value="<%if(!isEmpty(post)){%>${post.postname}<%}%>" />
+
+                                    <span class="input-group-btn">
+			                             			<button type="button" class="btn btn-primary" data-toggle="modal"
+                                                            data-target="#dialogSelectParentPost"><i class="ti-plus"></i>选择
+                                                    </button>
+			                             		</span>
+                                </div>
+                                <input type="hidden" name="postid" value="<%if(!isEmpty(post)){%>${post.id}<%}%>">
+                            </div>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label for="jobid" class="col-sm-2 control-label">职务</label>
+
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input id="jobid" type="text" class="form-control" placeholder="职务" disabled
+                                           value="<%if(!isEmpty(job)){%>${job.jobname}<%}%>" />
+
+                                    <span class="input-group-btn">
+			                             			<button type="button" class="btn btn-primary" data-toggle="modal"
+                                                            data-target="#dialogSelectParentJob"><i class="ti-plus"></i>选择
+                                                    </button>
+			                             		</span>
+                                </div>
+                                <input type="hidden" name="jobid" value="<%if(!isEmpty(job)){%>${job.id}<%}%>">
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+    </div>
+</div>
+<!-- 选择组织 -->
+<div id="dialogSelectParentUnit" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">选择上级单位</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeParentUnit" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                <button type="button" class="btn btn-primary" onclick="selectParentMenu()">确认选择</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 选择机场 -->
+<div id="dialogAirportSelect" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 700px;">
+        <div class="modal-content" style="width: 700px;">
+
+            <section class="content-wrap bg-white">
+                <header class="header navbar bg-white shadow">
+                    <div class="pull-left offscreen-left" style="padding-top:15px;">
+                        <div class="form-group">
+                            <input id="name" type="text" onclick="this.value='';" placeholder="请输入机场名称">
+                        </div>
+                    </div>
+                    <div class="pull-right offscreen-right btn-group tool-button">
+                        <a class="btn btn-primary navbar-btn" onclick="_selectOn()">确定</a>
+                    </div>
+                </header>
+                <div class=panel-body style="padding-top: 50px;">
+                    <div class="table-responsive no-border" style="padding-top: 5px;" >
+                        <input id="unitid" type="hidden">
+                        <table id="datatable_select" class="table table-bordered table-striped mg-t datatable">
+                            <thead>
+                            <tr>
+                                <th>机场编号</th>
+                                <th>机场名称</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<!-- 选择地点 -->
+<div id="dialogPlaceSelect" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 700px;">
+        <div class="modal-content" style="width: 700px;">
+
+            <section class="content-wrap bg-white">
+                <header class="header navbar bg-white shadow">
+                    <div class="pull-left offscreen-left" style="padding-top:15px;">
+                        <div class="form-group">
+                            <input id="place_name" type="text" onclick="this.value='';" placeholder="请输入地点名称">
+                        </div>
+                    </div>
+                    <div class="pull-right offscreen-right btn-group tool-button">
+                        <a class="btn btn-primary navbar-btn" onclick="_selectOnplace()">确定</a>
+                    </div>
+                </header>
+                <div class=panel-body style="padding-top: 50px;">
+                    <div class="table-responsive no-border" style="padding-top: 5px;" >
+                        <input id="place_id" type="hidden">
+                        <table id="datatable_select_place" class="table table-bordered table-striped mg-t datatable">
+                            <thead>
+                            <tr>
+                                <th>地点编号</th>
+                                <th>地点名称</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<!-- 选择部门 -->
+<div id="dialogSelectParentDept" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">选择部门</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeParentDept" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                <button type="button" class="btn btn-primary" onclick="selectParentDept()">确认选择</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 选择岗位 -->
+<div id="dialogSelectParentPost" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">选择岗位</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeParentPost" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                <button type="button" class="btn btn-primary" onclick="selectParentPost()">确认选择</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 选择岗位 -->
+<div id="dialogSelectParentJob" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">选择岗位</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeParentJob" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                <button type="button" class="btn btn-primary" onclick="selectParentJob()">确认选择</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 选择客户 -->
+<div id="dialogCusSelect" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 700px;">
+        <div class="modal-content" style="width: 700px;">
+            <section class="content-wrap bg-white">
+                <header class="header navbar bg-white shadow">
+                    <div class="pull-left offscreen-left" style="padding-top:15px;">
+                        <div class="form-group">
+                            <input id="name1" type="text" onclick="this.value='';" placeholder="请输入客户名称">
+                        </div>
+                    </div>
+                    <div class="pull-right offscreen-right btn-group tool-button">
+                        <a class="btn btn-primary navbar-btn" onclick="_selectOnCus()">确定</a>
+                    </div>
+                </header>
+                <div class=panel-body style="padding-top: 50px;">
+                    <div class="table-responsive no-border" style="padding-top: 5px;" >
+
+                        <table id="datatable_select_Cus" class="table table-bordered table-striped mg-t datatable">
+                            <thead>
+                            <tr>
+                                <th>客户编号</th>
+                                <th>客户名称</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<script language="JavaScript">
+    //20180402zhf1441
+    var editNum = "${obj.personnum!}";
+    var flag = false;
+    $("#numDiv input").blur(function () {
+        var numVal = $(this).val();
+        $.ajax({
+            url:"${base}/platform/base/person/countByNum",
+            data:{num:numVal},
+            type:"POST",
+            beforeSend:function () {
+                $("#numDiv").next("img").show()
+            },
+            success:function (data) {
+                if(data > 0 && numVal != editNum){
+                    flag = true;
+                    $("#numDiv").addClass("has-error");
+                    $("#numDiv span").show();
+                }else{
+                    flag = false;
+                    $("#numDiv span").hide();
+                    $("#numDiv").removeClass("has-error")
+                }
+            },
+            complete:function () {
+                $("#numDiv").next("img").hide()
+            }
+        });
+    });
+
+
+    $(document).ready(function () {
+        initTreeView();
+        initdatatable_select_Cus();
+        initdatatable_select_place();
+        $("#editForm #createtime").val(dataformatint("${obj.createTime}"));
+        $("#editForm #opat").val(dataformatint("${obj.opAt}"));
+
+        var emptypeId ="${obj.emptypeId}"
+        getradio(emptypeId);
+
+        if(emptypeId=="empType.employee"){
+            $("#empTypeemployee").attr("checked",true);
+
+        }else if(emptypeId=="empType.customer"){
+            $("#empTypecustomer").attr("checked",true);
+        }
+        else if(emptypeId=="empType.stock"){
+            $("#empTypestock").attr("checked",true);
+        }
+
+        $(":radio").click(function(){
+            var option=$(this).val()
+            getradio(option);
+        });
+
+        $('#editForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                if(flag){
+                    $("#numDiv input").focus();
+                    $("#numDiv").addClass("has-error");
+                    $("#numDiv span").show();
+                    Toast.warning("该编码已经存在")
+                    return false;
+                }else{
+                    $("#numDiv").removeClass("has-error")
+                }
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+    function _selectOn() {
+        var chks = datatable_select.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable_select.rows('.selected').data(), function (i, n) {
+                ids.push(this["id"]);
+                ids.push(this["airportname"]);
+            });
+            $("#editForm #airportid").val(ids[0])
+            $("#editForm #airportName").val(ids[1])
+            $('#dialogAirportSelect').modal('hide');
+        }else{
+            Toast.warning("请先选择机场！");
+        }
+    }
+    function initTreeView() {
+        initdatatable_select();
+        $("#jsTreeParentUnit").jstree({
+            plugins: ["wholerow", "json_data"],
+            core: {
+                data: {
+                    dataType: "json",
+                    url: function (node) {
+                        return node.id === "#" ? "${base}/platform/sys/unit/tree" : "${base}/platform/sys/unit/tree?pid=" + node.id
+                    }
+                },
+                multiple: false
+            }
+        }).on("dblclick.jstree", function (node) {
+            selectParentMenu();
+        });
+
+        $("#jsTreeParentDept").jstree({
+            plugins: ["wholerow", "json_data"],
+            core: {
+                data: {
+                    dataType: "json",
+                    url: function (node) {
+                        return node.id === "#" ? "${base}/platform/base/dept/tree" : "${base}/platform/base/dept/tree?pid=" + node.id
+                    }
+                },
+                multiple: false
+            }
+        }).on("dblclick.jstree", function (node) {
+            selectParentDept();
+        });
+
+        $("#jsTreeParentPost").jstree({
+            plugins: ["wholerow", "json_data"],
+            core: {
+                data: {
+                    dataType: "json",
+                    url: function (node) {
+                        return node.id === "#" ? "${base}/platform/base/post/tree" : "${base}/platform/base/post/tree?pid=" + node.id
+                    }
+                },
+                multiple: false
+            }
+        }).on("dblclick.jstree", function (node) {
+            selectParentPost();
+        });
+
+        $("#jsTreeParentJob").jstree({
+            plugins: ["wholerow", "json_data"],
+            core: {
+                data: {
+                    dataType: "json",
+                    url: function (node) {
+                        return node.id === "#" ? "${base}/platform/base/job/tree" : "${base}/platform/base/job/tree?pid=" + node.id
+                    }
+                },
+                multiple: false
+            }
+        }).on("dblclick.jstree", function (node) {
+            selectParentJob();
+        });
+    }
+    //选择组织
+    function selectParentMenu() {
+        var tree = $.jstree.reference("#jsTreeParentUnit");
+        var node = tree.get_selected(true);
+        $("#editForm #parentId").val(node[0].text);
+        $("#editForm input[name='unitid']").val(node[0].id);
+        $("#dialogSelectParentUnit").modal("hide");
+    }
+
+    //选择部门
+    function selectParentDept() {
+        var tree = $.jstree.reference("#jsTreeParentDept");
+        var node = tree.get_selected(true);
+        $("#editForm #deptid").val(node[0].text);
+        $("#editForm input[name='deptid']").val(node[0].id);
+        $("#dialogSelectParentDept").modal("hide");
+    }
+
+    //选择岗位
+    function selectParentPost() {
+        var tree = $.jstree.reference("#jsTreeParentPost");
+        var node = tree.get_selected(true);
+        $("#editForm #postid").val(node[0].text);
+        $("#editForm input[name='postid']").val(node[0].id);
+        $("#dialogSelectParentPost").modal("hide");
+    }
+
+    //选择职务
+    function selectParentJob() {
+        var tree = $.jstree.reference("#jsTreeParentJob");
+        var node = tree.get_selected(true);
+        $("#editForm #jobid").val(node[0].text);
+        $("#editForm input[name='jobid']").val(node[0].id);
+        $("#dialogSelectParentJob").modal("hide");
+    }
+    function _selectOnplace() {
+        var chks = datatable_select_place.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable_select_place.rows('.selected').data(), function (i, n) {
+                ids.push(this["id"]);
+                ids.push(this["placename"]);
+            });
+            $("#editForm #placeid").val(ids[0])
+            $("#editForm #placename").val(ids[1])
+            $('#dialogPlaceSelect').modal('hide');
+        }else{
+            Toast.warning("请先选择地点！");
+        }
+    }
+    var datatable_select;
+    var datatable_select_place;
+    var datatable_select_Cus;
+
+    function initdatatable_select() {
+        datatable_select = $('#datatable_select').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/plugins/datatables/cn.json"
+            },
+            "ajax": {
+                "url": "${base}/platform/base/airport/data",
+                "type": "post",
+                "data": function (d) {
+
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "airportnum", "bSortable": true,"render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }},
+                {"data": "airportname", "bSortable": true,"render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }}
+            ],
+            "columnDefs": [
+                {
+
+                }
+            ]
+        });
+        datatable_select.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#name").on('keyup', function () {
+            datatable_select.ajax.reload();
+        });
+    }
+    function initdatatable_select_Cus() {
+        datatable_select_Cus = $('#datatable_select_Cus').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/plugins/datatables/cn.json"
+            },
+            "ajax": {
+                "url": "${base}/platform/base/customer/data",
+                "type": "post",
+                "data": function (d) {
+
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "customercode", "bSortable": true,"render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }},
+                {"data": "customername", "bSortable": true,"render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }}
+            ],
+            "columnDefs": [
+                {
+
+                }
+            ]
+        });
+        datatable_select_Cus.on('click', 'tr', function () {
+
+            if ($(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            } else {
+                datatable_select_Cus.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        $("#name").on('keyup', function () {
+            datatable_select_Cus.ajax.reload();
+        });
+    }
+    function _selectOnCus() {
+        var chks = datatable_select_Cus.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable_select_Cus.rows('.selected').data(), function (i, n) {
+                ids.push(this["id"]);
+                ids.push(this["customername"]);
+            });
+            $("#editForm #customerId").val(ids[0])
+            $("#editForm #customername").val(ids[1])
+            $('#dialogCusSelect').modal('hide');
+        } else {
+            Toast.warning("请先选择客户！");
+        }
+    }
+    function initdatatable_select_place() {
+        datatable_select_place = $('#datatable_select_place').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/plugins/datatables/cn.json"
+            },
+            "ajax": {
+                "url": "${base}/platform/base/place/data",
+                "type": "post",
+                "data": function (d) {
+
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "placecode", "bSortable": true,"render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }},
+                {"data": "placename", "bSortable": true,"render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }}
+            ],
+            "columnDefs": [
+                {
+
+                }
+            ]
+        });
+        datatable_select_place.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#name").on('keyup', function () {
+            datatable_select_place.ajax.reload();
+        });
+    }
+    function getradio(option) {
+
+        if(option=="empType.employee"){
+            $('#unit').show();
+            $('#place').hide();
+            $('#placename').val("");
+            $('#placeid').val("");
+            $('#customer').hide();
+            $('#customername').val("");
+            $('#customerid').val("");
+
+        }else if(option=="empType.customer"){
+            $('#unit').hide();
+            $('#unitid').val("");
+            $('#parentId').val("");
+            $('#place').hide();
+            $('#placename').val("");
+            $('#placeid').val("");
+            $('#customer').show();
+        }
+        else if(option=="empType.stock"){
+            $('#unit').hide();
+            $('#unitid').val("");
+            $('#parentId').val("");
+            $('#place').show();
+            $('#customer').hide();
+            $('#customername').val("");
+            $('#customerid').val("");
+        }else{
+            $('#unit').hide();
+            $('#customer').hide();
+            $('#place').hide();
+        }
+
+    }
+</script>
+<%}%>

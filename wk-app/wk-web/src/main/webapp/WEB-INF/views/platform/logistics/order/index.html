@@ -1,0 +1,639 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<section class="content-wrap bg-white" style="top: 10px">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button">
+            <% if(@shiro.hasPermission('platform.logistics.order.add')){ %>
+            <a id="add" class="btn btn-primary navbar-btn" href="${base}/platform/logistics/order/add" data-pjax><i
+                    class="ti-plus"></i> ${msg['globals.button.add']}</a>
+            <%}%>
+            <% if(@shiro.hasPermission('platform.logistics.order.delete')){ %>
+            <button id="batchBtn" class="btn btn-primary navbar-btn" style="display: none" onclick="delCheck()"><i class="ti-close"></i>
+                批量关闭
+            </button>
+            <%}%>
+            <% if(@shiro.hasPermission('platform.logistics.order.archive')){ %>
+            <button id="archive" class="btn btn-primary navbar-btn" data-toggle="modal"><i class="ti-layout-tab"></i>&nbsp;归档
+            </button>
+            <%}%>
+            <!-- 这里加上ddl状态筛选 cw1012 -->
+            <!--<div class="col-sm-7" style="float: left;">-->
+            <div class="btn-group" style="top: 10px">
+                <select id="completeValue" name="completeValue" class="optionSelect">
+                    <option value='1' selected>未完成</option>
+                    <option value='2'>已完成</option>
+                    <option value='3'>已关闭</option>
+                </select>
+            </div>
+            &nbsp;&nbsp;
+            <div class="btn-group" style="top: 10px">
+                <select id="bpstatus" name="bpstatus" class="optionSelect">
+                    <option value='' selected>全部数据</option>
+                </select>
+            </div>
+            <!--</div>-->
+        </div>
+        <div class="pull-right offscreen-right">
+            <button class="btn btn-primary navbar-btn" onclick="sublime.toggleFilter('.cd-panel')"><i
+                    class="fa fa-sliders"></i> 筛选
+            </button>
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border">
+            <table class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                <tr>
+                    <th>订单编号</th>
+                    <th>状态</th>
+                    <th>业务类型</th>
+                    <th>紧急程度</th>
+                    <!--<th>出发地</th>-->
+                    <th>目的地</th>
+                    <th>时限要求</th>
+                    <!--   <th>预计送达时间</th>-->
+
+                    <th>送达时间</th>
+                    <th>订单所属人</th>
+                    <th>订单所属人电话</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">关闭</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12" id="delHtml">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancleDel" type="button" class="btn btn-default" data-dismiss="modal">
+                    ${msg['globals.button.cancel']}
+                </button>
+                <button id="okDel" type="button" class="btn btn-primary"
+                        data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-lg" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style=" width:900px;border: none">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="cd-panel from-right">
+    <form id="selectForm">
+        <header class="cd-panel-header">
+            <h4>高级筛选</h4>
+        </header>
+        <div class="cd-panel-container">
+            <div class="cd-panel-content shadow">
+                <!--<div class="form-group">-->
+                <!--<label for="ordernum">订单编号</label>-->
+                <!--<input type="text" id="ordernum" name="ordernum" onclick="this.value=''" class="form-control" placeholder="订单编号" autofocus>-->
+                <!--</div>-->
+                <!--<div class="form-group">-->
+                <!--<label for="customername">客户名称</label>-->
+                <!--<input type="text" id="customername" name="customername" onclick="this.value=''" class="form-control" placeholder="客户名称">-->
+                <!--<input type="hidden" id="customerid" name="customerid" value="">-->
+                <!--</div>-->
+                <div class="form-group">
+                    <label for="emergencyname">紧急程度</label>
+                    <select id="emergencyname" name="emergencyname" class="form-control" placeholder="请选择紧急程度">
+                    </select>
+                    <input type="hidden" id="emergency" class="form-control" name="emergency"
+                           data-parsley-required="true">
+                </div>
+                <!--<div class="form-group">
+                    <label for="btypename">业务类型</label>
+                    <select id="btypename" name="btypename" class="form-control" placeholder="业务类型">
+                    </select>
+                    <input type="hidden" id="btype" name="btype" value="">
+                </div>-->
+                <!-- <div class="form-group">
+                     <label for="startstockname">出发地</label>
+                     <input id="startstockname" name="startstockname" type="text" class="form-control" placeholder="出发地"
+                            value=""/>
+                     <input type="hidden" id="startstock" name="startstock" value="">
+                 </div>-->
+                <div class="form-group">
+                    <label for="endstockname">目的地</label>
+                    <input id="endstockname" name="endstockname" type="text" class="form-control" placeholder="目的地"
+                           value=""/>
+                    <input type="hidden" id="endstock" name="endstock" value="">
+                </div>
+                <div class="form-group">
+                    <label for="personname">订单所属人</label>
+                    <input id="personname" name="personname" type="text" class="form-control" placeholder="订单所属人"
+                           value=""/>
+                </div>
+                <div class="form-group">
+                    <label for="startTime">订单开始时间</label>
+                    <input id="startTime" name="startTime" type="text" class="form-control" placeholder="订单开始时间"
+                           value=""/>
+                </div>
+                <div class="form-group">
+                    <label for="endTime">订单截止时间</label>
+                    <input id="endTime" name="endTime" type="text" class="form-control" placeholder="订单截止时间" value=""/>
+                </div>
+
+                <!--<div class="form-group">-->
+                <!--<label for="materielname" >单号</label>-->
+                <!--<input id="materielname" name="materielname"  type="text" class="form-control"   placeholder="单号" value="" />-->
+                <!--</div>-->
+                <!--<div class="form-group">-->
+                <!--<label for="materielnum" >件号</label>-->
+                <!--<input id="materielnum" name="materielnum"  type="text" class="form-control"   placeholder="件号" value="" />-->
+                <!--</div>-->
+                <!--<div class="form-group">-->
+                <!--<label for="sequencenum" >序号</label>-->
+                <!--<input id="sequencenum"  name="sequencenum" type="text" class="form-control"   placeholder="序号" value="" />-->
+                <!--</div>-->
+                <button id="searchBtn" type="button" class="btn btn-primary">查询</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script language="JavaScript">
+    var datatable;
+
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching": false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/plugins/datatables/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/logistics/order/data",
+                "type": "post",
+                "data": function (d) {
+                    var arr = $('#selectForm').serialize();
+                    arr = decodeURIComponent(arr, true);//防止中文乱码
+                    arr = DataDeal.formToJson(arr);//转化为json
+                    d.selectForm = arr;
+                    d.otype = "72dd55d2c3cc42799c4e014745db2cdb";
+                    d.pstatus = $("#bpstatus").val();
+                    d.completeValue = $("#completeValue option:selected").val();
+                    d.personname = $("#personname").val();
+                    d.startTime = $("#startTime").val();
+                    d.endTime = $("#endTime").val();
+
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {
+                    "data": "ordernum", "bSortable": true, "render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                },
+                {
+                    "data": "pstatus", "bSortable": true, "render": function (data, type, row, meta) {
+                        return getDisStstus(data);
+                    }
+                },
+                {
+                    "data": "btypename", "bSortable": true, "render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                },
+                {
+                    "data": "emername", "bSortable": true, "render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                },
+                {
+                    "data": "endstockname", "bSortable": true, "render": function (data, type, row, meta) {
+                        data = data || "";
+                        if (data == "") {
+                            return "";
+                        } else {
+                            return data;
+                        }
+                    }
+                },
+                {
+                    "data": "timerequest", "bSortable": true, "render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                },
+                {
+                    "data": "operatetime", "bSortable": true, "render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                },
+                {
+                    "data": "personname", "bSortable": true, "render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                },
+                {
+                    "data": "tel", "bSortable": true, "render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                },
+
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        var datastyle = "style='opacity: 0.2'";
+                        var url = "${base}/platform/logistics/Deliveryorderentry/detail/" + row.id;
+                        /*if (parseInt(row.pstatus) < 2) {
+                            dvstyle = "style='opacity: 0.2'";
+                            url = "javascript:;";
+                        }*/
+                        var temp = '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                            ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                            (row.delflag == 0 && row.pstatus ==0 ?'<li><a href="javascript:;"  onclick="submitOrder(\'' + row.id + '\',\'' + row.pstatus + '\')">提交订单</a></li>' + '<li><a href="${base}/platform/logistics/order/edit/' + row.id + '" >修改</a></li>':'<li><a href="javascript:;" style=\'opacity: 0.2\'>提交订单</a></li>'  )
+                            + (row.pstatus != 0 ? '<li><a href="' + url + '">跟踪记录</a></li>' : '<li><a href="javascript:;" style=\'opacity: 0.2\'>跟踪记录</a></li>')
+                             +
+                            '<li><a href="${base}/platform/logistics/order/detail/' + row.id + '" data-toggle="modal" data-target="#dialogDetail">${msg["globals.button.detail"]}</a></li>' +
+                            /*'<li><a href="${base}/platform/logistics/order/edit/' + row.id + '">${msg["globals.button.update"]}</a></li>' +*/
+                            '<li class="divider"></li>' +
+                            (row.delflag == 0 && row.pstatus != 8 ?'<li><a href="javascript:;" onclick="del(\'' + row.id + '\',\'' + row.endstockname + '\')">关闭</a></li>' :'<li><a href="javascript:;" style=\'opacity: 0.2\'>关闭</a></li>')+
+                            '</ul></div>'
+
+                        return temp;
+                    },
+                    "targets": 9
+                }
+            ]
+
+        });
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    }
+
+    function getPstatusName(data) {
+        if (data == null || typeof data === "undefined") {
+            return "";
+        }
+        switch (data) {
+            case 0:
+                return "保存";
+            case 1:
+                return "订单提交，等待派单";
+            case 2:
+                return "已派单，待配送员接单";
+            case 3:
+                return "配送员已接单";
+            case 4:
+                return "仓库备料中";
+            case 5:
+                return "仓库备料完成";
+            case 6:
+                return "配送中";
+            case 7:
+                return "送达";
+            default:
+                return "订单完成";
+        }
+    }
+
+    function submitOrder(id, pstatus) {
+        if (pstatus != "0") {
+            return false;
+        }
+        $.ajax({
+            url: "${base}/platform/logistics/order/submitOrderDo/",
+            data: {id: id, status: 1},
+            type: "post",
+            success: function (data) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    datatable.ajax.reload();
+                } else {
+                    Toast.error(data.msg);
+                }
+            }
+        })
+    }
+
+    function reOrder() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            $.ajax({
+                url: "${base}/platform/logistics/Deliveryorder/adddelDo/",
+                data: {orderid: ids.toString()},
+                type: "post",
+                success: function (data) {
+                    if (data.code == 0) {
+                        Toast.success(data.msg);
+                        datatable.ajax.reload();
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                }
+            })
+        }
+    }
+
+    var content = [];
+
+    function del(id, endstockname) {
+        var dialog = $("#dialogDelete");
+        $("#delHtml").html("是否关闭目的地为["+endstockname+"]的订单");
+        dialog.modal("show");
+        dialog.find("#cancleDel").bind("click", function (event) {
+            $("#delHtml").html("");
+        });
+        dialog.find("#okDel").unbind("click");
+        dialog.find("#okDel").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("正在关闭中。。。");
+            $.post("${base}/platform/logistics/order/delete/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null, false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+            $("#delHtml").html("");
+        });
+    }
+
+    function delCheck() {
+        content = [];
+        var chks = datatable.rows('.selected').data();
+        var delFlag = false;
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                if(n.delflag == 1){
+                    delFlag = true
+                }
+                ids.push(n.id);
+                content.push(n.endstockname);
+            });
+            if(delFlag){
+                Toast.warning("订单已关闭，无需执行此操作");
+                return false;
+            }
+            var planeHtml = ""
+            if (content.length > 0) {
+                content.forEach(function (ele) {
+                    planeHtml += ele + ","
+                })
+                planeHtml = planeHtml.substring(0, planeHtml.length - 1)
+            }
+            var profixHtml = "是否关闭目的地为[";
+            var lastHtml = "]的订单?"
+            $("#delHtml").html(profixHtml + planeHtml + lastHtml);
+            var dialog = $("#dialogDelete");
+            dialog.modal("show");
+            dialog.find("#cancleDel").bind("click", function (event) {
+                $("#delHtml").html("");
+            });
+            dialog.find("#okDel").unbind("click");
+            dialog.find("#okDel").bind("click", function (event) {
+                var btn = $(this);
+                btn.button("loading");
+                $.post("${base}/platform/logistics/order/delete", {ids: ids.toString()}, function (data) {
+                    if (data.code == 0) {
+                        datatable.ajax.reload(null, false);
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                    btn.button("reset");
+                    dialog.modal("hide");
+                }, "json");
+                $("#delHtml").html("");
+            });
+        } else {
+            Toast.warning("请先选择要关闭的项");
+        }
+    }
+    var beginDate,endDate;
+    $(function () {
+        $("#startTime").datetimepicker({
+            format: 'yyyy-mm-dd hh:ii',      /*此属性是显示顺序，还有显示顺序是mm-dd-yyyy*/
+            language:'zh-CN',
+            autoclose: true
+        });
+        $("#endTime").datetimepicker({
+            format: 'yyyy-mm-dd hh:ii',      /*此属性是显示顺序，还有显示顺序是mm-dd-yyyy*/
+            language:'zh-CN',
+            autoclose: true
+        });
+        if($("#completeValue option:selected").val() == 1){
+            $("#batchBtn").css("display","block")
+        }else{
+            $("#batchBtn").css("display","none")
+        }
+        appendStpeNameByCompleteValue(1);
+        initDatatable();
+        bindVehicleDDL("紧急程度", "emergency", "emergencyname", "emergency");
+        // bindVehicleDDL("业务类型", "btype", "btypename", "btype");
+        $("#dialogDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+        $("#customername").autocomplete("${base}/platform/base/customer/autocomplete", {
+            dataType: "json",
+            mustMatch: true,
+            extraParams: {
+                customername: function () {
+                    return $('#customername').val();
+                }
+            },
+            parse: function (data) {
+                return $.map(data, function (row) {
+                    return {
+                        data: row,
+                        value: row.id,
+                        result: row.customername
+                    }
+                });
+            },
+            formatItem: function (data, i, max) {
+                return data.customercode + "|" + data.customername + "|" + data.customertel;
+            },
+            formatResult: function (data) {
+                return data.customername;
+            },
+            formatMatch: function (data, i, max) {
+                return data.id + data.customername;
+            }
+        }).result(function (event, data, formatted) {
+            if (typeof(data) == "undefined") {
+                $('#customerid').val("");
+            } else {
+                $('#customerid').val(data.id);
+
+            }
+        });
+        $("#startstockname").autocomplete("${base}/platform/base/place/autocomplete", {
+            dataType: "json",
+            mustMatch: true,
+            extraParams: {
+                placename: function () {
+                    return $('#startstockname').val();
+                }
+            },
+            parse: function (data) {
+                return $.map(data, function (row) {
+                    return {
+                        data: row,
+                        value: row.id,
+                        result: row.placename
+                    }
+                });
+            },
+            formatItem: function (data, i, max) {
+                return data.placecode + "|" + data.placename + "|" + data.telephone;
+            },
+            formatResult: function (data) {
+                return data.placename;
+            },
+            formatMatch: function (data, i, max) {
+                return data.id + data.placename;
+            }
+        }).result(function (event, data, formatted) {
+            if (typeof(data) == "undefined") {
+                $('#startstock').val("");
+            } else {
+                $('#startstock').val(data.id);
+
+            }
+        });
+
+        $("#endstockname").autocomplete("${base}/platform/base/place/autocomplete", {
+            dataType: "json",
+            mustMatch: true,
+            extraParams: {
+                placename: function () {
+                    return $('#endstockname').val();
+                }
+            },
+            parse: function (data) {
+                return $.map(data, function (row) {
+                    return {
+                        data: row,
+                        value: row.id,
+                        result: row.placename
+                    }
+                });
+            },
+            formatItem: function (data, i, max) {
+                return data.placecode + "|" + data.placename + "|" + data.telephone;
+            },
+            formatResult: function (data) {
+                return data.placename;
+            },
+            formatMatch: function (data, i, max) {
+                return data.id + data.placename;
+            }
+        }).result(function (event, data, formatted) {
+            if (typeof(data) == "undefined") {
+                $('#endstock').val("");
+            } else {
+                $('#endstock').val(data.id);
+
+            }
+        });
+    });
+    <!--20180530zhf1046-->
+    $("#bpstatus").change(function () {
+        datatable.ajax.reload();
+    });
+    var completeValue ;
+    <!--20180530zhf1046-->
+    $("#completeValue").change(function () {
+        completeValue =$(this).val();
+        if($(this).val() == 1){
+            $("#batchBtn").css("display","block")
+        }else{
+            $("#batchBtn").css("display","none")
+        }
+        if(completeValue == 2 || completeValue == 3){
+            var nowDate = new Date();
+            var oneDay=  24*60*60*1000;
+            beginDate = new Date(nowDate.getTime() - oneDay);
+            beginDate.setHours(0)
+            beginDate.setMinutes(0)
+            var format = "yyyy-MM-dd hh:mm"
+            $("#startTime").val(beginDate.format(format))
+            endDate = new Date();
+            endDate.setHours(23)
+            endDate.setMinutes(59)
+            $("#endTime").val(endDate.format(format));
+        }
+        if ($(this).val() == 1 || $(this).val() == 3) {
+            $("#bpstatus").html("<option value='' selected>全部数据</option>")
+        } else {
+            $("#bpstatus").html("")
+        }
+        appendStpeNameByCompleteValue($("#completeValue").val())
+        datatable.ajax.reload();
+    });
+
+    $("#archive").on("click", function () {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            $.ajax({
+                type: "POST",
+                url: "${base!}/platform/logistics/order/archiveOrdersOfSD",
+                data: {ids: ids.toString()},
+                success: function (data) {
+                    if (data.code == 0) {
+                        Toast.success("归档成功");
+                        datatable.ajax.reload();
+                    } else {
+                        Toast.warning(data.msg);
+                        datatable.ajax.reload();
+                    }
+                }
+            });
+        } else {
+            Toast.warning("至少选择一条数据进行归档");
+        }
+    });
+
+    function appendStpeNameByCompleteValue(completeValue) {
+        $.get("${base}/platform/logistics/orderstep/getStepAndStepName", {completeValue: completeValue}, function (data) {
+            data.forEach(function (data) {
+                $("#bpstatus").append("<option value='" + data.step + "'>" + data.stepname + "</option>");
+            });
+        });
+    }
+
+</script>
+<%}%>

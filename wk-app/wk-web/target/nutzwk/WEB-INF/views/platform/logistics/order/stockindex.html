@@ -1,0 +1,338 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button">
+            <% if(@shiro.hasPermission('platform.logistics.stockorder.print')){ %>
+            <!--
+            <a id="ckmprint" class="btn btn-primary navbar-btn" href="javascript:;" data-pjax onclick="ckmprint()"><i class="ti-printer"></i> 备料打印</a>
+             -->
+            <%}%>
+            <% if(@shiro.hasPermission('platform.logistics.stockorder.updvstock')){ %>
+          <!--
+          <button id="ckmcom" type="button" class="btn btn-primary navbar-btn" onclick="ckmcom()"><i class="ti-time"></i> 备料完成</button>
+          -->
+            <%}%>
+        </div>
+        <div class="pull-right offscreen-right">
+            <button class="btn btn-primary navbar-btn" onclick="sublime.toggleFilter('.cd-panel')"><i
+                    class="fa fa-sliders"></i> 筛选
+            </button>
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border">
+            <table class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                    <tr>
+                        <th>订单编号</th>
+                        <th>类型</th>
+                        <th>业务类型</th>
+                        <th>紧急程度</th>
+                        <th>出发地</th>
+                        <th>目的地</th>
+                        <th>状态</th>
+                        <th>时限要求</th>
+                        <!--<th>预计送达时间</th>-->
+                        <th>操作</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['globals.button.delete']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['globals.button.delete.notice']}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button id="okDel" type="button" class="btn btn-primary" data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-lg" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width:900px">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="cd-panel from-right">
+    <form id="selectForm">
+    <header class="cd-panel-header">
+        <h4>高级筛选</h4>
+    </header>
+    <div class="cd-panel-container">
+        <div class="cd-panel-content shadow">
+            <div class="form-group">
+                <label for="ordernum">订单编号</label>
+                <input type="text" id="ordernum" name="ordernum" onclick="this.value=''" class="form-control" placeholder="订单编号" autofocus>
+            </div>
+            <!--<div class="form-group">-->
+                <!--<label for="customername">客户名称</label>-->
+                <!--<input type="text" id="customername" name="customername" onclick="this.value=''" class="form-control" placeholder="客户名称">-->
+            <!--</div>-->
+            <div class="form-group">
+                <label for="emergencyname">紧急程度</label>
+                    <select id="emergencyname" name="emergencyname" class="form-control" placeholder="请选择紧急程度">
+                    </select>
+                <input type="hidden" id="emergency" class="form-control" name="emergency" data-parsley-required="true" >
+            </div>
+            <!--<div class="form-group">-->
+                <!--<label for="otype">类型</label>-->
+                <!--<input type="checkbox" id="otype"  name="otype" >-->
+            <!--</div>-->
+            <div class="form-group">
+                <label for="btypename">类型</label>
+                <select id="btypename" name="btypename" class="form-control" placeholder="类型">
+                </select>
+                <input type="hidden" id="otype" name="otype" value="">
+            </div>
+            <!--<div class="form-group">-->
+                <!--<label for="startstockname" >出发地</label>-->
+                <!--<input id="startstockname" name="startstockname"  type="text" class="form-control"   placeholder="出发地" value="" />-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+                <!--<label for="endstockname" >目的地</label>-->
+                <!--<input id="endstockname" name="endstockname"  type="text" class="form-control"   placeholder="目的地" value="" />-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+                <!--<label for="personname" >登记人</label>-->
+                <!--<input id="personname" name="personname"  type="text" class="form-control"   placeholder="登记人" value="" />-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+                <!--<label for="materielname" >单号</label>-->
+                <!--<input id="materielname" name="materielname"  type="text" class="form-control"   placeholder="单号" value="" />-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+                <!--<label for="materielnum" >件号</label>-->
+                <!--<input id="materielnum" name="materielnum"  type="text" class="form-control"   placeholder="件号" value="" />-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+                <!--<label for="sequencenum" >序号</label>-->
+                <!--<input id="sequencenum"  name="sequencenum" type="text" class="form-control"   placeholder="序号" value="" />-->
+            <!--</div>-->
+            <button id="searchBtn" type="button"  class="btn btn-primary" >查询</button>
+        </div>
+    </div>
+    </form>
+</div>
+<script language="JavaScript">
+    var datatable;
+
+    function initDatatable() {
+
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/plugins/datatables/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/logistics/order/stockdata",
+                "type": "post",
+                "data": function (d) {
+                    var arr = $('#selectForm').serialize();
+                    arr= decodeURIComponent(arr,true);//防止中文乱码
+                    arr=DataDeal.formToJson(arr);//转化为json
+                    d.selectForm=arr;
+
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                    {"data": "ordernum", "bSortable": true},
+
+                    {"data": "dict_otype.name", "bSortable": false,"render": function (data, type, row, meta) {
+                        data = data || "";
+                        if(data == ""){return "";}else{return data;}
+                    }},
+                    {"data": "dict_btype.name", "bSortable": false,"render": function (data, type, row, meta) {
+                        data = data || "";
+                        if(data == ""){return "";}else{return data;}
+                    }},
+                    {"data": "dict_emergency.name", "bSortable": false,"render": function (data, type, row, meta) {
+                        data = data || "";
+                        if(data == ""){return "";}else{return data;}
+                    }},
+                    {"data": "place_startstock.placename", "bSortable": false,"render": function (data, type, row, meta) {
+                        data = data || "";
+                        if(data == ""){return "";}else{return data;}
+                    }},
+                    {"data": "place_endstock.placename", "bSortable": false,"render": function (data, type, row, meta) {
+                        data = data || "";
+                        if(data == ""){return "";}else{return data;}
+                    }},
+                    {"data": "pstatus", "bSortable": true,"render":function (data, type, row, meta) {
+                        return getDisStstus(data);}
+                    },
+                    {"data": "timerequest", "bSortable": true},
+                    // {"data": "estimatetime", "bSortable": true},
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                                ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                            '<li><a href="${base}/platform/logistics/order/detail/' + row.id + '" data-toggle="modal" data-target="#dialogDetail">${msg["globals.button.detail"]}</a></li>' +
+                                '</ul></div>';
+                    },
+                    "targets": 8
+                }
+            ]
+        });
+        datatable.on('click', 'tr', function () {
+            if ($(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            } else {
+                datatable.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+
+        setInterval("datatable.ajax.reload()",120000);
+    }
+
+    function submitOrder(id) {
+        $.ajax({
+                url: "${base}/platform/logistics/order/submitOrderDo/",
+                data: {id:id,status:1},
+                type: "post",
+                success: function (data) {
+                    if (data.code == 0) {
+                        Toast.success(data.msg);
+                        datatable.ajax.reload();
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                }
+            })
+    }
+    function ckmcom() {
+        var chks = datatable.rows('.selected').data();
+
+        if(chks.length==0 ){
+            Toast.warning("请选择一条记录");
+            return false
+        };
+//        if(chks[0].pstatus != 4 ){
+//            Toast.warning("备料打印后才能点击备料完成");
+//            return false
+//        };
+        var ids = chks[0].id
+            $.ajax({
+                url: "${base}/platform/logistics/order/updvstock/",
+                data: {id: ids},
+                type: "post",
+                success: function (data) {
+                    if (data.code == 0) {
+                        Toast.success(data.msg);
+                        datatable.ajax.reload();
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                }
+            })
+
+    }
+
+    function ckmprint() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            $(location).attr('href', '${base}/platform/logistics/order/orderprint/'+ids.toString());
+        }
+    }
+
+    function del(id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#okDel").unbind("click");
+        dialog.find("#okDel").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/platform/logistics/order/delete/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null,false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+    function delCheck() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            var dialog = $("#dialogDelete");
+            dialog.modal("show");
+            dialog.find("#okDel").unbind("click");
+            dialog.find("#okDel").bind("click", function (event) {
+                var btn = $(this);
+                btn.button("loading");
+                $.post("${base}/platform/logistics/order/delete", {ids: ids.toString()}, function (data) {
+                    if (data.code == 0) {
+                        datatable.ajax.reload(null,false);
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                    btn.button("reset");
+                    dialog.modal("hide");
+                }, "json");
+            });
+        } else {
+            Toast.warning("${msg['globals.button.delete.select']}");
+        }
+    }
+    $(function () {
+        initDatatable();
+        // $('[name="otype"]').bootstrapSwitch({
+        //     onText:"内",
+        //     offText:"外",
+        //     onColor:"primary",
+        //     offColor:"danger",
+        //     size:"norma",
+        //     onSwitchChange:function(event,state){
+        //     }
+        // });
+        bindVehicleDDL("紧急程度","emergency","emergencyname","emergency");
+        bindVehicleDDL("业务类型","btype","btypename","btype");
+        $("#dialogDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+    });
+</script>
+<%}%>

@@ -1,0 +1,516 @@
+<%
+layout("/layouts/platform.html"){
+var getSelect = false;
+var getEdit = false;
+var getDelete = false;
+if(@shiro.hasPermission('platform.base.person.select')){
+getSelect=true;
+}
+if(@shiro.hasPermission('platform.base.person.edit')){
+getEdit=true;
+}
+if(@shiro.hasPermission('platform.base.person.delete')){
+getDelete=true;
+}
+%>
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button">
+            <% if(@shiro.hasPermission('platform.base.person.add')){ %>
+            <a id="add" class="btn btn-primary navbar-btn" href="${base}/platform/base/person/add" data-pjax><i
+                    class="ti-plus"></i> ${msg['globals.button.add']}</a>
+            <%}%>
+            <% if(@shiro.hasPermission('platform.base.person.delete')){ %>
+            <button class="btn btn-danger navbar-btn" onclick="delCheck()"><i class="ti-close"></i>
+                ${msg['globals.button.delete.more']}
+            </button>
+            <%}%>
+            <% if(@shiro.hasPermission('platform.base.person.bindWxuser')){ %>
+            <button id="bindWxuser" class="btn btn-primary navbar-btn" data-toggle="modal" data-target="#wxUserData"><i
+                    class="ti-themify-favicon-alt"></i> 绑定企业微信
+            </button>
+            <%}%>
+            <% if(@shiro.hasPermission('platform.base.person.unbindWxuser')){ %>
+            <button id="unbindWxuser" class="btn btn-primary navbar-btn" data-toggle="modal" onclick="unbindWx()"><i
+                    class="ti-unlink"></i> 解绑企业微信
+            </button>
+            <%}%>
+
+        </div>
+        <div class="pull-right offscreen-right">
+            <button class="btn btn-primary navbar-btn" onclick="sublime.toggleFilter('.cd-panel')"><i
+                    class="fa fa-sliders"></i> 筛选
+            </button>
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border">
+            <table class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                <tr>
+                    <th>${msg['base.person.column.personnum']}</th>
+                    <th>${msg['base.person.column.personname']}</th>
+
+                    <th>电话</th>
+                    <th>个人微信号</th>
+                    <th>工号</th>
+                    <th>企业微信号</th>
+                    <th>所属组织</th>
+                    <th>所属机场</th>
+                    <!--
+                     <th>所属部门</th>
+                     <th>所属岗位</th>
+                     <th>所属职务</th>
+                     <th>地点</th>-->
+                    <th>${msg['globals.table.column.operation']}</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['globals.button.delete']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['globals.button.delete.notice']}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}
+                </button>
+                <button id="okDel" type="button" class="btn btn-primary"
+                        data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="cd-panel from-right">
+    <form id="selectForm">
+        <header class="cd-panel-header">
+            <h4>高级筛选</h4>
+        </header>
+        <div class="cd-panel-container">
+            <div class="cd-panel-content shadow">
+                <div class="form-group">
+                    <label for="personnum">编号</label>
+                    <input type="text" id="personnum" name="personnum" onclick="this.value=''" class="form-control"
+                           placeholder="编号" autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="personname">姓名</label>
+                    <input type="text" id="personname" name="personname" onclick="this.value=''" class="form-control"
+                           placeholder="姓名">
+                </div>
+                <div class="form-group">
+                    <label for="jobNumber">工号</label>
+                    <input type="text" id="jobNumber" name="jobNumber" onclick="this.value=''" class="form-control"
+                           placeholder="工号">
+                </div>
+                <div class="form-group">
+                    <label for="tel">电话号码</label>
+                    <input type="text" id="tel" name="tel" onclick="this.value=''" class="form-control"
+                           placeholder="电话号码">
+                </div>
+                <button id="searchBtn" type="button" class="btn btn-primary">查询</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal fade" id="wxUserData" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 700px;">
+            <section class="content-wrap bg-white">
+                <header class="header navbar bg-white shadow">
+                    <div class="pull-left offscreen-left" style="padding-top:15px;">
+                        <div class="form-group">
+                            <input id="name1" class="form-control" type="text" onclick="this.value='';"
+                                   placeholder="请输入微信人员名称">
+                        </div>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                </header>
+
+                <div class=panel-body style="padding-top: 50px;">
+
+                    <div class="table-responsive no-border" style="padding-top: 5px;">
+
+                        <table id="datatable_selectWxuser"
+                               class="table table-bordered table-striped mg-t datatable_selectWxuser">
+                            <thead>
+                            <tr>
+                                <th>微信账号</th>
+                                <th>微信姓名</th>
+                                <th>手机号</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="mSubmit()">确定
+                    </button>
+                </div>
+        </div>
+        </section>
+    </div>
+    <!-- <div class="modal-content">
+         <header class="header navbar bg-white shadow">
+             <div class="pull-left offscreen-left" style="padding-top:15px;">
+                     <input id="name1" class="form-control" type="text" onclick="this.value='';" placeholder="请输入微信人员名称">
+             </div>
+             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                 &times;
+             </button>
+             <h4 class="pull-right modal-title" id="myModalLabel">
+                 选择微信账号
+             </h4><div class="modal-body">
+             <table id="datatable_selectWxuser"
+                    class="table table-bordered table-striped mg-t datatable_selectWxuser">
+                 <thead>
+                 <tr>
+                     <th>微信账号</th>
+                     <th>微信姓名</th>
+                     <th>手机号</th>
+                 </tr>
+                 </thead>
+             </table>
+         </div>
+         </header>
+
+         <div class="modal-footer">
+             <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+             </button>
+             <button type="button" class="btn btn-primary" onclick="mSubmit()">确定
+             </button>
+         </div>
+     </div>-->
+</div>
+</div>
+<script language="JavaScript">
+
+    var datatable;
+
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching": false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/plugins/datatables/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/base/person/data",
+                "type": "post",
+                "data": function (d) {
+                    var arr = $('#selectForm').serialize();
+                    arr = decodeURIComponent(arr, true);//防止中文乱码
+                    arr = DataDeal.formToJson(arr);//转化为json
+                    d.selectForm = arr;
+                    d.jobNumber = $("#jobNumber").val();
+                    d.tel = $("#tel").val();
+                }
+            },
+            "order": [[1, "asc"]],
+            "columns": [
+                {
+                    "data": "personnum", "bSortable": true, "render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                },
+                {
+                    "data": "personname", "bSortable": true, "render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                },
+
+                {
+                    "data": "tel", "bSortable": true, "render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                },
+                {
+                    "data": "wxNumber", "bSortable": true, "render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                },
+                {
+                    "data": "jobNumber", "bSortable": true, "render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                },
+                {
+                    "data": "wxUserid", "bSortable": true, "render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                },
+                {
+                    "data": "unitid", "bSortable": true, "render": function (data, type, row, meta) {
+                        return row.unit ? row.unit.name : "";
+                    }
+                },
+                {
+                    "data": "airportid", "bSortable": true, "render": function (data, type, row, meta) {
+                        return row.base_airport ? row.base_airport.airportname : "";
+                    }
+                },
+                /*
+              {"data": "deptid", "bSortable": true,"render": function (data, type, row, meta) {
+                      return row.base_dept ? row.base_dept.deptname : "";
+              }},
+           {"data": "base_post.postname", "bSortable": false,"render": function (data, type, row, meta) {
+                      return data ? data : "";
+              }},
+              {"data": "base_job.jobname", "bSortable": false,"render": function (data, type, row, meta) {
+                      return data ? data : "";
+              }},
+              {"data": "base_place.placename", "bSortable": false,"render": function (data, type, row, meta) {
+                      return data ? data : "";
+              }},*/
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+
+                            ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+
+                            ((${getSelect}) ? '<li><a href="${base}/platform/base/person/detail/' + row.id + '" data-toggle="modal" data-target="#dialogDetail">${msg["globals.button.detail"]}</a></li>' : "") +
+
+                            ((${getEdit}) ? '<li><a href="${base}/platform/base/person/edit/' + row.id + '" data-pjax>${msg["globals.button.update"]}</a></li>' : "") +
+
+                            '<li class="divider"></li>' +
+
+                            ((${getDelete}) ? '<li><a href="javascript:;" onclick="del(\'' + row.id + '\')">${msg["globals.button.delete"]}</a></li>' : "") +
+
+                            '</ul></div>';
+                    },
+                    "targets": 8
+                }
+            ]
+        });
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    }
+
+    function getdata(data) {
+        data = data || "";
+        if (data == "") {
+            return "";
+        } else {
+            return data;
+        }
+    }
+
+    function del(id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#okDel").unbind("click");
+        dialog.find("#okDel").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/platform/base/person/delete/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null, false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+
+    function delCheck() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            var dialog = $("#dialogDelete");
+            dialog.modal("show");
+            dialog.find("#okDel").unbind("click");
+            dialog.find("#okDel").bind("click", function (event) {
+                var btn = $(this);
+                btn.button("loading");
+                $.post("${base}/platform/base/person/delete", {ids: ids.toString()}, function (data) {
+                    if (data.code == 0) {
+                        datatable.ajax.reload(null, false);
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                    btn.button("reset");
+                    dialog.modal("hide");
+                }, "json");
+            });
+        } else {
+            Toast.warning("${msg['globals.button.delete.select']}");
+        }
+    }
+
+    function unbindWx() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            var wxUids = [];
+            $.each(chks, function (i, n) {
+                ids.push(n.id);
+                wxUids.push(n.wxUserid)
+            });
+            swal({
+                title: "您确定解绑该员工企业微信吗?",
+                text: "解绑后,员工便不能收到系统微信消息",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                if (willDelete) {
+                    $.post("${base}/platform/base/person/unbindWx", {ids: ids.toString(),wxUids:wxUids.toString()}, function (data) {
+                        if (data.code == 0) {
+                            Toast.success(data.msg)
+                            wxusertable.ajax.reload();
+                            datatable.ajax.reload();
+                        } else if(data.code == 2){
+                            Toast.warning(data.msg);
+                        }else{
+                            Toast.error(data.msg)
+                        }
+                    }, "json");
+                } else {
+                    swal.close();
+                }
+        });
+        } else {
+            Toast.warning("至少选择一条数据");
+        }
+    }
+
+    $(function () {
+        initDatatable();
+        selectwxuser();
+        $("#dialogDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+        $("#bindWxuser").on("click", function () {
+            if (datatable.rows('.selected').data().length != 1) {
+                Toast.warning("请选择一条数据");
+                return false;
+            }
+        });
+    });
+    var datatable;
+    var wxusertable;
+
+    function mSubmit() {
+        var users = wxusertable.rows('.selected').data();
+        if (users.length != 1) {
+            Toast.warning("请选择一条数据操作");
+            return false;
+        } else {
+            var userids = [];
+            $.each(wxusertable.rows('.selected').data(), function (i, n) {
+                userids.push(n.userid);
+            });
+        }
+        var chks = datatable.rows('.selected').data();
+        if (chks.length == 0) {
+            Toast.warning("请选择一个人员操作");
+            return false;
+        } else {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+        }
+        $.post("${base}/platform/base/person/bindWxuser", {
+            id: ids[0].toString(),
+            wxuserid: userids[0].toString()
+        }, function (data) {
+            if (data.code == 0) {
+                Toast.success(data.msg);
+                datatable.ajax.reload();
+                wxusertable.ajax.reload();
+            } else {
+                Toast.error(data.msg);
+            }
+            $("#wxUserData").modal("hide");
+        }, "json");
+
+    }
+
+    function selectwxuser() {
+        wxusertable = $('#datatable_selectWxuser').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching": false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/plugins/datatables/cn.json"
+            },
+            "ajax": {
+                "url": "${base}/platform/sys/wx/user/getDatabyParam",
+                "type": "post",
+                "data": function (d) {
+                    d.isBindPerson = "0" //只显示未绑定的微信账号
+                    d.keyword = $("#name1").val();
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "userid", "bSortable": true},
+                {"data": "name", "bSortable": true},
+                {"data": "mobile", "bSortable": true},
+            ]
+        });
+
+        wxusertable.on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                wxusertable.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        $("#name1").on('keyup', function () {
+            wxusertable.ajax.reload();
+        });
+    }
+
+
+</script>
+<%}%>

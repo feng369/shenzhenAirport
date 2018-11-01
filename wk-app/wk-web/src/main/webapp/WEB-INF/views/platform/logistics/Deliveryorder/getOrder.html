@@ -1,0 +1,131 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/logistics/Deliveryorder" id="goBack" data-pjax><i
+                class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+<div class="content-wrap">
+    <div class="wrapper">
+        <section class="panel panel-form">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        订单列表<input type="hidden" id="deliveryorderid" name="deliveryorderid"
+                                   value="${obj.deliveryorderid}">
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <ul id="list">
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 900px">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $.ajax({
+            "url": "${base}/platform/logistics/order/getdvorderList",
+            type: 'post',
+            dataType: 'json',
+            data: {deliveryorderid: $('#deliveryorderid').val()},
+            beforeSend: LoadFunction, //加载执行方法
+            error: erryFunction,  //错误执行方法
+            success: succFunction //成功执行方法
+        })
+
+        function LoadFunction() {
+            $("#list").html('加载中...');
+        }
+
+        function erryFunction() {
+            alert("error");
+        }
+
+        function succFunction(data) {
+            $('#list').html("");
+            data.forEach(function (data, i) {
+                //循环获取数据
+                var orderid = data.id;//订单id
+                var ordernum = data.ordernum;//订单编号
+                var emergency = "";//紧急程度
+                var timerequest = data.timerequest;//预计送达时间
+                var sex = data.startstock;
+                var customer = data.customer.customername;
+                var corlor = "panel-primary";
+                var person = "";
+                var start = "";
+                var end = "";
+                var orderStatus = data.pstatus;
+                if (typeof(data.dict_emergency) != "undefined") {
+                    if (data.dict_emergency.code == "emergency.urgent") {
+                        corlor = "panel-warning";
+                    } else if (data.dict_emergency.code == "emergency.aog") {
+                        corlor = "panel-danger";
+                    }
+                    emergency = data.dict_emergency.name;
+                }
+                if (typeof(data.place_startstock) != "undefined") {
+                    start = data.place_startstock.placename;
+                }
+                if (typeof(data.place_endstock) != "undefined") {
+                    end = data.place_endstock.placename;
+                }
+                if (typeof(data.logisticsDeliveryorder) != "undefined") {
+                    if (typeof(data.logisticsDeliveryorder.person) != "undefined") {
+                        person = data.logisticsDeliveryorder.person.personname;
+                    }
+                }
+
+                temp = "<div class=\"col-sm-6 col-md-3\"><div  class=\"panel " + corlor + " \">" +
+                    "<div class=\"panel-heading\">" + customer + " &nbsp;&nbsp;<span id='" + data.id + "' class='label label-success'></span></div>" +
+                    "<div class=\"panel-body\">" +
+                    "<p><label>订单编号：</label>" + ordernum + "</p>" +
+                    "<p><label>出发地：</label>" + start + "</p>" +
+                    "<p><label>目的地：</label>" + end + "</p>" +
+                    "<p><label>业务类型：</label>" + data.dict_btype.name + "</p>" +
+                    "<p><label>紧急程度：</label>" + emergency + "</p>" +
+                    "<p><label>预计送达时间：</label>" + timerequest + "</p>" +
+                    "<p><label>配送员：</label>" + person + "</p>" +
+                    "</div><div class='panel-footer text-right'><div class='btn-group'>" +
+                    "<a href='${base}/platform/logistics/order/detail/" + data.id + " ' class='btn btn-default'  data-toggle='modal' data-target='#dialogDetail' title='查看详情'><i class='ti-eye'></i></a>" +
+                    "<a href='${base}/platform/logistics/Deliveryorderentry/detail/" + data.id + " ' class='btn btn-default'   title='跟踪记录'><i class='ti-truck'></i></a>" +
+                    "<a href='${base}/platform/base/personpool/ppool/" + data.id + " ' class='btn btn-default'  data-toggle='modal' data-target='#dialogDetail' title='改派'><i class='ti-user'></i></a>" +
+                    "</div></div></div></div>";
+                $('#list').append(temp);
+                var datanow = new Date();
+                timerequest = new Date(timerequest);
+                if (timerequest) {
+                    if (orderStatus == "8") {
+                        $("#" + data.id).html(" 已完成 ");
+                    } else {
+                        timerequest = new Date(timerequest);
+                        var timeout = (timerequest.getTime() - datanow.getTime()) / 1000
+                        if (timeout <= 0) {
+                            $("#" + data.id).html(" 已超时 ");
+                            $("#" + data.id).toggleClass("label label-danger")
+                        } else if (timeout < 600) {
+                            $("#" + data.id).toggleClass("label-warning")
+                            $("#" + data.id).countDown(timeout);
+                        } else {
+                            $("#" + data.id).countDown(timeout);
+                        }
+                    }
+                }
+            });
+        }
+    });
+
+
+</script>
+<%}%>
+

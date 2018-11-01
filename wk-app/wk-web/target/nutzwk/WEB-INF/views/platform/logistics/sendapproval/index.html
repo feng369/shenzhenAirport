@@ -1,0 +1,360 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button">
+            <!--<a id="add" class="btn btn-primary navbar-btn" href="${base}/platform/logistics/sendapproval/add" data-pjax><i class="ti-plus"></i> ${msg['globals.button.add']}</a>-->
+            <!--<button class="btn btn-danger navbar-btn" onclick="delCheck()"><i class="ti-close"></i> ${msg['globals.button.delete.more']}</button>-->
+            <button id="btnapproval" class="btn btn-primary navbar-btn" onclick="sucApproval();"><i class="ti-comments"></i>审批</button>
+            <!--<button class="btn btn-danger navbar-btn" onclick="faiApproval();"><i class="ti-comments"></i>审批不通过</button>-->
+            <select id="pstatusname"   name="pstatusname" class="navbar-text">
+                <option value='0' selected>未审批</option>
+                <option value='1'>已审批</option>
+            </select>
+            <input type="hidden" id="pstatus" name="pstatus" value="0">
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border">
+            <table class="table table-bordered table-striped mg-t datatable" style="white-space: nowrap; ">
+                <thead>
+                    <tr>
+                        <th>操作</th>
+                        <th>状态</th>
+                        <th>申请人</th>
+                            <th>厂家</th>
+                            <th>运输方式</th>
+                            <th>费用费用类型</th>
+                            <th>临时报价</th>
+                            <th>协议号</th>
+                            <th>免单号</th>
+                            <th>审批人</th>
+                        <th>审批结果</th>
+                        <th>审批日期</th>
+                        <!--<th>查看合同</th>-->
+
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['globals.button.delete']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['globals.button.delete.notice']}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button id="okDel" type="button" class="btn btn-primary" data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<!-- 审批 -->
+<div id="dialogApproval" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 800px;">
+        <div class="modal-content" style="width: 800px;">
+            <section class="content-wrap bg-white">
+                <header class="header navbar bg-white shadow">
+                    <div class="pull-left offscreen-left" style="padding-top:15px;">
+                        <div class="form-group">
+                            <label>审批</label>
+                        </div>
+                    </div>
+                    <div class="pull-right offscreen-right btn-group tool-button">
+                        <a class="btn btn-primary navbar-btn" onclick="_selectApproval();">确定</a>
+                    </div>
+                </header>
+                <br>
+                <div class=panel-body style="padding-top: 50px;">
+                    <div class="row mb10">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="aresultname" class="col-sm-2 control-label">审批结果</label>
+                                <div class="col-sm-5">
+                                    <select id="aresultname"   name="aresultname" class="navbar-btn">
+                                        <option value='1' selected>通过</option>
+                                        <option value='0'>不通过</option>
+                                    </select>
+                                    <input type="hidden" id="aresult" value="1" class="form-control" name="aresult" placeholder="">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="suggest" class="col-sm-2 control-label">审批意见</label>
+                                <div class="col-sm-5">
+                                    <textarea rows="5" id="suggest" class="form-control" name="suggest" placeholder="请填写审批意见"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<script language="JavaScript">
+    var datatable;
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "scrollX": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/plugins/datatables/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/logistics/sendapproval/data",
+                "type": "post",
+                "data": function (d) {
+                    d.pstatus=$("#pstatus").val()
+                }
+            },
+            "order": [[1, "desc"]],
+            "columns": [
+                {"data": "", "bSortable": true},
+                {"data": "pstatus", "bSortable": true,"render": function (data, type, row, meta) {
+//                    alert("1:"+data);
+                    data = data.toString() || "";
+                    if(data == ""){return "";}
+                    else if(data=="0"){return "未审批";}
+                    else if(data=="1"){return "已审批";}
+                }},
+                {"data": "apply.personname", "bSortable": true,"render": function (data, type, row, meta) {
+                    data = data || "";
+                    if(data == ""){return "";}else{return data;}
+                }},
+                    {"data": "plan.receivename", "bSortable": true,"render": function (data, type, row, meta) {
+                        data = data || "";
+                        if(data == ""){return "";}else{return data;}
+                    }},
+                {"data": "plan.tansporttype", "bSortable": true,"render": function (data, type, row, meta) {
+                    data = data || "";
+                    if(data == ""){return "";}else{
+                        return gettransname(data);
+//                        return data;
+                    }
+                }},
+                {"data": "plan.costtype", "bSortable": true,"render": function (data, type, row, meta) {
+                    data = data || "";
+                    if(data == ""){return "";}else{
+                        return getcostname(data);
+//                        return data;
+                    }
+                }},
+                {"data": "plan.tempprice", "bSortable": true,"render": function (data, type, row, meta) {
+                    data = data || "";
+                    if(data == ""){return "";}else{
+
+                        return data;}
+                }},
+                {"data": "plan.protocolnum", "bSortable": true,"render": function (data, type, row, meta) {
+                    data = data || "";
+                    if(data == ""){return "";}else{return data;}
+                }},
+                {"data": "plan.freenum", "bSortable": true,"render": function (data, type, row, meta) {
+                    data = data || "";
+                    if(data == ""){return "";}else{return data;}
+                }},
+                {"data": "person.personname", "bSortable": true,"render": function (data, type, row, meta) {
+                    data = data || "";
+                    if(data == ""){return "";}else{return data;}
+                }},
+                    {"data": "aresult", "bSortable": true,"render": function (data, type, row, meta) {
+                        data = data || "";
+                        if(data == ""){return "";}else if(data=="1"){return "通过";}else{ return  "不通过";}
+                    }},
+                    {"data": "approvaldate", "bSortable": true,"render": function (data, type, row, meta) {
+                        data = data || "";
+                        if(data == ""){return "";}else{return data;}
+                    }},
+            ],
+            "columnDefs": [
+//                {
+//                    "render":function(data, type, row){
+//                        return '<a href="javascript:;" data-toggle="modal" data-target="#dialogDetail">查看合同</a>';
+//                    },
+//                    "targets":12
+//                },
+                {
+                    "render": function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                                ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                                '<li><a href="${base}/platform/logistics/sendapproval/detail/' + row.id + '" data-toggle="modal" data-target="#dialogDetail">查看合同</a></li>' +
+//                                '<li><a href="${base}/platform/logistics/sendapproval/edit/' + row.id + '" data-pjax>${msg["globals.button.update"]}</a></li>' +
+                                '</ul></div>';
+                    },
+                    "targets": 0
+                }
+            ]
+        });
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    }
+
+    function gettransname(transid){
+//        var name="";
+//        $.ajaxSettings.async=false;
+//        $.post("${base}/platform/sys/dict/getNamebyId",{"id":transid},function(d){
+////            alert(d);
+//            name=d;
+//        });
+//        return name;
+        if(transid=="0"){
+            return "空运";
+        }
+        else if(transid=="1"){
+            return "陆运";
+        }
+        else{
+            return "上门自提";
+        }
+    }
+
+    function getcostname(costid){
+        var name="";
+        $.ajaxSettings.async=false;
+        $.post("${base}/platform/sys/dict/getNamebyId",{"id":costid},function(d){
+//            alert(d);
+            name=d;
+        });
+        return name;
+    }
+
+    function del(id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#okDel").unbind("click");
+        dialog.find("#okDel").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/platform/logistics/sendapproval/delete/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null,false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+    function delCheck() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            var dialog = $("#dialogDelete");
+            dialog.modal("show");
+            dialog.find("#okDel").unbind("click");
+            dialog.find("#okDel").bind("click", function (event) {
+                var btn = $(this);
+                btn.button("loading");
+                $.post("${base}/platform/logistics/sendapproval/delete", {ids: ids.toString()}, function (data) {
+                    if (data.code == 0) {
+                        datatable.ajax.reload(null,false);
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                    btn.button("reset");
+                    dialog.modal("hide");
+                }, "json");
+            });
+        } else {
+            Toast.warning("${msg['globals.button.delete.select']}");
+        }
+    }
+    function sucApproval(){
+
+        var dialog = $("#dialogApproval");
+        dialog.modal("show");
+
+    }
+
+    function _selectApproval(){
+        var chk = datatable.rows('.selected').data();
+//        alert(chk.length);
+        if(chk.length>0){
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            var params={
+                "ids":ids.toString(),
+                "aresult":$("#aresult").val(),
+                "suggest":$("#suggest").val()
+            };
+            $.post("${base}/platform/logistics/sendapproval/setApproval",
+                params,
+                function (data) {
+                if(data){
+                    Toast.success("审批完毕");
+                }else{alert(data);}
+            }, "json");
+            $("#dialogApproval").modal("hide");
+            datatable.ajax.reload();
+        }
+        else{
+            Toast.warning("请选择一条记录");
+        }
+
+    }
+
+    $(function () {
+        $("#pstatusname").on("change",function() {
+            $("#pstatus").val($(this).val());
+            if($(this).val()=="1")
+            {
+                $("#btnapproval").hide();
+            }else{
+                $("#btnapproval").show();
+            }
+            datatable.ajax.reload();
+            });
+        $("#aresultname").on("change",function() {
+            $("#aresult").val($(this).val());
+            datatable.ajax.reload();
+        });
+        initDatatable();
+        $("#dialogDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+    });
+</script>
+<%}%>

@@ -1,0 +1,333 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/base/airmeterial" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/base/airmeterial/addDo" method="post">
+                <div class="row mb10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="meterialnum" class="col-sm-2 control-label">${msg['base.airmeterial.column.meterialnum']}</label>
+                            <div class="col-sm-8" id="numDiv">
+                            <input type="text" id="meterialnum" class="form-control" name="meterialnum" data-parsley-required="true" validate="true" placeholder="${msg['base.airmeterial.column.meterialnum']}">
+                                <span style="color: red" hidden>该编码已经存在</span>
+                            </div>
+                            <img src="/assets/img/loading.gif" hidden>
+                        </div>
+                        <div class="form-group">
+                            <label for="meterialname" class="col-sm-2 control-label">${msg['base.airmeterial.column.meterialname']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="meterialname" class="form-control" name="meterialname" data-parsley-required="true" validate="true" placeholder="${msg['base.airmeterial.column.meterialname']}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="meterialtypeid" class="col-sm-2 control-label">类型</label>
+
+                            <div class="col-sm-8">
+                                <select id="meterialtypeid" name="meterialtypeid" class="form-control">
+
+                                </select>
+                            </div>
+                            <input type="hidden" id="meterialtypeId" name="meterialtypeId" value="">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="manufactor" class="col-sm-2 control-label">${msg['base.airmeterial.column.manufactor']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="manufactor" class="form-control" name="manufactor" data-parsley-required="true" validate="true" placeholder="${msg['base.airmeterial.column.manufactor']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="meterialmodel" class="col-sm-2 control-label">${msg['base.airmeterial.column.meterialmodel']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="meterialmodel" class="form-control" name="meterialmodel" data-parsley-required="true" validate="true" placeholder="${msg['base.airmeterial.column.meterialmodel']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="meteritalunit" class="col-sm-2 control-label">${msg['base.airmeterial.column.meteritalunit']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="meteritalunit" class="form-control" name="meteritalunit" data-parsley-required="true" validate="true" placeholder="${msg['base.airmeterial.column.meteritalunit']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="meteritalspec" class="col-sm-2 control-label">${msg['base.airmeterial.column.meteritalspec']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="meteritalspec" class="form-control" name="meteritalspec" data-parsley-required="false" placeholder="${msg['base.airmeterial.column.meteritalspec']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="meteritallength" class="col-sm-2 control-label">${msg['base.airmeterial.column.meteritallength']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="meteritallength" class="form-control" name="meteritallength" data-parsley-pattern="/^[0-9]+([.]{1}[0-9]+){0,1}$/" data-parsley-pattern-message="请输入正整数或小数"  validate="true" value="0" placeholder="${msg['base.airmeterial.column.meteritallength']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="meteritalwidth" class="col-sm-2 control-label">${msg['base.airmeterial.column.meteritalwidth']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="meteritalwidth" class="form-control" name="meteritalwidth" data-parsley-pattern="/^[0-9]+([.]{1}[0-9]+){0,1}$/" data-parsley-pattern-message="请输入正整数或小数" validate="true" value="0" placeholder="${msg['base.airmeterial.column.meteritalwidth']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="meteritalhigh" class="col-sm-2 control-label">${msg['base.airmeterial.column.meteritalhigh']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="meteritalhigh" class="form-control" name="meteritalhigh" data-parsley-pattern="/^[0-9]+([.]{1}[0-9]+){0,1}$/" data-parsley-pattern-message="请输入正整数或小数" validate="true" value="0" placeholder="${msg['base.airmeterial.column.meteritalhigh']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="meteritalweight" class="col-sm-2 control-label">${msg['base.airmeterial.column.meteritalweight']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="meteritalweight" class="form-control" name="meteritalweight" data-parsley-pattern="/^[0-9]+([.]{1}[0-9]+){0,1}$/" data-parsley-pattern-message="请输入正整数或小数" validate="true" value="0" placeholder="${msg['base.airmeterial.column.meteritalweight']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="ipack" class="col-sm-2 control-label">${msg['base.airmeterial.column.haspack']}</label>
+                            <div class="col-sm-8">
+                                <select id="ipack" name="ipack" class="form-control">
+
+                                </select>
+                            </div>
+                            <input type="hidden" id="haspack" name="haspack" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="capacity" class="col-sm-2 control-label">${msg['base.airmeterial.column.capacity']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="capacity" class="form-control" name="capacity" data-parsley-required="false" validate="true" placeholder="${msg['base.airmeterial.column.capacity']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mincarrier" class="col-sm-2 control-label">${msg['base.airmeterial.column.mincarrier']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="mincarrier" class="form-control" name="mincarrier" data-parsley-type="integer" data-parsley-required="true" value="1"  placeholder="${msg['base.airmeterial.column.mincarrier']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="singlecarrynum" class="col-sm-2 control-label">${msg['base.airmeterial.column.singlecarrynum']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="singlecarrynum" class="form-control" name="singlecarrynum" data-parsley-pattern="/^[0-9]+([.]{1}[0-9]+){0,1}$/" data-parsley-pattern-message="请输入正整数或小数" value="1" placeholder="${msg['base.airmeterial.column.singlecarrynum']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="singleloading" class="col-sm-2 control-label">${msg['base.airmeterial.column.singleloading']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="singleloading" class="form-control" name="singleloading" data-parsley-required="false" placeholder="${msg['base.airmeterial.column.singleloading']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="singleunloading" class="col-sm-2 control-label">${msg['base.airmeterial.column.singleunloading']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="singleunloading" class="form-control" name="singleunloading" data-parsley-required="false" placeholder="${msg['base.airmeterial.column.singleunloading']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicletypeid" class="col-sm-2 control-label">${msg['base.airmeterial.column.vehicletypeId']}</label>
+                            <div class="col-sm-8">
+                                <select id="vehicletypeid" name="vehicletypeid" class="form-control">
+
+                                </select>
+                            </div>
+                            <input type="hidden" id="vehicletypeId" name="vehicletypeId" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="iforklift" class="col-sm-2 control-label">${msg['base.airmeterial.column.hasforklift']}</label>
+                            <div class="col-sm-8">
+                                <select id="iforklift" name="iforklift" class="form-control">
+
+                                </select>
+                            </div>
+                            <input type="hidden" id="hasforklift" name="hasforklift" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="describ" class="col-sm-2 control-label">${msg['base.airmeterial.column.describ']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="describ" class="form-control" name="describ"  data-parsley-required="false" placeholder="${msg['base.airmeterial.column.describ']}">
+                            </div>
+                        </div>
+                        <!--<div class="form-group">-->
+                            <!--<label for="creater" class="col-sm-2 control-label">${msg['base.airmeterial.column.creater']}</label>-->
+                            <!--<div class="col-sm-8">-->
+                            <!--<input type="text" id="creater" class="form-control" name="creater" data-parsley-required="false" placeholder="${msg['base.airmeterial.column.creater']}">-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="form-group">-->
+                            <!--<label for="createTime" class="col-sm-2 control-label">${msg['base.airmeterial.column.createTime']}</label>-->
+                            <!--<div class="col-sm-8">-->
+                            <!--<input type="text" id="createTime" class="form-control" name="createTime" data-parsley-required="false" placeholder="${msg['base.airmeterial.column.createTime']}">-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+                <div class='stepy-errors text-left' ></div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+<script language="JavaScript">
+    //20180402zhf1441
+    var flag = false;
+    $("#numDiv input").blur(function () {
+        var numVal = $(this).val();
+        $.ajax({
+            url:"${base}/platform/base/airmeterial/countByNum",
+            data:{num:numVal},
+            type:"POST",
+            beforeSend:function () {
+                $("#numDiv").next("img").show()
+            },
+            success:function (data) {
+                if(data > 0){
+                    flag = true;
+                    $("#numDiv").addClass("has-error");
+                    $("#numDiv span").show();
+                }else{
+                    flag = false;
+                    $("#numDiv span").hide();
+                    $("#numDiv").removeClass("has-error")
+                }
+            },
+            complete:function () {
+                $("#numDiv").next("img").hide()
+            }
+        });
+    });
+
+
+
+    $(document).ready(function () {
+
+        bindVehicleDDL("航材类型","metType","meterialtypeid","meterialtypeId");
+
+        bindVehicleDDL("打包","packing","ipack","haspack");
+
+        bindVehicleDDL("配送使用车辆类型","vehicleType","vehicletypeid","vehicletypeId");
+
+        bindVehicleDDL("叉车","forklift","iforklift","hasforklift");
+
+        $("#meterialtypeid").on("change",function(){
+            $("#meterialtypeId").val($(this).val());
+        });
+
+        $("#ipack").on("change",function(){
+            $("#haspack").val($(this).val());
+        });
+
+        $("#vehicletypeid").on("change",function(){
+            $("#vehicletypeId").val($(this).val());
+        });
+
+        $("#iforklift").on("change",function(){
+            $("#hasforklift").val($(this).val());
+        });
+
+        $(".parsley-form").validate({
+            errorPlacement: function (error) {
+                //$(".parsley-form").append("<div class='stepy-errors'></div>")
+                $(".stepy-errors").append(error);
+
+
+            },
+            rules: {
+                meterialnum:"required",
+                meterialname:"required",
+                manufactor:"required",
+                meterialmodel:"required",
+                meteritalunit:"required",
+                meteritallength:"required",
+                meteritalwidth:"required",
+                meteritalhigh:"required",
+                meteritalweight:"required",
+                capacity:"required"
+
+            },
+            messages: {
+                meterialnum:{
+                    required:"件号必须填写"
+                },
+                meterialname:{
+                    required:"名称必须填写"
+                },
+                manufactor:{
+                    required:"厂家必须填写"
+                },
+                meterialmodel:{
+                    required:"型号必须填写"
+                },
+                meteritalunit:{
+                    required:"单位必须填写"
+                },
+                meteritallength:{
+                    required:"长度(厘米)必须填写"
+                },
+                meteritalwidth:{
+                    required:"宽度(厘米)必须填写"
+                },
+                meteritalhigh:{
+                    required:"高度(厘米)必须填写"
+                },
+                meteritalweight:{
+                    required:"重量(千克)必须填写"
+                },
+                capacity:{
+                    required:"容纳量（标准单位）必须填写"
+                }
+            }
+        });
+
+        $('#addForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                if(flag){
+                    $("#numDiv input").focus();
+                    $("#numDiv").addClass("has-error");
+                    $("#numDiv span").show();
+                    Toast.warning("该编码已经存在")
+                    return false;
+                }else{
+                    $("#numDiv").removeClass("has-error")
+                }
+
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    form.resetForm();
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+                resetDefaltData();
+            }
+        });
+
+        function resetDefaltData(){
+            $("#mincarrier").val("1");
+            $("#singlecarrynum").val("1");
+            $("#meteritallength").val("0");
+            $("#meteritalwidth").val("0");
+            $("#meteritalhigh").val("0");
+            $("#meteritalweight").val("0");
+        }
+    });
+</script>
+<%}%>
+
+

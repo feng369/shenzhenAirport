@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html class="signin no-js" lang="${lang!}" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="${AppName!}">
+    <meta name="keywords" content="nutz,nutzwk">
+    <title>${AppName!}</title>
+    <link rel="icon" href="${base!}/assets/img/bvcloud/BestVision.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="${base!}/assets/img/bvcloud/BestVision.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="${base!}/assets/plugins/bvcloud/login.css">
+    <link rel="stylesheet" href="${base!}/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${base!}/assets/css/font-awesome.css">
+    <link rel="stylesheet" href="${base!}/assets/css/themify-icons.css">
+    <link rel="stylesheet" href="${base!}/assets/css/animate.min.css">
+    <link rel="stylesheet" href="${base!}/assets/css/skins/palette.css">
+    <link rel="stylesheet" href="${base!}/assets/css/fonts/font.css">
+    <link rel="stylesheet" href="${base!}/assets/css/main.css">
+
+    <!--[if lt IE 9]>
+    <script src="${base!}/assets/js/html5shiv.js"></script>
+    <script src="${base!}/assets/js/respond.min.js"></script>
+    <script src="${base!}/assets/js/json2.js"></script>
+    <![endif]-->
+    <script src="${base!}/assets/plugins/modernizr.js"></script>
+    <script src="${base!}/assets/plugins/jquery-1.11.1.min.js"></script>
+    <script src="${base!}/assets/js/jquery.pjax.js"></script>
+    <script src="${base!}/assets/js/sso/RSA.js"></script>
+    <script src="${base!}/assets/js/sso/BigInt.js"></script>
+    <script src="${base!}/assets/js/sso/Barrett.js"></script>
+    <script src="${base!}/assets/js/qrcode.js"></script>
+
+
+</head>
+
+
+<body id="wrap">
+<div class="modal fade bs-example-modal-md" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="gridSystemModalLabel">扫码下载</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="row" align="center">
+                    <div class="col-sm-6">
+                        <div class="cc ti-android"> 配送端</div>
+                        <img src="${base!}/assets/img/bvcloud/iAirportSZ.png" class="ad">
+                        <p align="center">扫描上方二维码下载</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="cc ti-android"> 需求端</div>
+                        <img src="${base!}/assets/img/bvcloud/cAirportSZ.png" class="ad">
+                        <p align="center">扫描上方二维码下载</p>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="overlay"></div>
+<div id="container" class="center-wrapper ">
+
+    <nav class="navbar-default navbar-fixed-top" >
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false" >
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="navbar-brand"></div>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+
+                <!-- START Language list-->
+                <ul class="nav navbar-nav navbar-right" >
+                    <li id="mobile"><a class="ti-mobile" data-toggle="modal" data-target=".bs-example-modal-md"> 安卓手机客户端</a></li>
+                    <li class="language-dropdown dropdown hidden-md">
+                        <a href="javascript:;" data-toggle="dropdown" id="language">
+                            <%if(lang==null||lang=="zh_CN"){%>
+                            <img src="${base!}/assets/img/flags/cn.png" class="flag">
+                            <span class="language">中文</span> <span class="caret"></span></a>
+                            <%}else{%>
+                            <img src="${base!}/assets/img/flags/us.png" class="flag">
+                            <span class="language">English</span> <span class="caret"></span></a>
+                        <%}%>
+                            <ul class="dropdown-menu dropdown-menu-right animated fadeInUp">
+                                <li>
+                                    <a href="?lang=en_US">
+                                        <img src="${base!}/assets/img/flags/us.png" class="flag">
+                                        <span class="language">English</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="?lang=zh_CN">
+                                        <img src="${base!}/assets/img/flags/cn.png" class="flag">
+                                        <span class="language">中文</span>
+                                    </a>
+                                </li>
+                            </ul>
+                    </li>
+                </ul>
+                <!-- END Language list    -->
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+
+
+    <div class="center-content">
+        <div class="row no-m">
+            <div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-0 col-md-5 col-md-offset-1 col-lg-3 col-lg-offset-1 login_bg1">
+
+                <%if(lang==null||lang=="zh_CN"){%>
+                       <div class="zh_appname">
+
+                           <h2>${AppName!}<small>V1.0</small></h2>
+
+                       <p>SaaS平台服务，资源共享</p>
+                       <p>GPS定位，即时监控设备使用及维护情况</p>
+                       <p>O2O运营模式，全方位线上、线下技术支持</p>
+            </div>
+                <%}else{%>
+                <div class="eng_appname">
+
+                    <h2>Intelligent Airport <br>Management Platform<small>V1.0</small></h2>
+
+                    <p>SaaS platform services, resource sharing</p>
+                    <p>GPS positioning, real-time monitoring equipment use and maintenance</p>
+                    <p>O2O operating mode, all-round online, offline technical support</p>
+                </div>
+                <%}%>
+            </div>
+
+
+            <div class="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-2 col-md-5 col-md-offset-0 col-lg-3 col-lg-offset-4 login_bg2">
+
+                <section id="user" class="panel bg-white no-b fadeIn animated" style="display: block">
+                    <%if(lang==null||lang=="zh_CN"){%>
+                    <h2 class="zh">账号登录 <span class="code" onclick="btn1()">扫码登录</span></h2>
+                    <%}else{%>
+                    <h2 class="eng">Login<span class="code" onclick="btn1()">Barcode</span></h2>
+                    <%}%>
+                    <div class="p15">
+                        <form id="loginForm" action="${base!}/platform/login/doLogin" data-parsley-validate="" novalidate=""
+                              role="form"
+                              method="post">
+                            <input type="hidden" id="platformCaptcha" name="platformCaptcha">
+
+                            <div class="form-group">
+                                <input type="text" id="username" name="username"  required
+                                       class="form-control input-lg mb25"
+                                       placeholder="${msg['login.username']}">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" id="password" name="password"  required
+                                       class="form-control input-lg mb25"
+                                       placeholder="${msg['login.password']}">
+                            </div>
+                            <div id="tip" class="alert alert-danger" role="alert" style="display:none"></div>
+                            <!--<p id="tip" class="bg-danger p15" style="display:none"></p>-->
+
+                            <div class="show">
+                                <button id="login" class="btn btn-primary btn-lg btn-block" type="button"
+                                        data-loading-text="${msg['login.submit']}...">
+                                    ${msg['login.submit']}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <section id="barcode" class="panel bg-white no-b fadeIn animated" style="display: none">
+                    <%if(lang==null||lang=="zh_CN"){%>
+                    <h2 class="zh">扫码登录 <span class="computer" onclick="btn2()">账号登录</span></h2>
+                    <h5 align="center" id="codectnt" style="color:#FF0000"></h5>
+                    <div class=" row" align="center">
+                        <div class="qr_code" id="qrcode"></div>
+                        <p>请使用<a data-toggle="modal" data-target=".bs-example-modal-sm" style="cursor: pointer">安卓手机APP客户端</a>，扫一扫登录</p>
+                    </div>
+                    <%}else{%>
+                    <h2 class="eng">Barcode<span class="computer" onclick="btn2()"> User ID</span></h2>
+                    <div class=" row" align="center">
+                        <div class="qr_code" id="eqrcode"></div>
+                        <p>Please use <a>Android phone APP client</a><br>Sweep to login</p>
+                    </div>
+                    <%}%>
+
+                </section>
+                <!--<p class="text-center text-default">-->
+                    <!--Copyright &copy; 佰睿创璟-->
+                    <!--<span id="year" class="mr5"></span>版权所有-->
+                <!--</p>-->
+                <script type="text/javascript">
+                    function btn1(){
+
+                        document.getElementById('barcode').style.display='block';
+                        document.getElementById('user').style.display='none';
+
+                        //1 将二维码写入后台数据库内
+                        //2 扫描二维码的手机将用户id写入到对应二维码
+                        //3 web端监控数据库此二维码行是否有数据写入
+                        //4 如果有userid写入且写入时间在二维码有效期内，则判断登录成功
+                        //5 否则登录失败
+
+                        var text = guid();
+                        //1
+                        setCode(text);
+                        makeCode(text);
+
+
+
+                    }
+                    function btn2(){
+
+                        document.getElementById('user').style.display='block';
+                        document.getElementById('barcode').style.display='none';
+                        clearInterval(id);
+                    }
+                    var id=0;
+                    var obj=null;
+                    function setCode(code){
+//                        alert(code);
+                        var url="${base!}/platform/sys/barcode/addTo";
+                        var param={"code":code};
+                        $.post(url,param,function(d){
+                            if(d.code==0){//成功
+                                //3
+                                id=setInterval(function(){
+                                    var rslt=getUserid(code);
+
+                                    if(rslt==-1){
+                                        clearInterval(id);
+//                                        $.dialog
+//                                        alert("服务器繁忙，请刷新再试");
+                                        document.getElementById("codectnt").innerHTML="服务器繁忙，请刷新再试";
+                                    }else if(rslt==2){
+                                        clearInterval(id);
+                                        document.getElementById("codectnt").innerHTML="二维码已失效，请刷新再试";
+//                                        alert("二维码已失效，请刷新再试");
+                                    }else if(rslt==null||rslt==3){
+                                        clearInterval(id);
+                                    }else if(rslt==0){}
+                                    else{
+                                        clearInterval(id);
+                                        userLogin(rslt);
+//                                        alert("登陆成功:"+rslt);
+
+                                    }
+                                },1000);
+                            }
+                        });
+                    }
+
+                    function userLogin(user){
+                        var url="${base!}/platform/login/doTokenLogin";
+                        var param={"username":user.loginname,"password":user.password};
+                        $.ajaxSettings.async=false;
+                        $.post(url,param,function(d){
+                            alert(d.msg);
+                        });
+                    }
+
+                    function getUserid(code){
+                        var url="${base!}/platform/sys/barcode/fetchUser";
+                        var param={"code":code};
+                        var rslt=null;
+                        $.ajaxSettings.async=false;
+                        $.post(url,param,function(d){
+//                            alert(-1);
+                            if(d!=-1){
+//                                alert(0);
+                                if(d.userid){//验证是否在效期内
+//                                    alert(2);
+                                    if(d.curDate&&d.startDate&&d.endDate){
+//                                        alert(3);
+                                        var cur=new Date(d.curDate.replace(/\-/g, "\/"));
+                                        var start=new Date(d.startDate.replace(/\-/g, "\/"));
+                                        var end=new Date(d.endDate.replace(/\-/g, "\/"));
+                                        if(start<cur<end){
+//                                            alert(4);
+                                            //rslt=d.user.username;//登录成功
+                                            rslt=d.user;
+                                        }
+                                        else{
+//                                            alert(5);
+                                            rslt=2;//二维码失效
+                                        }
+                                    }
+                                    else{
+//                                        alert(6);
+                                            rslt=-1;
+
+                                    }
+                                }
+                                else
+                                {
+//                                    alert(1);
+                                    if(d.endDate){
+                                        var end=new Date(d.endDate.replace(/\-/g, "\/"));
+                                        var cur=new Date();
+//                                        alert(cur>end);
+                                        if(cur>end){//过期
+                                            rslt=2;
+                                        }
+                                        else{
+                                            rslt=0;//未登录
+                                        }
+                                    }
+                                    else{
+//                                        alert(7);
+                                        rslt=0;//未登录
+                                    }
+                                }
+                            }else{
+//                                alert(8);
+                                rslt=d;//错误
+                            }
+                        });
+                        return rslt;
+                    }
+                </script>
+            </div>
+            <div class="clo-sm-12">
+                <p class="text-center text-default" style="color:rgba(255,255,255,0.5); bottom:0; position: absolute; width: 100%;">
+                    <a href="http://www.miitbeian.gov.cn" style="color:rgba(255,255,255,0.5)">鄂ICP备17026837号-1</a>  &nbsp;&nbsp;佰睿创璟 <span id="year" class="mr5"></span>版权所有
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- 验证码 -->
+<div id="dialogVeryCode" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" style="color:black;">
+                    ${msg['login.error.verifycode']}
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form id="f2" onsubmit="return false;" data-parsley-validate="" novalidate="">
+                    <div class="row">
+                        <div class="col-xs-2"></div>
+                        <div class="col-xs-6">
+                            <input type="text" id="verifycode" required class="form-control input-lg"
+                                   placeholder="${msg['login.captcha']}">
+                        </div>
+                        <div class="col-xs-4">
+                            <img id="captcha_img" src="${base!}/platform/login/captcha" style="height:46px;cursor: pointer;"
+                                 onclick="$('#captcha_img').attr('src', '${base!}/platform/login/captcha?_=' + new Date().getTime())"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="ok" type="button" class="btn btn-primary" data-dismiss="modal">${msg['login.submit']}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function bodyRSA()
+    {
+        setMaxDigits(200);
+        return new RSAKeyPair("${publicKeyExponent!'10001'}","","${publicKeyModulus!'a5aeb8c636ef1fda5a7a17a2819e51e1ea6e0cceb24b95574ae026536243524f322807df2531a42139389674545f4c596db162f6e6bbb26498baab074c036777'}");
+    }
+    var key =  bodyRSA();
+    var temp;
+    $(document).ready(function () {
+        $("#year").html(new Date().getFullYear());
+        $("#login").on("click",function () {
+            temp=$("#password").val();
+            $("#password").val(encryptedString(key,$("#password").val().split("").reverse().join("")));
+            $("#loginForm").submit();
+        });
+        $("#loginForm").ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").text("${msg['login.load']}");
+                form.find("button:submit").attr("disabled", "disabled");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    $("#tip").hide();
+                    form.find("button:submit").text("${msg['login.success']}");
+                    window.location.href = "${base!}/platform/home";
+                } else if (data.code == 2) {
+                    $("#verifycode").val("");
+                    $("#password").val(temp);
+                    $("#dialogVeryCode img").attr("src", '${base!}/platform/login/captcha?_=' + new Date().getTime());
+                    return $("#dialogVeryCode").modal({show: true, backdrop: 'static', keyboard: false});
+                } else {
+                    $("#platformCaptcha").val("");
+                    $("#password").val("").focus();
+                    $('#captcha_img').attr('src', '${base!}/platform/login/captcha?_=' + new Date().getTime());
+                    $("#tip").html(data.msg);
+                    $("#tip").fadeIn();
+                    form.find("button:submit").text("${msg['login.submit']}");
+                    form.find("button:submit").removeAttr("disabled")
+                }
+            }
+        });
+        $("#ok").on("click", function () {
+            if ($("#verifycode").val() == "") {
+                $("#f2").submit();
+                return false;
+            }
+            temp=$("#password").val();
+            $("#password").val(encryptedString(key,$("#password").val().split("").reverse().join("")));
+            $("#platformCaptcha").val($("#verifycode").val());
+            $("#loginForm").submit();
+        });
+        $("#dialogVeryCode").on("keypress", function (event) {
+            var key = event.which;
+            if (key == 13) {
+                $("#ok").trigger("click");
+            }
+        });
+        $("#username").focus();
+
+    });
+
+
+    var qrcode = new QRCode(document.getElementById("qrcode"), {
+        width : 160,
+        height : 160
+    });
+    var eqrcode = new QRCode(document.getElementById("eqrcode"), {
+        width : 160,
+        height : 160
+    });
+
+
+    function makeCode(elText) {
+
+        if (!elText) {
+            return;
+        }
+        qrcode.makeCode(elText);
+        eqrcode.makeCode(elText);
+    }
+
+    function guid() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+            return v.toString(16);
+        });
+    }
+
+</script>
+
+
+
+<script src="${base!}/assets/bootstrap/js/bootstrap.js"></script>
+<script src="${base!}/assets/plugins/jquery.form.js"></script>
+<script src="${base!}/assets/plugins/parsley.min.js"></script>
+<script src="${base!}/assets/plugins/parsley.zh_cn.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,128 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/base/customer" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/base/customer/addDo" method="post">
+                <div class="row mb10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="customername" class="col-sm-2 control-label">${msg['base.customer.column.customername']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="customername" class="form-control" name="customername" data-parsley-required="true" placeholder="${msg['base.customer.column.customername']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="customercode" class="col-sm-2 control-label">${msg['base.customer.column.customercode']}</label>
+                            <div class="col-sm-8" id="numDiv">
+                            <input type="text" id="customercode" class="form-control" name="customercode" data-parsley-required="true" placeholder="${msg['base.customer.column.customercode']}">
+                                <span style="color: red" hidden>该编码已经存在</span>
+                            </div>
+                            <img src="/assets/img/loading.gif" hidden>
+                        </div>
+                        <div class="form-group">
+                            <label for="customeraddress" class="col-sm-2 control-label">${msg['base.customer.column.customeraddress']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="customeraddress" class="form-control" name="customeraddress" data-parsley-required="true" placeholder="${msg['base.customer.column.customeraddress']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="customertel" class="col-sm-2 control-label">${msg['base.customer.column.customertel']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="customertel" class="form-control" name="customertel" data-parsley-required="true" placeholder="${msg['base.customer.column.customertel']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cusnum" class="col-sm-2 control-label">${msg['base.customer.column.cusnum']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="cusnum" class="form-control" name="cusnum" data-parsley-required="true" placeholder="${msg['base.customer.column.cusnum']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerdecrib" class="col-sm-2 control-label">${msg['base.customer.column.customerdecrib']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="customerdecrib" class="form-control" name="customerdecrib" data-parsley-required="true" placeholder="${msg['base.customer.column.customerdecrib']}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+<script language="JavaScript">
+    //20180402zhf1441
+    var flag = false;
+    $("#numDiv input").blur(function () {
+        var numVal = $(this).val();
+        $.ajax({
+            url:"${base}/platform/base/customer/countByNum",
+            data:{num:numVal},
+            type:"POST",
+            beforeSend:function () {
+                $("#numDiv").next("img").show()
+            },
+            success:function (data) {
+                if(data > 0){
+                    flag = true;
+                    $("#numDiv").addClass("has-error");
+                    $("#numDiv span").show();
+                }else{
+                    flag = false;
+                    $("#numDiv span").hide();
+                    $("#numDiv").removeClass("has-error")
+                }
+            },
+            complete:function () {
+                $("#numDiv").next("img").hide()
+            }
+        });
+    });
+    $(document).ready(function () {
+        $('#addForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                if(flag){
+                    $("#numDiv input").focus();
+                    $("#numDiv").addClass("has-error");
+                    $("#numDiv span").show();
+                    Toast.warning("该编码已经存在")
+                    return false;
+                }else{
+                    $("#numDiv").removeClass("has-error")
+                }
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    form.resetForm();
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+<%}%>
+
+

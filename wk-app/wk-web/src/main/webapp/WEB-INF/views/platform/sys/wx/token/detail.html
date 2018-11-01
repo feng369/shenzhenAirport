@@ -1,0 +1,50 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">企业微信Token</a>
+                        <small>${obj.id}</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                                                        <tr>
+                                <td>${msg['sys.wx.column.appnum']}</td><td>${obj.appnum}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['sys.wx.column.appname']}</td><td>${obj.appname}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['sys.wx.column.corpid']}</td><td>${obj.corpid}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['sys.wx.column.secret']}</td><td>${obj.secret}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['sys.wx.column.agentid']}</td><td>${obj.agentid}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['sys.wx.column.token']}</td><td>${obj.token}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['sys.wx.column.expire']}</td><td>${obj.expire}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['sys.wx.column.starttime']}</td><td>${obj.starttime}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['sys.wx.column.endtime']}</td><td>${obj.endtime}</td>
+                            </tr>
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

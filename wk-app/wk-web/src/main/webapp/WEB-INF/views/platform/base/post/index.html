@@ -1,0 +1,140 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button">
+            <% if(@shiro.hasPermission('platform.base.post.add')){ %>
+                <a id="add" class="btn btn-primary navbar-btn" href="${base}/platform/base/post/add" data-pjax><i class="ti-plus"></i> ${msg['globals.button.add']}</a>
+            <%}%>
+            <% if(@shiro.hasPermission('platform.base.post.delete')){ %>
+                <button class="btn btn-danger navbar-btn" onclick="delCheck()"><i class="ti-close"></i> ${msg['globals.button.delete.more']}</button>
+            <%}%>
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 56px;">
+        <div class="table-responsive no-border">
+            <table id="postTreeTable" class="table no-m">
+                <thead>
+                    <tr>
+                            <th>${msg['base.post.column.postname']}</th>
+                            <th>所属组织</th>
+                            <th>${msg['globals.table.column.operation']}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <% for(o in obj){
+                %>
+                <tr data-tt-id="${o.id}" data-tt-parent-id="${o.parentId}" data-tt-branch="${o.hasChildren}">
+                    <td>
+                        <span class="pd-l-sm"></span>${o.postname!}
+                    </td>
+                    <td>${o.unit.name!}</td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                <i class="ti-settings"></i>
+                                <span class="ti-angle-down"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <% if(@shiro.hasPermission('platform.base.post.select')){ %>
+                                <li><a href="${base}/platform/base/post/detail/${o.id}" data-toggle="modal"
+                                       data-target="#dialogPostDetail">查看</a></li>
+                                <%}%>
+                                <% if(@shiro.hasPermission('platform.base.post.edit')){ %>
+                                <li><a href="${base}/platform/base/post/edit/${o.id}" data-pjax>修改</a></li>
+                                <%}%>
+                                <% if(@shiro.hasPermission('platform.base.post.delete')){ %>
+                                <li><a href="javascript:;" onclick="del('${o.id}')">删除</a></li>
+                                <%}%>
+                                <li class="divider"></li>
+                                <li><a href="${base}/platform/base/post/add?pid=${o.id}" data-pjax>添加子单位</a></li>
+
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                <%
+                }%>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['globals.button.delete']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['globals.button.delete.notice']}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button id="okDel" type="button" class="btn btn-primary" data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogPostDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<script language="JavaScript">
+    var postTreeTable;
+    $(function () {
+        $("#dialogPostDetail").on("hidden.bs.modal", function() {
+            $(this).removeData("bs.modal");
+        });
+        postTreeTable= $("#postTreeTable").treetable({
+            expandable: true,
+            onNodeExpand : function(){
+                var node = this;
+                var rows = "<tr data-tt-id=\"loading\" data-tt-parent-id=\""+node.id+"\" data-tt-branch=\"false\"><td colspan='5'><img src=\""+base+"/assets/img/loading.gif\"/>loading</td></tr>";
+                postTreeTable.treetable("loadBranch", node, rows);
+                $.post("${base}/platform/base/post/child/"+node.id,{}, function(data){
+                    postTreeTable.treetable("unloadBranch", node);
+                    postTreeTable.treetable("loadBranch", node, data);
+                });
+            }
+        });
+    });
+
+    function del(id){
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#okDel").unbind("click");
+        dialog.find("#okDel").bind("click", function(event){
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/platform/base/post/delete/"+id,{},function(data){
+                //重置按钮状态，关闭提示框
+                dialog.modal("hide");
+                if(data.code==0){
+                    Toast.success(data.msg);
+                    postTreeTable.treetable("removeNode", id);
+                    //从表格中移除此行
+                }else{
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+            },"json");
+        });
+    }
+
+    $(function () {
+
+        $("#dialogPostDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+    });
+</script>
+<%}%>

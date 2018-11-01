@@ -1,0 +1,154 @@
+<%
+layout("/layouts/platform.html"){
+%>
+
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/logistics/order/stock" id="goBack" data-pjax><i class="ti-angle-left"></i> ${msg['globals.button.back']}</a>
+        <button id="print" type="button" class="btn btn-primary navbar-btn" ><i class="ti-angle-left"></i> 打印</button>
+    </div>
+</header>
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+<div id="PrintHTML" style="background-color: white;">
+    <table style="width: 100%;">
+        <tr>
+            <td colspan="4" style="height: 35px; text-align: center; font-weight: bold; font-size: 14px;"><h2>航材配送交接单</h2></td>
+        </tr>
+
+        <tr>
+            <td style="width: 25%; height: 25px; font-size: 12px; text-align: left;" id="customer">客户名称:<%if(orderprint.customer !=null){%>${orderprint.customer.customername}<%}%></td>
+            <td style="width: 35%; height: 25px;font-size: 12px;text-align: left;">需求单号:${orderprint.ordernum} </td>
+            <td style="width: 25%; height: 25px; font-size: 12px; text-align: left;" id="place_startstock">出发地:<%if(orderprint.place_startstock !=null){%>${orderprint.place_startstock.placename}<%}%></td>
+            <td style="width: 15%; height: 25px; font-size: 12px; text-align: left;" id="dict_btype">业务类型:${orderprint.dict_btype.name}</td>
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 25px; font-size: 12px; text-align: left;" id="dict_emergency">紧急程度:<%if(orderprint.dict_emergency !=null){%>${orderprint.dict_emergency.name}<%}%></td>
+            <td style="width: 35%; height: 25px;font-size: 12px;text-align: left;">工单号:<%if(orderprint.logisticsDeliveryorder !=null){%>${orderprint.logisticsDeliveryorder.deliveryordernum}<%}%> </td>
+            <td style="width: 25%; height: 25px; font-size: 12px; text-align: left;" id="place_endstock">目的地:<%if(orderprint.place_endstock !=null){%>${orderprint.place_endstock.placename}<%}%></td>
+            <td style="width: 15%; height: 25px; font-size: 12px; text-align: left;" id="dict_transporttype">运输类型:<%if(orderprint.dict_transporttype !=null){%>${orderprint.dict_transporttype.name}<%}%></td>
+        </tr>
+    </table>
+    <table id="printtable" border="1" style="width: 100%;" >
+        <thead>
+        <tr>
+            <th style="width: 15%; font-size: 12px; text-align: center; border: 1px solid black;">
+                单号/名称
+            </th>
+            <th style="width: 15%; font-size: 12px; text-align: center; border: 1px solid black;">
+                件号/自编号
+            </th>
+            <th style="width: 15%; font-size: 12px; text-align: center; border: 1px solid black;">序号/计量编号
+            </th>
+            <th style="width: 10%; font-size: 12px; text-align: center; border: 1px solid black;">批次号
+            </th>
+            <th style="width: 15%; font-size: 12px; text-align: center; border: 1px solid black;">数量
+            </th>
+            <th style="width: 15%; font-size: 12px; text-align: center; border: 1px solid black;">
+                出库架位
+            </th>
+            <th style="width: 15%; font-size: 12px; text-align: center; border: 1px solid black;">目的架位
+            </th>
+        </tr>
+        </thead>
+        <tbody style="font-size: 12px; text-align: center; border: 1px solid black;">
+        </tbody>
+    </table>
+    <table style="width: 100%; table-layout: fixed; margin-top: 20px;">
+        <tr>
+            <td colspan="4" style="width: 100%; height: 25px; font-size: 12px; text-align: left; font-weight: bold;">
+                备注:${orderprint.note}
+            </td>
+        </tr>
+    </table>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <tr>
+            <td style="width: 20%;font-size: 12px; text-align: left;">整体件数:    </td>
+            <td style="width: 20%;font-size: 12px; text-align: left;">包装:</td>
+            <td style="width: 30%;font-size: 12px; text-align: left;">报价金额:</td>
+            <td style="width: 30%;font-size: 12px; text-align: left;">
+                时限要求:${orderprint.timerequest}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="width: 100%;font-size: 12px; text-align: left;">配送员检查是否完好: &nbsp;&nbsp;完好 <input type="checkbox">  &nbsp;&nbsp;其他 <input type="checkbox">  </td>
+            <td style="width: 30%;font-size: 12px; text-align: left;">签字:</td>
+            <td style="width: 30%;font-size: 12px; text-align: left;">
+                <div id="now"></div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="width: 100%;font-size: 12px; text-align: left;">发货人签字: </td>
+            <td style="width: 30%;font-size: 12px; text-align: left;">收货人签字:</td>
+            <td style="width: 30%;font-size: 12px; text-align: left;">
+               使用人签字:
+            </td>
+        </tr>
+    </table>
+</div>
+        </section></div></div>
+
+<script>
+    $(function () {
+
+        var time1 = new Date().format("yyyy-MM-dd hh:mm:ss");
+        $('#now').html("打印时间:"+time1);
+        $('#print').click(function () {
+            $('#PrintHTML').jqprint();
+        });
+        initDatatable();
+    });
+
+    function initDatatable() {
+        var tabledata='${orderprint.logistics_orderentry}'
+        tabledata=eval(tabledata);
+        datatable = $('#printtable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "bPaginate": false, //翻页功能
+            "bInfo": false,//页脚信息
+            "processing": false,
+            "serverSide": false,
+            "select": false,
+            "ordering": false,
+            "data":  tabledata,
+            "columns": [
+                {"data": "materielname", "bSortable": true,"render": function (data, type, row, meta) {
+                     data = data || "";
+                    if(data == ""){return "";}else{return data;}
+                }},
+                {"data": "materielnum", "bSortable": true,"render": function (data, type, row, meta) {
+                    data = data || "";
+                    if(data == ""){return "";}else{return data;}
+                }},
+                {"data": "sequencenum", "bSortable": true,"render": function (data, type, row, meta) {
+                    data = data || "";
+                    if(data == ""){return "";}else{return data;}
+                }},
+                {"data": "batch", "bSortable": true,"render": function (data, type, row, meta) {
+                    data = data || "";
+                    if(data == ""){return "";}else{return data;}
+                }},
+                {"data": "quantity", "bSortable": true,"render": function (data, type, row, meta) {
+                    data = data || "";
+                    if(data == ""){return "";}else{return data;}
+                }},
+                {"data": "outframe", "bSortable": true,"render": function (data, type, row, meta) {
+                    data = data || "";
+                    if(data == ""){return "";}else{return data;}
+                }},
+                {"data": "inframe", "bSortable": true,"render": function (data, type, row, meta) {
+                    data = data || "";
+                    if(data == ""){return "";}else{return data;}
+                }},
+            ]
+
+        });
+    }
+
+
+
+
+</script>
+<%}%>

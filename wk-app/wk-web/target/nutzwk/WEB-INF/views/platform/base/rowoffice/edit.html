@@ -1,0 +1,255 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/base/rowoffice" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate>
+                <input name="id" type="hidden" value="${obj.id}">
+                <div class="row mb10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="officename" class="col-sm-2 control-label">${msg['base.rowoffice.column.officename']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="officename" class="form-control" name="officename" data-parsley-required="true"
+                                       placeholder="${msg['base.rowoffice.column.officename']}" value="${obj.officename}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="startdata" class="col-sm-2 control-label">开始时间</label>
+                            <div class="col-sm-8 input-group date form_datetime"  style="padding-left: 16px;padding-right: 16px;"  data-date-format="HH:ii" data-link-field="at">
+                                <input type="text" id="startdata" name="startdata" readonly class="form-control" value="${obj.startdata}">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="enddata" class="col-sm-2 control-label">结束时间</label>
+                            <div class="col-sm-8 input-group date form_datetime"  style="padding-left: 16px;padding-right: 16px;"  data-date-format="dd MM yyyy - HH:ii" data-link-field="at">
+                                <input type="text" id="enddata" name="enddata" readonly class="form-control" value="${obj.enddata}">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            员工
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="heading">
+                            <button id="build" type="button" class="btn  btn-success" data-toggle="modal" data-target="" onclick="append()">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>添加
+                            </button>
+                        </div>
+                        <div class="table-responsive no-border">
+                            <table id="AddFormEntry" class="table table-bordered table-striped mg-t datatable" width="1000px" border="0" cellspacing="0" cellpadding="0" style="margin: 0 auto">
+                                <thead>
+                                <th width="30">删除</th>
+                                <th>员工编号</th>
+                                <th>员工姓名</th>
+                                </thead>
+                                <tbody id="mainbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button id="divInsert" type="button" class="btn btn-primary btn-block btn-lg btn-parsley" onclick="submitFrom()">提交</button>
+                        </div>
+                    </div>
+                </div>
+
+        </section>
+
+    </div>
+</div>
+<script language="JavaScript">
+    function submitFrom(){
+        var arr = $('#editForm').serialize();
+        arr= decodeURIComponent(arr,true);//防止中文乱码
+        arr=DataDeal.formToJson(arr);//转化为json
+        var arrentry=JSON.stringify($('#AddFormEntry').tableinputtoJson())
+        $("#divInsert").ajaxSubmit({
+            url:'${base}/platform/base/rowoffice/editDo',
+            dataType:'json',
+            data:{rowoffice:arr,rowofficeentry:arrentry},
+            type:"post",
+            beforeSubmit: function (arr, form, options) {
+                $('#divInsert').button("loading");
+            },
+            success:function(data){
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+            }
+        });
+    }
+    var rows=0
+    function append() {
+        var officeid="${obj.id!}"
+        var strAppend = '<tr id="rows" style="background: rgb(255, 255, 255) none repeat scroll 0% 0%;">' +
+            '<td width="10"><button type="button" id="btnDel" onclick="btdel(this)" class="btn btn-sm"><i class="ti-minus"></i></button></td>'+
+            '<td > <input class="form-control ma" id="personnum'+rows+'" type="text" name="personnum" value="" size="8">' +
+            '<input type="hidden" id = "personid'+rows+'" name="personid" value=""><input class="form-control" id="officeid'+rows+'" type="hidden" name="officeid" value="'+officeid+'" size="8"></td>' +
+            '<td><input class="form-control" id="personname'+rows+'" name="personname" type="text" disabled value="" size="8"></td>' +
+            '<tr>';
+        $("#AddFormEntry tbody ").append(strAppend);
+        autosearch("ma",rows);
+        rows++;
+    }
+
+    function btdeltr(clickTd) {
+
+        var id=$(clickTd).attr("id")
+        var tr = $(clickTd).parent().parent().parent();
+            $.post("${base}/platform/base/rowofficeentry/delete/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    tr.remove();
+                } else {
+                    Toast.error(data.msg);
+                }
+            }, "json");
+
+
+
+    }
+    function btdel(clickTd) {
+        var tr = $(clickTd).parent().parent();
+        tr.remove();
+    }
+    function autosearch(id,rows) {
+        $("#personnum"+rows).autocomplete("${base}/platform/base/person/autocomplete", {
+            dataType: "json",
+            mustMatch: true,
+            extraParams: {
+                personnum: function () {
+                    return $("#personnum"+rows).val();
+                }
+            },
+            parse: function (data) {
+                return $.map(data, function (row) {
+                    return {
+                        data: row,
+                        value: row.id,
+                        result: row.personnum,
+                    }
+                });
+            },
+            formatItem: function (data, i, max) {
+                return data.personnum + "|" + data.personname ;
+            },
+            formatResult: function (data,i, max) {
+                return data.personnum + "|" + data.personname ;
+            },
+
+        }).result(function (event, data, formatted) {
+            var row=$(this).attr("id");
+            row= row.replace($(this).attr("name"),"");
+            if (typeof(data) == "undefined") {
+                $('#personid'+row).val("");
+            } else {
+                $('#personid'+row).val(data.id);
+                $('#personname'+row).val(data.personname);
+
+            }
+        })
+    }
+
+    function initDatatable_Entry(tabledata) {
+        datatable_entry = $('#AddFormEntry').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "bPaginate": false, //翻页功能
+            "bInfo": false,//页脚信息
+            "processing": false,
+            "serverSide": false,
+            "select": false,
+            "ordering": false,
+            "data":  tabledata,
+            "columns": [
+                {"data": "id", "bSortable": true},
+                {"data": "person.personnum", "bSortable": true},
+                {"data": "person.personname", "bSortable": true}
+            ],"columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" id="'+row.id+'" onclick="btdeltr(this)" class="btn btn-default"><i class="ti-minus"></i></button></div><input class="form-control" id="id"'+row.id+' type="hidden" name="id" value="'+row.id+'">';
+                    },
+                    "targets": 0
+                },
+                {
+                    "render": function (data, type, row) {
+                        data = data || "";
+                        if(data==""){
+                            return '<input class="form-control" id="personnum'+row.id+'" type="text" name="personnum" value="" size="8">'+'<input  id="personid'+row.id+'" type="hidden" name="personid" value="" size="8">';
+
+                        }else{
+                            return '<input class="form-control" id="personnum'+row.id+'" type="text" name="personnum" value='+data+' size="8">'+'<input  id="personid'+row.id+'" type="hidden" name="personid" value="'+row.personid+'" size="8">';
+                        }
+                    },
+                    "targets": 1
+                },
+                {
+                    "render": function (data, type, row) {
+                        data = data || "";
+                        if(data==""){
+                            return '<input class="form-control append" disabled id="personname'+row.id+'" type="text" name="personname" value="" size="8">'+'<input class="form-control append" id="officeid" type="hidden" name="officeid" value="'+row.officeid+'" size="8">'
+
+                        }else{
+                            return '<input class="form-control append" disabled id="personname'+row.id+'" type="text" name="personname" value='+data+' size="8">'+'<input class="form-control append" id="officeid" type="hidden" name="officeid" value="'+row.officeid+'" size="8">'
+                        }
+                    },
+                    "targets": 2
+                }
+            ]
+
+        });
+    }
+    $(document).ready(function () {
+        $('.form_datetime').datetimepicker({
+            language:  'zh-CN',
+            format:'hh:ii',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView:1,
+            minView: 0,
+            maxView: 1,
+            forceParse: 0,
+            showMeridian: 1
+        });
+        var tabledata = '${obj.rowofficeentry}'
+        tabledata = eval(tabledata);
+        var rows = tabledata.length;
+        if (rows != 0) {
+            initDatatable_Entry(tabledata);
+            $.each(tabledata, function (i, data) {
+                autosearch("append", data.id);
+            });
+        }
+    });
+</script>
+<%}%>

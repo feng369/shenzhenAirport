@@ -1,0 +1,511 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<section class="content-wrap bg-white" style="top: 5px">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button" style="top: 10px">
+            起始时间
+        </div>
+        <div class="btn-group tool-button" style="top: 10px">
+            <input type="text" id="startTime" class="form-control" placeholder="起始时间" value=""/>
+        </div>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <div class="btn-group tool-button" style="top: 10px">
+            截止时间
+        </div>
+        <div class="btn-group tool-button" style="top: 10px">
+            <input type="text" id="endTime" class="form-control" placeholder="截止时间" value=""/>
+        </div>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <div class="btn-group tool-button" style="top: 10px">
+            客户
+        </div>
+        <div class="btn-group tool-button" style="top: 10px">
+            <select class="form-control" name="customerid" id="myCustomer">
+                <script type="application/javascript">
+                    $.get("${base!}/platform/base/customer/getCustomers", function(data){
+                        data.forEach(function(ele){
+                            $("#myCustomer").append("<option value='"+ele.id+"'>"+ele.customername+"</option>");
+                        });
+                    });
+                </script>
+                <!--<option value="">深航</option>-->
+            </select>
+        </div>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <div class="btn-group tool-button" style="top: 10px">
+            <button class="btn btn-primary" data-toggle="modal" id="generateChart"><i class="ti-hand-point-up"></i>生成报表</button>
+        </div>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <div class="btn-group tool-button" style="top: 10px">
+            <% if(@shiro.hasPermission('platform.logistics.logisticStock.downloadOrderChart')){ %>
+            <button class="btn btn-primary" data-toggle="modal" id="exportExcel"><i class="ti-export"></i>导出报表</button>
+            <%}%>
+        </div>
+        <!--
+        <div class="pull-right offscreen-right">
+            <button class="btn btn-primary navbar-btn" onclick="sublime.toggleFilter('.cd-panel')"><i
+                    class="fa fa-sliders"></i> 筛选
+            </button>
+        </div>
+        -->
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border">
+            <div class="row" id="tchart">
+
+            </div>
+
+            <div align="center" style="top: 15px">
+                <span style="font-size: 20px;">配送目的地分类统计表</span>
+            </div>
+            <table class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                <tr>
+                    <!--<th>序号</th>-->
+                    <th>目的地</th>
+                    <th>配送次数</th>
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+
+<script src="${base!}/assets/js/echarts.js" type="application/javascript" language="JavaScript"></script>
+<script src="${base!}/assets/js/shine.js" type="application/javascript" language="JavaScript"></script>
+
+<script language="JavaScript">
+    var generateChartClick = false;
+    var datatable;
+    var number=0;
+    var chartData;
+    function initDatatable() {
+        number=0;
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching": false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/plugins/datatables/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/logistics/order/logisticStockData",
+                "type": "post",
+                "data": function (d) {
+                    d.startTime=$("#startTime").val();
+                    d.endTime=$("#endTime").val();
+                    d.customerid=$("#myCustomer").val();
+                },
+                "complete":function(){
+                    initchart();
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                // {
+                //     "data": "", "bSortable": true, "render": function (data, type, row, meta) {
+                //         number++;
+                //         alert(number);
+                //         return number;
+                //     }
+                // },
+                {
+                    "data": "placename", "bSortable": true, "render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                },
+                {
+                    "data": "ct", "bSortable": true, "render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                },
+                {
+                    "data": "starttime", "bSortable": true, "render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                },
+                {
+                    "data": "endtime", "bSortable": true, "render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                }
+
+            ]
+        });
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        /*$("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });*/
+        $("#generateChart").click(function () {
+            number=0;
+            exportExcel = false
+            generateChartClick = true;
+
+            datatable.ajax.reload();
+
+        });
+
+
+
+    }
+
+
+
+    $(function () {
+        var nowDate = new Date();
+        var oneday = 1000 * 60 * 60 * 24
+        var beginDate = new Date(nowDate.getTime() - oneday)
+        var endDate = new Date()
+        var format = "yyyy-MM-dd hh:mm"
+
+        beginDate.setHours(21)
+        beginDate.setMinutes(0)
+        $("#startTime").val(beginDate.format(format));
+
+        endDate.setHours(9)
+        endDate.setMinutes(0)
+        $("#endTime").val(endDate.format(format));
+        $("#startTime").datetimepicker({
+            format: 'yyyy-mm-dd hh:ii', /*此属性是显示顺序，还有显示顺序是mm-dd-yyyy*/
+            language: 'zh-CN',
+            autoclose: true
+        });
+        $("#endTime").datetimepicker({
+            format: 'yyyy-mm-dd hh:ii', /*此属性是显示顺序，还有显示顺序是mm-dd-yyyy*/
+            language: 'zh-CN',
+            autoclose: true
+        });
+
+        initDatatable();
+
+
+        $("#customername").autocomplete("${base}/platform/base/customer/autocomplete", {
+            dataType: "json",
+            mustMatch: true,
+            extraParams: {
+                customername: function () {
+                    return $('#customername').val();
+                }
+            },
+            parse: function (data) {
+                return $.map(data, function (row) {
+                    return {
+                        data: row,
+                        value: row.id,
+                        result: row.customername
+                    }
+                });
+            },
+            formatItem: function (data, i, max) {
+                return data.customercode + "|" + data.customername + "|" + data.customertel;
+            },
+            formatResult: function (data) {
+                return data.customername;
+            },
+            formatMatch: function (data, i, max) {
+                return data.id + data.customername;
+            }
+        }).result(function (event, data, formatted) {
+            if (typeof(data) == "undefined") {
+                $('#customerid').val("");
+            } else {
+                $('#customerid').val(data.id);
+
+            }
+        });
+
+    });
+    var places=[];
+    var placenumber=[];
+    function initchart(){
+        setTimeout(function(){
+            $.post("${base}/platform/logistics/order/logisticStockData",{"startTime":$("#startTime").val(),"endTime":$("#endTime").val(),"customerid":$("#myCustomer").val()},function(d){
+                // alert(d.data.length);
+                if(d){
+                    places.splice(0,places.length);
+                    placenumber.splice(0,placenumber.length);
+                    for(var i=0;i<d.data.length;i++){
+                       // alert(d.data[i].placename+"|"+d.data[i].ct);
+                        places.push(d.data[i].placename);
+                        placenumber.push(d.data[i].ct);
+                    }
+                }
+            })
+
+//             if(chartData==null){
+//                 return false;
+//             }else{
+//                 places.splice(0,places.length);
+//                 placenumber.splice(0,placenumber.length);
+//                 for(var i=0;i<chartData.data.length;i++){
+// //                  alert(d.data[i].name+"|"+d.data[i].number);
+//                     places.push(chartData.data[i].placename);
+//                     placenumber.push(chartData.data[i].ct);
+//                 }
+//             }
+        },500);
+
+        // alert(places);
+        setTimeout(function(){
+            document.getElementById("tchart").style.height = "50%";
+            document.getElementById("tchart").style.width = "90%";
+            document.getElementById("tchart").style.position = "fixed";
+
+            var myChart = echarts.init(document.getElementById('tchart'),'shine');
+//            alert(unitnumber);
+            var option = {
+                title:{
+                    text:'配送目的地统计'
+                },
+                tooltip : {
+                    trigger: 'axis'//,
+//                    axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+//                        type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+//                    }
+                },
+                legend: {
+                    data:places
+                },
+                toolbox: {
+                    show : true,
+                    feature : {
+//                        dataView : {show: true, readOnly: false},
+                        magicType : {show: true, type: ['line', 'bar']},
+//                        restore : {show: true},
+//                        saveAsImage : {show: true}
+                    },
+                    right:90
+                },
+                calculable : true,
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : places
+//                        axisTick: {
+//                            alignWithLabel: true
+//                        }
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'value',
+                        data:placenumber
+                    }
+                ],
+                series : [
+                    {
+                        name:'配送次数',
+                        type:'bar',
+                        data:placenumber,
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'top'
+                            }
+                        },
+                        // markPoint : {
+                        //     data : [
+                        //         {type : 'max', name: '最大值'},
+                        //         {type : 'min', name: '最小值'}
+                        //     ]
+                        // },
+                        markLine : {
+                            data : [
+                                {type : 'average', name: '平均值'}
+                            ]
+                        }
+                    }
+                ],
+                // color: ['#4775d1'],
+                "themeName": "shine",
+                "theme": {
+                    "seriesCnt": 4,
+                    "backgroundColor": "rgba(0,0,0,0)",
+                    "titleColor": "#333333",
+                    "subtitleColor": "#aaaaaa",
+                    "textColorShow": false,
+                    "textColor": "#333",
+                    "markTextColor": "#ffffff",
+                    "color": [
+                        "#d0021b",
+                        "#4a90e2",
+                        "#f5a623",
+                        "#7ed321",
+                        "#9013fe",
+                        "#8b572a",
+                        "#9b9b9b"
+                    ],
+                    "borderColor": "#ffffff",
+                    "borderWidth": "0",
+                    "visualMapColor": [
+                        "#4a90e2",
+                        "rgba(124,200,255,0.51)"
+                    ],
+                    "legendTextColor": "#333333",
+                    "kColor": "#c12e34",
+                    "kColor0": "#2b821d",
+                    "kBorderColor": "#c12e34",
+                    "kBorderColor0": "#2b821d",
+                    "kBorderWidth": 1,
+                    "lineWidth": "2",
+                    "symbolSize": "5",
+                    "symbol": "emptyCircle",
+                    "symbolBorderWidth": "2",
+                    "lineSmooth": true,
+                    "graphLineWidth": 1,
+                    "graphLineColor": "#aaaaaa",
+                    "mapLabelColor": "#333333",
+                    "mapLabelColorE": "#333333",
+                    "mapBorderColor": "#eeeeee",
+                    "mapBorderColorE": "#ffffff",
+                    "mapBorderWidth": 0.5,
+                    "mapBorderWidthE": "1",
+                    "mapAreaColor": "#dddddd",
+                    "mapAreaColorE": "rgba(230,182,0,1)",
+                    "axes": [
+                        {
+                            "type": "all",
+                            "name": "通用坐标轴",
+                            "axisLineShow": true,
+                            "axisLineColor": "#333",
+                            "axisTickShow": true,
+                            "axisTickColor": "#333",
+                            "axisLabelShow": true,
+                            "axisLabelColor": "#333",
+                            "splitLineShow": true,
+                            "splitLineColor": [
+                                "#ccc"
+                            ],
+                            "splitAreaShow": false,
+                            "splitAreaColor": [
+                                "rgba(250,250,250,0.3)",
+                                "rgba(200,200,200,0.3)"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "name": "类目坐标轴",
+                            "axisLineShow": true,
+                            "axisLineColor": "#333",
+                            "axisTickShow": true,
+                            "axisTickColor": "#333",
+                            "axisLabelShow": true,
+                            "axisLabelColor": "#333",
+                            "splitLineShow": false,
+                            "splitLineColor": [
+                                "#ccc"
+                            ],
+                            "splitAreaShow": false,
+                            "splitAreaColor": [
+                                "rgba(250,250,250,0.3)",
+                                "rgba(200,200,200,0.3)"
+                            ]
+                        },
+                        {
+                            "type": "value",
+                            "name": "数值坐标轴",
+                            "axisLineShow": true,
+                            "axisLineColor": "#333",
+                            "axisTickShow": true,
+                            "axisTickColor": "#333",
+                            "axisLabelShow": true,
+                            "axisLabelColor": "#333",
+                            "splitLineShow": true,
+                            "splitLineColor": [
+                                "#e2e2e2"
+                            ],
+                            "splitAreaShow": false,
+                            "splitAreaColor": [
+                                "rgba(250,250,250,0.3)",
+                                "rgba(200,200,200,0.3)"
+                            ]
+                        },
+                        {
+                            "type": "log",
+                            "name": "对数坐标轴",
+                            "axisLineShow": true,
+                            "axisLineColor": "#333",
+                            "axisTickShow": true,
+                            "axisTickColor": "#333",
+                            "axisLabelShow": true,
+                            "axisLabelColor": "#333",
+                            "splitLineShow": true,
+                            "splitLineColor": [
+                                "#e2e2e2"
+                            ],
+                            "splitAreaShow": false,
+                            "splitAreaColor": [
+                                "rgba(250,250,250,0.3)",
+                                "rgba(200,200,200,0.3)"
+                            ]
+                        },
+                        {
+                            "type": "time",
+                            "name": "时间坐标轴",
+                            "axisLineShow": true,
+                            "axisLineColor": "#333",
+                            "axisTickShow": true,
+                            "axisTickColor": "#333",
+                            "axisLabelShow": true,
+                            "axisLabelColor": "#333",
+                            "splitLineShow": true,
+                            "splitLineColor": [
+                                "#e2e2e2"
+                            ],
+                            "splitAreaShow": false,
+                            "splitAreaColor": [
+                                "rgba(250,250,250,0.3)",
+                                "rgba(200,200,200,0.3)"
+                            ]
+                        }
+                    ],
+                    "axisSeperateSetting": true,
+                    "toolboxColor": "#06467c",
+                    "toolboxEmpasisColor": "#4187c2",
+                    "tooltipAxisColor": "#cccccc",
+                    "tooltipAxisWidth": 1,
+                    "timelineLineColor": "#005eaa",
+                    "timelineLineWidth": "1",
+                    "timelineItemColor": "#005eaa",
+                    "timelineItemColorE": "#005eaa",
+                    "timelineCheckColor": "#005eaa",
+                    "timelineCheckBorderColor": "rgba(49,107,194,0.5)",
+                    "timelineItemBorderWidth": "1",
+                    "timelineControlColor": "#005eaa",
+                    "timelineControlBorderColor": "#005eaa",
+                    "timelineControlBorderWidth": "1",
+                    "timelineLabelColor": "#005eaa",
+                    "datazoomBackgroundColor": "rgba(47,69,84,0)",
+                    "datazoomDataColor": "rgba(47,69,84,0.3)",
+                    "datazoomFillColor": "rgba(167,183,204,0.4)",
+                    "datazoomHandleColor": "#a7b7cc",
+                    "datazoomHandleWidth": "50",
+                    "datazoomLabelColor": "#333333"
+                }
+
+            };
+
+            myChart.setOption(option);
+        },1500);
+    }
+
+
+
+
+</script>
+<%}%>

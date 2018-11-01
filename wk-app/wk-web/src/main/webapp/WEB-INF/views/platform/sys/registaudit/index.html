@@ -1,0 +1,223 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<section class="content-wrap bg-white" style="top: 10px;">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group" style="top: 10px">
+        <select  id="resultStatus" class="form-control">
+            <option value="-1" selected>待审核</option>
+            <option value="0">通过</option>
+            <option value="1" >退回</option>
+        </select>
+        </div>
+        <div class="pull-right offscreen-right">
+            <button class="btn btn-primary navbar-btn" onclick="sublime.toggleFilter('.cd-panel')"><i
+                    class="fa fa-sliders"></i> 筛选
+            </button>
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border">
+            <table class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                <tr>
+                    <th>用户名</th>
+                    <th>真实姓名</th>
+                    <th>电话号码</th>
+                    <th>微信号</th>
+                    <th>所属公司</th>
+                    <!--<th>注册方式</th>-->
+                    <th>注册时间</th>
+                    <th>审核结果</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['globals.button.delete']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['globals.button.delete.notice']}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}
+                </button>
+                <button id="okDel" type="button" class="btn btn-primary"
+                        data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="cd-panel from-right">
+        <header class="cd-panel-header">
+            <h4>高级筛选</h4>
+        </header>
+        <div class="cd-panel-container">
+            <div class="cd-panel-content shadow">
+                <div class="form-group">
+                    <label for="loginname">用户名</label>
+                    <input type="text" id="loginname" name="loginname" onclick="this.value=''" class="form-control" placeholder="用户名" autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="username">真实姓名</label>
+                    <input type="text" id="username" name="username" onclick="this.value=''" class="form-control" placeholder="真实姓名">
+                </div>
+                <div class="form-group">
+                    <label for="tel">电话号码</label>
+                    <input type="text" id="tel" name="tel" onclick="this.value=''" class="form-control" placeholder="电话号码">
+                </div>
+                <div class="form-group">
+                    <label for="registTime">注册时间</label>
+                    <input type="date" id="registTime" name="registTime" onclick="this.value=''" class="form-control" placeholder="注册时间">
+                </div>
+                <button id="searchBtn" type="button"  class="btn btn-primary" >查询</button>
+            </div>
+        </div>
+</div>
+<script language="JavaScript">
+    var datatable;
+
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching": false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/plugins/datatables/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/sys/registaudit/getRegistList",
+                "type": "post",
+                "data": function (d) {
+                    d.result = $("#resultStatus option:selected").val();
+                    d.loginname=$("#loginname").val();
+                    d.username=$("#username").val();
+                    d.tel = $("#tel").val();
+                    d.registTime= $("#registTime").val();
+                }
+            },
+            "order": [[5, "desc"]],
+            "columns": [
+                {
+                    "data": "loginname", "bSortable": true, "render": function (data, type, row) {
+                        return data ? data :"";
+                    }
+                },
+                {"data": "username", "bSortable": true, "render": function (data, type, row) {
+                        return data ? data :"";
+                }},
+                {"data": "tel", "bSortable": true, "render": function (data, type, row) {
+                        return data ? data :"";
+                }},
+                {"data": "wxnumber", "bSortable": true, "render": function (data, type, row) {
+                        return data ? data :"";
+                }},
+                {"data": "name", "bSortable": true, "render": function (data, type, row) {
+                        return data ? data :"";
+                }},
+               /* {"data": "way", "bSortable": true, "render": function (data, type, row) {
+                        if(data == 0){
+                            return "手机注册";
+                        }else if(data == 1){
+                            return "web注册";
+                        }else{
+                            return ""
+                        }
+                    }},*/
+                {"data": "registtime", "bSortable": true, "render": function (data, type, row) {
+                        return data ? data :"";
+                }},
+                {"data": "result", "bSortable": true, "render": function (data, type, row) {
+                        if(data == -1){
+                            return "待审核"
+                        }else if(data == 0){
+                            return "通过"
+                        }else if(data == 1){
+                            return "退回"
+                        }else{
+                            return ""
+                        }
+                    }
+            },
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        var detailUrl;
+                        var auditUrl;
+                        if(row.way == 1){
+                            detailUrl = "${base}/platform/sys/registaudit/detail/";
+                            auditUrl = "${base}/platform/sys/registaudit/audit/";;
+                        }else{
+                            detailUrl = "${base}/platform/sys/registaudit/phonedetail/";
+                            auditUrl = "${base}/platform/sys/registaudit/phoneaudit/";
+                        }
+                        if(row.result != -1){
+                            return  '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                                ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                                '<li><a href="' +detailUrl+ row.id +'" data-toggle="modal" data-target="#dialogDetail">查看</a></li>'+
+                                '</div>';
+                        }
+                        return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                            ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                            '<li><a href="'+detailUrl + row.id+'" data-toggle="modal" data-target="#dialogDetail">查看</a></li>'+
+                            '<li><a href="'+ auditUrl + row.id + '">审核</a></li>'+
+
+                            '</div>';
+                    },
+                    "targets": 7
+                }
+            ]
+        });
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    }
+
+
+    $("#resultStatus").change(function () {
+        $("#registTime").val("");
+        $("#tel").val("");
+        $("#username").val("");
+        $("#loginname").val("");
+        $("#resultStatus option:selected").val($(this).val());
+        datatable.ajax.reload();
+    });
+    $(function () {
+        initDatatable();
+        $("#dialogDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+    });
+</script>
+<%}%>

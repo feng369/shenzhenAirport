@@ -1,0 +1,93 @@
+package cn.wizzer.framework.map;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+
+/**
+ * Created by xl on 2017/7/6.
+ */
+public class MapUtils {
+    //private static double EARTH_RADIUS = 6378.137;
+    private static double EARTH_RADIUS = 6371.393;
+    private static double rad(double d)
+    {
+        return d * Math.PI / 180.0;
+    }
+
+    /**
+     * 计算两个经纬度之间的距离
+     * @param lat1
+     * @param lng1
+     * @param lat2
+     * @param lng2
+     * @return
+     */
+    public static double GetDistance(double lat1, double lng1, double lat2, double lng2)
+    {
+        double radLat1 = rad(lat1);
+        double radLat2 = rad(lat2);
+        double a = radLat1 - radLat2;
+        double b = rad(lng1) - rad(lng2);
+        double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a/2),2) +
+                Math.cos(radLat1)*Math.cos(radLat2)*Math.pow(Math.sin(b/2),2)));
+        s = s * EARTH_RADIUS;
+        s = Math.round(s * 1000);
+        return s;
+    }
+
+    public static Object getMinValue(Map<Integer, Integer> map) {
+        if (map == null) return null;
+        Collection<Integer> c = map.values();
+        Object[] obj = c.toArray();
+        Arrays.sort(obj);
+        return obj[0];
+    }
+
+    /**
+     * 根据用户的起点和终点经纬度计算两点间距离，此距离为相对较短的距离，单位米。
+     *
+     * @param start
+     *           起点的坐标
+     * @param end
+     *           终点的坐标
+     * @return
+     */
+    public static double calculateLineDistance(LngLat start, LngLat end)
+    {
+        if ((start == null) || (end == null))
+        {
+            throw new IllegalArgumentException("非法坐标值，不能为null");
+        }
+        double d1 = 0.01745329251994329D;
+        double d2 = start.longitude;
+        double d3 = start.latitude;
+        double d4 = end.longitude;
+        double d5 = end.latitude;
+        d2 *= d1;
+        d3 *= d1;
+        d4 *= d1;
+        d5 *= d1;
+        double d6 = Math.sin(d2);
+        double d7 = Math.sin(d3);
+        double d8 = Math.cos(d2);
+        double d9 = Math.cos(d3);
+        double d10 = Math.sin(d4);
+        double d11 = Math.sin(d5);
+        double d12 = Math.cos(d4);
+        double d13 = Math.cos(d5);
+        double[] arrayOfDouble1 = new double[3];
+        double[] arrayOfDouble2 = new double[3];
+        arrayOfDouble1[0] = (d9 * d8);
+        arrayOfDouble1[1] = (d9 * d6);
+        arrayOfDouble1[2] = d7;
+        arrayOfDouble2[0] = (d13 * d12);
+        arrayOfDouble2[1] = (d13 * d10);
+        arrayOfDouble2[2] = d11;
+        double d14 = Math.sqrt((arrayOfDouble1[0] - arrayOfDouble2[0]) * (arrayOfDouble1[0] - arrayOfDouble2[0])
+                + (arrayOfDouble1[1] - arrayOfDouble2[1]) * (arrayOfDouble1[1] - arrayOfDouble2[1])
+                + (arrayOfDouble1[2] - arrayOfDouble2[2]) * (arrayOfDouble1[2] - arrayOfDouble2[2]));
+
+        return (Math.asin(d14 / 2.0D) * 12742001.579854401D);
+    }
+}

@@ -1,0 +1,106 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">logistics_sendplan</a>
+                        <small>发货计划详细信息</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                                                        <tr>
+                                <td>状态</td><td><%if(obj.pstatus=='0'){%>已计划<%}else if(obj.pstatus=='1'){%>审批中<%}else if(obj.pstatus=='2'){%>发货中<%}else if(obj.pstatus=='3'){%>已交货<%}else{%>已完成<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendplan.column.receivename']}</td><td>${obj.receivename}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendplan.column.receiveaddress']}</td><td>${obj.receiveaddress}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendplan.column.packnum']}</td><td>${obj.packnum}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendplan.column.tansporttype']}</td><td id="tdtansporttype"></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendplan.column.costtype']}</td><td id="tdcosttype"></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendplan.column.tempprice']}</td><td>${obj.tempprice}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendplan.column.protocolnum']}</td><td>${obj.protocolnum}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendplan.column.freenum']}</td><td>${obj.freenum}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendplan.column.deliverynum']}</td><td>${obj.deliverynum}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendplan.column.weight']}</td><td>${obj.weight}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendplan.column.flightnum']}</td><td>${obj.flightnum}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendplan.column.thirdname']}</td><td>${obj.thirdname}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendplan.column.drivername']}</td><td>${obj.drivername}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendplan.column.carnum']}</td><td>${obj.carnum}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendplan.column.tel']}</td><td>${obj.tel}</td>
+                            </tr>
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>
+<!--<script src="${base!}/assets/plugins/jquery-1.11.1.min.js"></script>-->
+<script language="JavaScript">
+    $("#tdcosttype").html(getcostname("${obj.costtype}"));
+    $("#tdtansporttype").html(gettransname("${obj.tansporttype}"));
+//    $(document).ready(function () {
+//        getCosttype();
+//        getTransporttype();
+//    });
+//    function getCosttype(){
+//        var costtype="${obj.costtype}";
+//        var url="${base}/platform/sys/dict/getNamebyId";
+//        var param={"id":costtype};
+//        $.post(url,t,function(d){
+//            if(d){
+//                $("#tdcosttype").html(d);
+//            }
+//
+//        });
+//
+//    }
+//
+//    function getTransporttype(){
+//        var tansporttype="${obj.tansporttype}";
+//        var url="${base}/platform/sys/dict/getNamebyId";
+//        var param={"id":tansporttype};
+//        $.post(url,t,function(d){
+//            if(d){
+//                $("#tdtansporttype").html(d);
+//            }
+//
+//        });
+//
+//    }
+
+</script>

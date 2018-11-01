@@ -1,0 +1,53 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <!--<a href="javascript:;" class="h4 show no-m pt5">查看部门</a>-->
+                        <small>部门明细</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                            <tr>
+                                <td>所属组织</td><td><%if(!isEmpty(unit)){%>${unit.name}<%}%></td>
+                            </tr>
+                            <tr>
+                                <td>上级部门</td><td><%if(!isEmpty(parentDept)){%>${parentDept.deptname}<%}%></td>
+                            </tr>
+                            <tr>
+                                    <td>${msg['base.dept.column.deptnum']}</td><td>${obj.deptnum}</td>
+                            </tr>
+                            <tr>
+                                    <td>${msg['base.dept.column.deptname']}</td><td>${obj.deptname}</td>
+                            </tr>
+                            <tr>
+                                <td>创建人</td><td>${creater.username}</td>
+                            </tr>
+                            <tr>
+                                <td>创建时间</td><td id="createTime"></td>
+                            </tr>
+                            <tr>
+                                <td>最后操作人</td><td>${opby.username}</td>
+                            </tr>
+                            <tr>
+                                <td>最后操作时间</td><td id="opAt"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>
+<script language="JavaScript">
+    $(document).ready(function () {
+        $("#createTime").html(dataformatint("${obj.createTime}"));
+        $("#opAt").html(dataformatint("${obj.opAt}"));
+    })
+</script>

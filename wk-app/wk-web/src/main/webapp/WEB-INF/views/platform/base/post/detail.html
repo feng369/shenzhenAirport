@@ -1,0 +1,35 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <!--<a href="javascript:;" class="h4 show no-m pt5">岗位</a>-->
+                        <small>岗位明细</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                        <tr>
+                            <td>所属组织</td><td><%if(!isEmpty(unit)){%>${unit.name}<%}%></td>
+                        </tr>
+                        <tr>
+                            <td>上级岗位</td><td><%if(!isEmpty(parentPost)){%>${parentPost.postname}<%}%></td>
+                        </tr>
+                                                        <tr>
+                                <td>${msg['base.post.column.postnum']}</td><td>${obj.postnum}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.post.column.postname']}</td><td>${obj.postname}</td>
+                            </tr>
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

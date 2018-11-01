@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="generator" type="Application" factoryName="Application">
+    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+    <option name="MAIN_CLASS_NAME" value="cn.wizzer.commons.code.Generator" />
+    <option name="VM_PARAMETERS" />
+    <option name="PROGRAM_PARAMETERS" value="-i Sys_mobile -u /platform/sys -b wk-app/wk-web -p cn.wizzer.app.sys -f -v index_add_detail_edit_ -mod cn.wizzer.app.sys.modules.models -ctr cn.wizzer.app.web.modules.controllers.platform.sys -sev cn.wizzer.app.sys.modules.services controller service locale view" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/wk-app/wk-web" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <option name="ENABLE_SWING_INSPECTOR" value="false" />
+    <option name="ENV_VARIABLES" />
+    <option name="PASS_PARENT_ENVS" value="true" />
+    <module name="wk-parent" />
+    <envs />
+    <method />
+  </configuration>
+</component>

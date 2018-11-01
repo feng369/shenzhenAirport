@@ -1,0 +1,240 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/logistics/sendgoods" id="goBack" data-pjax><i class="ti-angle-left"></i> ${msg['globals.button.back']}</a>
+    </div>
+</header>
+<div class="content-wrap" >
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form" >
+            <div class="container" >
+                <div class="main">
+                    <ul class="cbp_tmtimeline" id="ul">
+
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script language="JavaScript">
+    $(document).ready(function () {
+        $('#ul').html("");
+        var sgid = "${id!}";
+//        alert(sgid);
+        $.post("${base}/platform/logistics/orderplanentry/getSGInfo", {"sgid":sgid}, function (data) {
+            data.forEach(function(data) {
+                var stepname = data.stepname;
+                var content = data.content;
+                var operatetime =data.operatetime;
+                var status=data.pstatus;
+                var pic = data.picpath;
+                var time="";
+                var tdata=""
+                var acl="cbp_tmicon1";
+                var tel="cbp_tmlabel2";
+                var tmtime = "cbp_tmtime1";
+
+                var step=data.step;
+                var operater=data.操作人;
+                if(typeof(operater) == 'undefined' ){
+                    operater ="";
+                }
+                var contractcode=data.contractcode;
+                if(typeof(contractcode) == 'undefined' ){
+                    contractcode ="";
+                }
+                var partnum=data.partnum;
+                if(typeof(partnum) == 'undefined' ){
+                    partnum ="";
+                }
+                var serialnum=data.serialnum;
+                if(typeof(serialnum) == 'undefined' ){
+                    serialnum ="";
+                }
+                var number=data.number;
+                if(typeof(number) == 'undefined' ){
+                    number ="";
+                }
+                var shelf=data.shelf;
+                if(typeof(shelf) == 'undefined' ){
+                    shelf ="";
+                }
+                var batchnum=data.batchnum;
+
+                var issuetype=data.issuetype;
+                if(typeof(issuetype) == 'undefined' ){
+                    issuetype ="";
+                }
+                var rough=data.rough;
+                if(typeof(rough) == 'undefined' ){
+                    rough ="";
+                }
+                var receivename=data.receivename;
+                if(typeof(receivename) == 'undefined' ){
+                    receivename ="";
+                }
+                var receiveaddress=data.receiveaddress;
+                if(typeof(receiveaddress) == 'undefined' ){
+                    receiveaddress ="";
+                }
+                var senddate=data.senddate;
+                if(typeof(senddate) == 'undefined' ){
+                    senddate ="";
+                }
+                var isAir=data.是否禁航;
+                if(typeof(isAir) == 'undefined' ){
+                    isAir ="";
+                }
+                var billnum=data.billnum;
+                if(typeof(billnum) == 'undefined' ){
+                    billnum ="";
+                }
+                var packnum=data.packnum;
+                if(typeof(packnum) == 'undefined' ){
+                    packnum ="";
+                }
+                var tempprice=data.tempprice;
+                if(typeof(tempprice) == 'undefined' ){
+                    tempprice ="";
+                }
+                var protocolnum=data.protocolnum;
+                if(typeof(protocolnum) == 'undefined' ){
+                    protocolnum ="";
+                }
+                var freenum=data.freenum;
+                if(typeof(freenum) == 'undefined' ){
+                    freenum ="";
+                }
+                var thirdname=data.thirdname;
+                if(typeof(thirdname) == 'undefined' ){
+                    thirdname ="";
+                }
+                var flightnum=data.flightnum;
+                if(typeof(flightnum) == 'undefined' ){
+                    flightnum ="";
+                }
+                var drivername=data.drivername;
+                if(typeof(drivername) == 'undefined' ){
+                    drivername ="";
+                }
+                var carnum=data.carnum;
+                if(typeof(carnum) == 'undefined' ){
+                    carnum ="";
+                }
+                var weight=data.weight;
+                if(typeof(weight) == 'undefined' ){
+                    weight ="";
+                }
+                var airportname=data.机场;
+                if(typeof(airportname) == 'undefined' ){
+                    airportname ="";
+                }
+                var tansporttype=data.运输方式;
+                if(typeof(tansporttype) == 'undefined' ){
+                    tansporttype ="";
+                }
+                var warehousename=data.库存地;
+                if(typeof(warehousename) == 'undefined' ){
+                    warehousename ="";
+                }
+                var prioritylv=data.优先级;
+                if(typeof(prioritylv) == 'undefined' ){
+                    prioritylv ="";
+                }
+                var personname=data.交货人;
+                if(typeof(personname) == 'undefined' ){
+                    personname ="";
+                }
+                var costtype=data.费用类型;
+                if(typeof(costtype) == 'undefined' ){
+                    costtype ="";
+                }
+                var materielnum=data.包装件数;
+//                alert(JSON.stringify(data));
+                if(typeof(materielnum) == 'undefined' ){
+                    materielnum ="";
+                }
+                var packtype=data.包装方式;
+                if(typeof(packtype) == 'undefined' ){
+                    packtype ="";
+                }
+                var approvaler=data.审批人;
+                if(typeof(approvaler) == 'undefined' ){
+                    approvaler ="";
+                }
+                var approvaldate=data.审批时间;
+                if(typeof(approvaldate) == 'undefined' ){
+                    approvaldate ="";
+                }
+                var aresult=data.aresult;
+                var suggest=data.suggest;
+
+
+                if(status==1){
+                    status="已完成";
+                    acl="cbp_tmicon2";
+                    tel="cbp_tmlabel1"
+                }else{
+                    status="未开始"
+                }
+
+                if(typeof(operatetime) == 'undefined' ){
+                    tdata ="未开始";
+                }else{
+                    tdata= new Date(operatetime).format("MM/dd/yy")
+                    time=new Date(operatetime).format("hh:mm:ss")
+                }
+
+                if(typeof(batchnum) == 'undefined' ){
+                    batchnum ="无";
+                }
+                if(typeof(suggest) == 'undefined' ){
+                    suggest ="无";
+                }
+
+                if(typeof(content) == 'undefined' ){
+                    content ="";
+                }
+                var imgtmp="";
+                if(typeof(pic) !="undefined" && pic!=""){
+                    console.debug(pic)
+                    var img=new Array();
+                    img=pic.split(',');
+                    img.forEach(function(data) {
+                        imgtmp=imgtmp+"<img src='"+data+"' class='img-rounded' data-action='zoom' style='max-height: 100px'>&nbsp;&nbsp;"
+                    })
+
+                }
+
+                var temp="<li>" +
+                    "<time class='"+tmtime+"' datetime='"+operatetime+"'><span>"+tdata+"</span><span>"+time+"</span></time>" +
+                    "<i class='"+acl+" ti-time' ></i> <div class='"+tel+"'> " +
+                    "<h2>"+stepname+"("+status+")</h2> " +
+                    "<div>操作人:&nbsp;&nbsp;&nbsp;&nbsp;"+operater+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>" +
+                ((step==1&&status=="已完成")?"<div>合同编号:&nbsp;&nbsp;&nbsp;&nbsp;"+contractcode+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件号:&nbsp;&nbsp;&nbsp;&nbsp;"+partnum+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;序号:&nbsp;&nbsp;&nbsp;&nbsp;"+serialnum+"</div>" +
+                    "<div>数量:&nbsp;&nbsp;&nbsp;&nbsp;"+number+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;批次号:&nbsp;&nbsp;&nbsp;&nbsp;"+batchnum+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;优先级:&nbsp;&nbsp;&nbsp;&nbsp;"+prioritylv+"</div>" +
+                    "<div>发料类型:&nbsp;&nbsp;&nbsp;&nbsp;"+issuetype+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;库存地:&nbsp;&nbsp;&nbsp;&nbsp;"+warehousename+"</div>" +
+                    "<div>收货方:&nbsp;&nbsp;&nbsp;&nbsp;"+receivename+"</div>" +
+                    "<div>收货地址:&nbsp;&nbsp;&nbsp;&nbsp;"+receiveaddress+"</div>":"") +
+                    (step==3&&status=="已完成"?"<div>是否禁航:&nbsp;&nbsp;&nbsp;&nbsp;"+isAir+"</div>":"") +
+                    (step==4&&status=="已完成"?"<div>包装方式:&nbsp;&nbsp;&nbsp;&nbsp;"+packtype+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;包装件数:&nbsp;&nbsp;&nbsp;&nbsp;"+materielnum+"</div>":"")+
+                    (step==5&&status=="已完成"?"<div>运输方式:&nbsp;&nbsp;&nbsp;&nbsp;"+tansporttype+"</div>"+
+                    "<div>费用类型:&nbsp;&nbsp;&nbsp;&nbsp;"+costtype+"</div>":"")+
+                    ((step==6||step==7)&&status=="已完成"?"<div>审批者:&nbsp;&nbsp;&nbsp;&nbsp;"+approvaler+"</div>":"")+
+                    (step==7&&status=="已完成"?"<div>审批时间:&nbsp;&nbsp;&nbsp;&nbsp;"+approvaldate+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;审批意见:&nbsp;&nbsp;&nbsp;&nbsp;"+suggest+"</div>":"")+
+                    (step==9&&status=="已完成"?"<div>运单号:&nbsp;&nbsp;&nbsp;&nbsp;"+billnum+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件数:&nbsp;&nbsp;&nbsp;&nbsp;"+packnum+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;重量:&nbsp;&nbsp;&nbsp;&nbsp;"+weight+"</div>"+
+                    "<div>航班号:&nbsp;&nbsp;&nbsp;&nbsp;"+flightnum+"</div>"+
+                    "<div>第三方名称:&nbsp;&nbsp;&nbsp;&nbsp;"+thirdname+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;司机名称:&nbsp;&nbsp;&nbsp;&nbsp;"+drivername+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;车牌号:&nbsp;&nbsp;&nbsp;&nbsp;"+carnum+"</div>":"")+
+                    "<div>"+content+"</div><div style='padding-top: 10px'>"+imgtmp+"</div></div></li>";
+                $('#ul').append(temp);
+            });
+        }, "json");
+
+    })
+
+</script>
+<%}%>

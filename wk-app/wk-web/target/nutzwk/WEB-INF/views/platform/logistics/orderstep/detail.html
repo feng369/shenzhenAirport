@@ -1,0 +1,32 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <!--<a href="javascript:;" class="h4 show no-m pt5">logistics_orderstep</a>-->
+                        <!--20180227zhf1120-->
+                       <!-- <small>${obj.id}</small>-->
+                        <small>配送流程明细</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                         <!--20180227zhf1120-->                    <tr>
+                                <td>步骤</td><td>${obj.step}</td>
+                            </tr>
+                                                        <tr>
+                                <!--20180227zhf1120-->
+                                <td>步骤名称</td><td>${obj.stepname}</td>
+                            </tr>
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

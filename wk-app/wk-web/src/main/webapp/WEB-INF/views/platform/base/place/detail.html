@@ -1,0 +1,66 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                     <!--   <a href="javascript:;" class="h4 show no-m pt5">地点管理</a>-->
+                        <small>地点信息</small>
+                    </div>
+                </header>
+                   <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                            <tr>
+                                <td>上级编码</td><td><%if(!isEmpty(parentPlace)){%>${parentPlace.placecode}|${parentPlace.placename}<%}%></td>
+                            </tr>
+                            <tr>
+                                <td>${msg['base.place.column.placecode']}</td><td><%if(!isEmpty(obj)){%>${obj.placecode}<%}%></td>
+                            </tr>
+                            <tr>
+                                <td>机场</td><td><%if(!isEmpty(airport)){%>${airport.airportname}<%}%></td>
+                            </tr>
+                            <tr>
+                                <td>单位</td><td><%if(!isEmpty(customer)){%>${customer.customername}<%}%></td>
+                            </tr>
+                            <tr>
+                                <td>区域</td><td><%if(!isEmpty(obj)){%>${obj.area.name}<%}%></td>
+                            </tr>
+                            <tr>
+                                <td>类型</td><td><%if(!isEmpty(obj)){%>${obj.type.name}<%}%></td>
+                            </tr>
+                            <tr>
+                                <td>${msg['base.place.column.placename']}</td><td><%if(!isEmpty(obj)){%>${obj.placename}<%}%></td>
+                            </tr>
+                            <tr>
+                                <td>管控点</td><td><%if(!isEmpty(obj)){%>${obj.ctrl.name}<%}%></td>
+                            </tr>
+                            <tr>
+                                <td>负责人</td><td><%if(!isEmpty(person)){%>${person.personname}<%}%></td>
+                            </tr>
+                            <tr>
+                                <td>${msg['base.place.column.telephone']}</td><td><%if(!isEmpty(obj)){%>${obj.telephone}<%}%></td>
+                            </tr>
+                            <tr>
+                                <td>${msg['base.place.column.address']}</td><td><%if(!isEmpty(obj)){%>${obj.address}<%}%></td>
+                            </tr>
+                            <tr>
+                                <td>${msg['base.place.column.longitude']}</td><td><%if(!isEmpty(obj)){%>${obj.longitude}<%}%></td>
+                            </tr>
+                            <tr>
+                                <td>${msg['base.place.column.latitude']}</td><td><%if(!isEmpty(obj)){%>${obj.latitude}<%}%></td>
+                            </tr>
+                            <tr>
+                                <td>${msg['base.place.column.describ']}</td><td><%if(!isEmpty(obj)){%>${obj.describ}<%}%></td>
+                            </tr>
+
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

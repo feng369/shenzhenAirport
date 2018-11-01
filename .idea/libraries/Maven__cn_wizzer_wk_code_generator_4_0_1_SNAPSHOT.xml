@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: cn.wizzer:wk-code-generator:4.0.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.m2/repository/cn/wizzer/wk-code-generator/4.0.1-SNAPSHOT/wk-code-generator-4.0.1-20180309.063827-16.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.m2/repository/cn/wizzer/wk-code-generator/4.0.1-SNAPSHOT/wk-code-generator-4.0.1-20180309.063827-16-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.m2/repository/cn/wizzer/wk-code-generator/4.0.1-SNAPSHOT/wk-code-generator-4.0.1-20180309.063827-16-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

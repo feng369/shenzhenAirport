@@ -1,0 +1,1377 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<script type="application/javascript">
+
+</script>
+
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/logistics/order" id="goBack" data-pjax><i
+                class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate>
+                <input type="hidden" id="id" name="id" value="${obj.id!}">
+                <input type="hidden" id="airportid"
+                                                                                 name="airportid"
+                                                                                 value="${obj.airportid!}">
+                <input
+                    type="hidden" id="pstatus" name="pstatus" class="form-control" value="${obj.pstatus}">
+                <input
+                    type="hidden" id="deliveryorderid" name="deliveryorderid" class="form-control"
+                    value="${obj.deliveryorderid}">
+                <input type="hidden" id="creater" name="creater" value="${obj.creater!}">
+                <input type="hidden"
+                                                                                                id="createTime"
+                                                                                                name="createTime"
+                                                                                                value="${obj.createTime!}">
+                <input
+                    type="hidden" id="vehicleid" name="vehicleid" value="${obj.vehicleid!}">
+                <input type="hidden"
+                                                                                                    id="otype"
+                                                                                                    name="otype"
+value="72dd55d2c3cc42799c4e014745db2cdb">
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                物料清单
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="heading">
+                                <div style="float:left;" >
+                                    <button id="build" type="button" class="btn  btn-success" data-toggle="modal" data-target="" onclick="append()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>添加</button>
+                                </div>
+                                <div style="float:left;margin-left:20px;">
+                                    <select id="ordertype" name="ordertype" placeholder="航材需求类型" class="form-control">
+                                        <!--<option value="">航材需求类型</option>-->
+                                        <option value="CC">CC</option>
+                                        <option value="CCO">CCO</option>
+                                        <option value="CO">CO</option>
+                                        <option value="DE" selected>DE</option>
+                                        <option value="DWI">DWI</option>
+                                        <option value="EXCH">EXCH</option>
+                                        <option value="EXG">EXG</option>
+                                        <option value="EXK">EXK</option>
+                                        <option value="I_POC">I_POC</option>
+                                        <option value="IFT">IFT</option>
+                                        <option value="IVLOSS">IVLOSS</option>
+                                        <option value="IWR">IWR</option>
+                                        <option value="LI">LI</option>
+                                        <option value="LO">LO</option>
+                                        <option value="LOK">LOK</option>
+                                        <option value="MR">MR</option>
+                                        <option value="MRTEQ">MRTEQ</option>
+                                        <option value="NRC">NRC</option>
+                                        <option value="PO">PO</option>
+                                        <option value="POA">POA</option>
+                                        <option value="POB">POB</option>
+                                        <option value="POBFE">POBFE</option>
+                                        <option value="POC">POC</option>
+                                        <option value="POF">POF</option>
+                                        <option value="POG">POG</option>
+                                        <option value="POH">POH</option>
+                                        <option value="POK">POK</option>
+                                        <option value="POM">POM</option>
+                                        <option value="POR">POR</option>
+                                        <option value="POS">POS</option>
+                                        <option value="POT">POT</option>
+                                        <option value="POTK">POTK</option>
+                                        <option value="POTM">POTM</option>
+                                        <option value="POW">POW</option>
+                                        <option value="PR">PR</option>
+                                        <option value="RO">RO</option>
+                                        <option value="ROI">ROI</option>
+                                        <option value="ROS">ROS</option>
+                                        <option value="ROT">ROT</option>
+                                        <option value="ROTK">ROTK</option>
+                                        <option value="SEV">SEV</option>
+                                        <option value="SM">SM</option>
+                                        <option value="SMK">SMK</option>
+                                        <option value="SMT">SMT</option>
+                                        <option value="SMTK">SMTK</option>
+                                        <option value="SO">SO</option>
+                                        <option value="SOK">SOK</option>
+                                        <option value="SOL">SOL</option>
+                                        <option value="SOR">SOR</option>
+                                        <option value="WAO">WAO</option>
+                                        <option value="WAOI">WAOI</option>
+                                        <option value="WAOS">WAOS</option>
+                                        <option value="WO">WO</option>
+                                        <option value="WOACMR">WOACMR</option>
+                                        <option value="WOAOUT">WOAOUT</option>
+                                        <option value="WOBA">WOBA</option>
+                                        <option value="WOBC">WOBC</option>
+                                        <option value="WOCA">WOCA</option>
+                                        <option value="WOCOM">WOCOM</option>
+                                        <option value="WODMC">WODMC</option>
+                                        <option value="WODWC">WODWC</option>
+                                        <option value="WOEO">WOEO</option>
+                                        <option value="WOEQ">WOEQ</option>
+                                        <option value="WOET">WOET</option>
+                                        <option value="WOEXCH">WOEXCH</option>
+                                        <option value="WOG">WOG</option>
+                                        <option value="WOGR">WOGR</option>
+                                        <option value="WOI">WOI</option>
+                                        <option value="WOKCCO">WOKCCO</option>
+                                        <option value="WOLINE">WOLINE</option>
+                                        <option value="WOLOAN">WOLOAN</option>
+                                        <option value="WOMC">WOMC</option>
+                                        <option value="WOOUT">WOOUT</option>
+                                        <option value="WORCCO">WORCCO</option>
+                                        <option value="WORO">WORO</option>
+                                        <option value="WOSZST">WOSZST</option>
+                                        <option value="WOT">WOT</option>
+                                        <option value="WOTC">WOTC</option>
+                                        <option value="WOW">WOW</option>
+                                        <option value="XSCRAP">XSCRAP</option>
+                                    </select>
+                                </div>
+                                <div style="float:left;">
+                                    <input type="text" id="l_orderno" name="l_orderno" class="form-control"
+                                           placeholder="请输入故障号"
+                                           data-parsley-required="true"
+                                           data-parsley-type="integer"/>
+                                </div>
+                                <div style="float:left;">
+                                    <button id="downloadbt" type="button" class="btn  btn-primary"
+                                            onclick="downloadFromERP()">
+                                        <span class="glyphicon gglyphicon-upload" aria-hidden="true"></span>导入物料
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="widget-content padded clearfix">
+                                <table id="editFormEntry" class="table table-bordered table-striped" width="1000px"
+                                       border="0" cellspacing="0" cellpadding="0" style="margin: 0 auto">
+                                    <thead>
+                                    <th>删除</th>
+                                    <th align="center">MR号</th>
+                                    <th>锁定件号</th>
+                                    <th>预留件号</th>
+                                    <th>项次号</th>
+                                    <th>单项物料领用状态</th>
+                                    <th>预留序号</th>
+                                    <th>批次号</th>
+                                    <th>需求数量</th>
+                                    <th>库房号</th>
+                                    <th>架位</th>
+                                    <th>飞机号</th>
+                                    </thead>
+                                    <tbody id="mainbody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion"
+                             href="#collapseTwo">
+                            <h4 class="panel-title">
+                                <a>
+                                    其他信息
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label for="packagesnum" class="col-sm-2 control-label">件数</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="packagesnum" value="${obj.packagesnum!}"
+                                               class="form-control" name="packagesnum" placeholder="件数">
+                                    </div>
+                                    <label for="weight" class="col-sm-2 control-label">重量(KG)</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="weight" value="${obj.weight!}" class="form-control"
+                                               name="weight" placeholder="重量">
+                                    </div>
+                                    <label for="stockspace" class="col-sm-2 control-label">仓位</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="stockspace" value="${obj.stockspace!}"
+                                               class="form-control" name="stockspace" placeholder="仓位">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="packagetype" class="col-sm-2 control-label">包装方式</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="packagetype" name="packagetype"
+                                               value="${obj.packagetype!}" class="form-control" placeholder="包装方式">
+                                    </div>
+                                    <label for="isAOG" class="col-sm-2 control-label">是否有AOG标签</label>
+                                    <div class="col-sm-2">
+                                        <input type="checkbox" id="isAOG" name="isAOG">
+                                    </div>
+                                    <label for="isSpecial" class="col-sm-2 control-label">是否有特殊标志</label>
+                                    <div class="col-sm-2">
+                                        <input type="checkbox" id="isSpecial" name="isSpecial">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="devicenum" class="col-sm-2 control-label">机号</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="devicenum" class="form-control" name="devicenum"
+                                               placeholder="机号">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion"
+                         href="#collapseOne">
+                        <h4 class="panel-title">
+                            <a>
+                                基础信息
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <div class="row mb10">
+                                <div class="col-lg-12">
+                                   <!-- <div class="form-group">
+                                        <label for="ordernum" class="col-sm-2 control-label">${msg['logistics.order.column.ordernum']}</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" id="ordernum" class="form-control" name="ordernum"
+                                                   value="${obj.ordernum}">
+                                        </div>
+                                        <div class="form-group has-feedback">
+                                            <label for="customerid" class="col-sm-2 control-label">客户名称</label>
+                                            <div class="col-sm-5">
+                                                <div class="input-group">
+                                                    <input type="text" id="customername" name="customername"
+                                                           readonly class="form-control" placeholder="选择客户"
+                                                           value="<%if(!isEmpty(obj.customer)){%>${obj.customer.customername}<%}%>">
+                                                    <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-primary"
+                                                            data-toggle="modal"
+                                                            data-target="#dialogCusSelect"><i class="ti-plus"></i>选择
+                                                    </button>
+			                             		</span>
+                                                </div>
+                                                <input type="hidden" id="customerid" name="customerid"
+                                                       value="${obj.customerid}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+
+                                        <label for="btype" class="col-sm-2 control-label">业务类型</label>
+                                        <div class="col-sm-2">
+                                            <select id="btypename" name="btypename" class="form-control"
+                                                    placeholder="请选择业务类型">
+
+                                            </select>
+                                            <input type="hidden" id="btype" name="btype" value="">
+                                        </div>
+                                        <label for="emergency" class="col-sm-2 control-label">紧急程度</label>
+                                        <div class="col-sm-2">
+                                            <select id="emergencyname" name="emergencyname" class="form-control"
+                                                    placeholder="请选择紧急程度">
+
+                                            </select>
+                                            <input type="hidden" id="emergency" class="form-control"
+                                                   name="emergency" data-parsley-required="true">
+                                        </div>
+                                        <label for="emergency" class="col-sm-2 control-label">航材类型<span
+                                                style="color: red">*</span></label>
+                                        <div class="col-sm-2">
+                                            <select id="hctypename" data-parsley-required="true" name="hctypename"
+                                                    class="form-control" placeholder="请选择航材类型">
+
+                                            </select>
+                                            <input type="hidden" id="hctype" class="form-control" name="hctype"
+                                                   data-parsley-required="true">
+                                        </div>
+                                        &lt;!&ndash;<label for="transporttype" class="col-sm-2 control-label">运输类型</label>&ndash;&gt;
+                                        &lt;!&ndash;<div class="col-sm-2">&ndash;&gt;
+                                        &lt;!&ndash;<select id="transportname" name="transportname" class="form-control" placeholder="请选择运输类型">&ndash;&gt;
+
+                                        &lt;!&ndash;</select>&ndash;&gt;
+                                        &lt;!&ndash;<input type="hidden" id="transporttype" class="form-control" name="transporttype">&ndash;&gt;
+                                        &lt;!&ndash;</div>&ndash;&gt;
+
+                                    </div>
+
+                                    <div class="form-group">
+
+
+                                    </div>
+                                    &lt;!&ndash;  <div class="form-group">
+                                          <div class="has-feedback">
+                                              <label for="startstock" class="col-sm-2 control-label">出发地</label>
+                                              <div class="col-sm-4">
+                                                  <div class="input-group">
+                                                      <input id="startstockname"   type="text" class="form-control" data-provide="typeahead" autocomplete="off" placeholder="选择出发地"
+                                                             value="<%if(!isEmpty(obj.place_startstock)){%>${obj.place_startstock.placename}<%}%>" />
+                                                      <span class="input-group-btn">
+                                                          <button id="startbutton" type="button" class="btn btn-primary" data-toggle="modal"
+                                                                  data-target="#dialogStockSelect" ><i class="ti-plus"></i>选择
+                                                          </button>
+                                                       </span>
+                                                  </div>
+                                                  <input type="hidden" id="startstock" name="startstock" value="${obj.startstock}">
+                                              </div>
+                                          </div>
+                                          <label for="startstockphone" class="col-sm-2 control-label">出发地联系电话</label>
+                                          <div class="col-sm-3">
+                                              <input type="text" id="startstockphone" class="form-control"  name="startstockphone" value="${obj.startstockphone}"  placeholder="${msg['logistics.order.column.startstockphone']}">
+                                          </div>
+                                      </div>&ndash;&gt;
+                                    <div class="form-group">
+                                        <div class="has-feedback">
+                                            <label for="endstock" class="col-sm-2 control-label">目的地</label>
+                                            <div class="col-sm-4">
+                                                <div class="input-group">
+                                                    <input id="endstockname" type="text" class="form-control"
+                                                           class="form-control" data-provide="typeahead"
+                                                           autocomplete="off" placeholder="选择出发地"
+                                                           value="<%if(!isEmpty(obj.place_endstock)){%>${obj.place_endstock.placename}<%}%>"/>
+                                                    <span class="input-group-btn">
+                                                    <button id="endbutton" type="button" class="btn btn-primary"
+                                                            data-toggle="modal"
+                                                            data-target="#dialogStockSelect"><i class="ti-plus"></i>选择
+                                                    </button>
+			                             		</span>
+                                                </div>
+                                                <input type="hidden" id="endstock" name="endstock"
+                                                       value="${obj.endstock}">
+                                            </div>
+                                        </div>
+                                        <label for="endstockphone" class="col-sm-2 control-label">${msg['logistics.order.column.endstockphone']}</label>
+                                        <div class="col-sm-3">
+                                            <input type="text" id="endstockphone" class="form-control"
+                                                   name="endstockphone" value="${obj.endstockphone}"
+                                                   placeholder="${msg['logistics.order.column.endstockphone']}">
+                                        </div>
+                                    </div>
+                                    &lt;!&ndash;   <div class="form-group">
+                                           <label for="airwaybillno" class="col-sm-2 control-label">${msg['logistics.order.column.airwaybillno']}</label>
+                                           <div class="col-sm-4">
+                                               <input type="text" id="airwaybillno" class="form-control" name="airwaybillno" value="${obj.airwaybillno!}"  placeholder="${msg['logistics.order.column.airwaybillno']}">
+                                           </div>
+                                           <label for="contractnum" class="col-sm-2 control-label">${msg['logistics.order.column.contractnum']}</label>
+                                           <div class="col-sm-4">
+                                               <input type="text" id="contractnum" class="form-control" name="contractnum"  value="${obj.contractnum!}" placeholder="${msg['logistics.order.column.contractnum']}">
+                                           </div>
+                                       </div>&ndash;&gt;
+
+
+                                    &lt;!&ndash;<div class="form-group">
+                                        <label for="timerequest" class="col-sm-2 control-label">时限要求</label>
+                                        <div class="col-sm-8 input-group date form_datetime"  style="padding-left: 16px;padding-right: 16px;"  data-date-format="dd MM yyyy - HH:ii" data-link-field="at">
+                                            <input type="text" id="timerequest" name="timerequest" readonly class="form-control" value="${obj.timerequest!}">
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                        </div>
+                                    </div>&ndash;&gt;
+                                    <div class="form-group">
+                                        <label for="personid" class="col-sm-2 control-label">登记人</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" id="personname" name="personname" readonly
+                                                   class="form-control"
+                                                   value="<%if(!isEmpty(obj.person)){%>${obj.person.personname}<%}%>">
+                                            <input type="hidden" id="personid" name="personid" class="form-control"
+                                                   data-parsley-required="true" disabled value="${obj.personid}">
+                                        </div>
+                                        <label for="intime" class="col-sm-2 control-label">登记时间</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" id="intime" name="intime" readonly
+                                                   class="form-control" value="${obj.intime!}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="note" class="col-sm-2 control-label">备注</label>
+                                        <div class="col-sm-8">
+                                            <textarea type="text" id="note" class="form-control" name="note"  rows="3" placeholder="备注">${obj.note!}</textarea>
+                                        </div>
+                                    </div>-->
+
+                                    <div class="form-group">
+                                        <div class="form-group has-feedback">
+                                            <label for="customerid" class="col-sm-2 control-label">客户名称<span style="color: red">*</span></label>
+                                            <div class="col-sm-5">
+                                                <div class="input-group">
+                                                    <input type="text" id="customername"  name="customername" data-parsley-required="true"   readonly class="form-control" placeholder="选择客户"     value="${obj.customer.customername!}">
+                                                    <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                            data-target="#dialogCusSelect"><i class='ti-plus'></i> 选择
+                                                    </button>
+			                             		</span>
+                                                </div>
+                                                <input type="hidden" id="customerid" name="customerid" value="${obj.customerid}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <!--<input type="hidden" id="personid" name="personid" readonly class="form-control" value="${session.personid}">-->
+                                        <!--  <input type="text" id="personname" name="personname" readonly class="form-control" value="${@shiro.getPrincipalProperty('username')}">-->
+                                        <div class="form-group has-feedback">
+                                            <label for="personid" class="col-sm-2 control-label">需求所属人<span style="color: red">*</span></label>
+                                            <div class="col-sm-5">
+                                                <div class="input-group">
+                                                    <input type="text" id="personname" data-parsley-required="true"  readonly class="form-control" placeholder="选择"  name="personname" value="${obj.person.personname!}"> <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#dialogPersonSelect"><i class='ti-plus'></i>
+                                                    选择</button>
+			                             		</span>
+                                                </div>
+                                                <input type="hidden" id="personid" name="personid" value="${obj.personid}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="btype" class="col-sm-2 control-label">业务类型<span style="color: red">*</span></label>
+                                        <div class="col-sm-2">
+                                            <select id="btypename" data-parsley-required="true"  name="btypename" class="form-control" placeholder="请选择业务类型">
+
+                                            </select>
+                                            <input type="hidden" id="btype" name="btype" value="">
+                                        </div>
+                                        <label for="emergency" class="col-sm-2 control-label">紧急程度<span style="color: red">*</span></label>
+                                        <div class="col-sm-2">
+                                            <select id="emergencyname" data-parsley-required="true"  name="emergencyname" class="form-control" placeholder="请选择紧急程度">
+
+                                            </select>
+                                            <input type="hidden" id="emergency" class="form-control" name="emergency" data-parsley-required="true" >
+                                        </div>
+                                        <label for="emergency" class="col-sm-2 control-label">航材类型<span style="color: red">*</span></label>
+                                        <div class="col-sm-2">
+                                            <select id="hctypename" data-parsley-required="true"  name="hctypename" class="form-control" placeholder="请选择航材类型">
+
+                                            </select>
+                                            <input type="hidden" id="hctype" class="form-control" name="hctype" data-parsley-required="true" >
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="has-feedback">
+                                            <label for="endstock" class="col-sm-2 control-label">目的地<span style="color: red">*</span></label>
+                                            <div class="col-sm-4">
+                                                <div class="input-group">
+                                                    <input id="endstockname" data-parsley-required="true" type="text" class="form-control" class="form-control" data-provide="typeahead"  placeholder="选择目的地"
+                value="${obj.place_endstock.placename!}" disabled/>
+                                                    <span class="input-group-btn">
+                                                    <button id="endbutton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#dialogStockSelect"><i class="ti-plus"></i> 选择</button>
+			                             		</span>
+                                                </div>
+                                                <input type="hidden" id="endstock" name="endstock" value="${obj.endstock!}">
+                                            </div>
+                                        </div>
+                                        <label for="endstockphone" class="col-sm-2 control-label">${msg['logistics.order.column.endstockphone']}</label>
+                                        <div class="col-sm-3">
+                                            <input type="text" id="endstockphone" class="form-control" name="endstockphone"  value="${obj.endstockphone!}" placeholder="${msg['logistics.order.column.endstockphone']}">
+                                        </div>
+                                    </div>
+                                    <!--
+                                    <div class="form-group">
+                                         <label for="timerequest" class="col-sm-2 control-label">时限要求</label>
+                                         <div class="col-sm-8 input-group date form_datetime"  style="padding-left: 16px;padding-right: 16px;"  data-date-format="yyyy-mm-dd  HH:ii" data-link-field="at">
+                                             <input type="text" id="timerequest"  readonly class="form-control" value="">
+                                             <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                             <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                         </div>
+                                     </div>
+                                     -->
+                                    <div class="form-group">
+                                        <label for="note" class="col-sm-2 control-label">备注</label>
+                                        <div class="col-sm-8">
+                                            <textarea  type="text" id="note" class="form-control" name="note" rows="3"  placeholder="备注">${obj.note!}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <div>
+                            <button id="divInsert" type="button" onclick="submitFrom()"
+                                    class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="保存">保存
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+<div id="dialogPersonSelect" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 700px;">
+        <div class="modal-content" style="width: 700px;">
+            <section class="content-wrap bg-white">
+                <header class="header navbar bg-white shadow">
+                    <div class="pull-left offscreen-left" style="padding-top:15px;">
+                        <div class="form-group">
+                            <input id="keyword" type="text" class="form-control" onclick="this.value='';" placeholder="请输入人员姓名/工号">
+                        </div>
+                    </div>
+                    <div class="pull-right offscreen-right btn-group tool-button">
+                        <a class="btn btn-primary navbar-btn" onclick="_selectOnPerson()">确定</a>
+                    </div>
+                </header>
+                <div class=panel-body style="padding-top: 50px;">
+                    <div class="table-responsive no-border" style="padding-top: 5px;" >
+                        <table id="datatable_select_Person" class="table table-bordered table-striped mg-t datatable">
+                            <thead>
+                            <tr>
+                                <th>工号</th>
+                                <th>人员名称</th>
+                                <th>电话号码</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+    </div>
+</div>
+<!-- 选择客户 -->
+<div id="dialogCusSelect" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 700px;">
+        <div class="modal-content" style="width: 700px;">
+            <section class="content-wrap bg-white">
+                <header class="header navbar bg-white shadow">
+                    <div class="pull-left offscreen-left" style="padding-top:15px;">
+                        <div class="form-group">
+                            <input id="name" type="text" onclick="this.value='';" placeholder="请输入客户名称">
+                        </div>
+                    </div>
+                    <div class="pull-right offscreen-right btn-group tool-button">
+                        <a class="btn btn-primary navbar-btn" onclick="_selectOn()">确定</a>
+                    </div>
+                </header>
+                <div class=panel-body style="padding-top: 50px;">
+                    <div class="table-responsive no-border" style="padding-top: 5px;">
+
+                        <table id="datatable_select_Cus" class="table table-bordered table-striped mg-t datatable">
+                            <thead>
+                            <tr>
+                                <th>客户编号</th>
+                                <th>客户名称</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<!-- 选择出发地点 -->
+<div id="dialogStockSelect" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 800px;">
+        <div class="modal-content" style="width: 800px;">
+            <section class="content-wrap bg-white">
+                <header class="header navbar bg-white shadow">
+                    <div class="pull-left offscreen-left" style="padding-top:15px;">
+                        <div class="form-group">
+                            <input id="Stockname" type="text" onclick="this.value='';" placeholder="请输入地点名称">
+                        </div>
+                    </div>
+                    <div class="pull-right offscreen-right btn-group tool-button">
+                        <a class="btn btn-primary navbar-btn" onclick="_selectOnPlace()">确定</a>
+                    </div>
+                </header>
+                <div class=panel-body style="padding-top: 50px;">
+                    <div class="table-responsive no-border" style="padding-top: 5px;">
+                        <input id="Stockid" type="hidden" value="">
+                        <table id="datatable_select_Stock" class="table table-bordered table-striped mg-t datatable">
+                            <thead>
+                                <tr>
+                                    <th>地点编号</th>
+                                    <th>地点名称</th>
+                                <!--<th>单位</th>
+                                <th>负责人</th>
+                                <th>联系电话</th>-->
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+
+<script language="JavaScript">
+    var datatable_select_Cus;
+    var datatable_select_Stock;
+    var datatable_entry;
+
+    function downloadFromERP() {
+        if (!($("#ordertype").val())) {
+            Toast.warning("请选择航材需求来源类型");
+            return false;
+        }
+        if (l_orderno == false) {
+            Toast.warning("请输入数字类型故障号");
+            return false;
+        }
+        var btn = $(this);
+        btn.button("loading");
+        $('#loading').modal('show');
+        $.post("${base}/platform/logistics/order/downloadFromERP", {
+            orderno: $('#l_orderno').val(),
+            ordertype: $("#ordertype").val()
+        }, /*"${base}/assets/plugins/WOBA-20180447.json",*/ function (data) {
+            if (data.code == 0) {
+                erpDataResult = data.data;
+                var d = []
+                $.each(erpDataResult.OrderNoList, function (index, value) {
+                    for (var i = 0; i < erpDataResult[value].length; i++) {
+                        d.push(erpDataResult[value][i])
+                    }
+                })
+                var tabledata = eval(d)
+                var rows = tabledata.length;
+                if (rows != 0) {
+                    initDatatable_Entry(tabledata)
+                    $.each(tabledata, function (i, data) {
+                        autosearch("append", data.id)
+                    })
+                }
+                $('#loading').modal('hide');
+                Toast.success("导入成功")
+            } else {
+                $('#loading').modal('hide');
+                Toast.error("物料导入失败，请检查网络是否正常");
+            }
+            btn.button("reset");
+        }, "json");
+    }
+    function btdeldr(clickTd) {
+        var tr = $(clickTd).parent().parent().parent()
+        tr.remove();
+    }
+    function submitFrom() {
+        var arr = $('#editForm').serialize()
+        arr = decodeURIComponent(arr, true)//防止中文乱码
+        arr = DataDeal.formToJson(arr)//转化为json
+        var arrentry = JSON.stringify($('#editFormEntry').tableinputtoJson())
+        $("#divInsert").ajaxSubmit({
+            url: '${base}/platform/logistics/order/editDo',
+            dataType: 'json',
+            data:{logisticsOrder : arr,logisticsOrderentry : arrentry,orderid:$("#id").val()},
+            type: "post",
+            beforeSubmit: function (arr, form, options) {
+                $('#divInsert').button("loading");
+            },
+            success: function (data) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+            }
+        });
+    }
+
+    function initDatatable_Entry(tabledata) {
+        var oldTable = $('#editFormEntry').dataTable()
+        oldTable.fnClearTable()                 //清空一下table
+        oldTable.fnDestroy()                    //还原初始化了的dataTable
+        datatable_entry = $('#editFormEntry').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching": false,
+            "bPaginate": false, //翻页功能
+            "bInfo": false,//页脚信息
+            "processing": false,
+            "serverSide": false,
+            "select": false,
+            "ordering": false,
+            "data": tabledata,
+            "columns": [
+                {"data": "id", "bSortable": true},
+                {"data": "MRNO", "bSortable": true},
+                {"data": "PN_L", "bSortable": true},
+                {"data": "PN_R", "bSortable": true},
+                {"data": "ITEMNO", "bSortable": true},
+                {"data": "ORDERSTATE", "bSortable": true},
+                {"data": "SN", "bSortable": true},
+                {"data": "BN", "bSortable": true},
+                {"data": "QTY", "bSortable": true},
+                {"data": "STOCK", "bSortable": true},
+                {"data": "LOCATION", "bSortable": true},
+                {"data": "MSN", "bSortable": true}
+            ], "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        var lorderno = $("#ordertype").val() + $("#l_orderno").val()
+                        return '<div class="btn-group"><button type="button" id="' + row.id + '" onclick="btdeldr(this)" class="btn btn-default"><i class="ti-minus"></i></button></div><input  class="form-control" id="id"' + row.id + ' type="hidden" name="id" value="' + data + '" size="8" disabled>' +
+   '<input  id="lorderno" name="lorderno" type="hidden" value="' + lorderno + '" disabled>';
+                    },
+                    "targets": 0
+                },
+                {
+                    "render": function (data, type, row) {
+                        data = data || ""
+                        if (data == "") {
+                            return '<input class="form-control" id="materielname' + row.id + '" type="text"  name="materielname" value="' + row.materielname + '" size="8" value="" disabled>' + '<input class="form-control" id="materielid' + row.materielid + '" type="hidden" name="materielid" value="" size="8">'
+                        } else {
+                            return '<input class="form-control" id="materielname' + row.id + '" type="text" name="materielname" value=' + (data?data:"") + ' size="8" disabled>' + '<input class="form-control" id="materielid' + row.id + '" type="hidden" name="materielid" value="' + row.materielid + '" size="8">' + '<input class="form-control" id="id"' + row.id + ' type="hidden" name="id" value="'+row.id+'"  size="8">';
+                        }
+                    },
+                    "targets": 1
+                },
+                {
+                    "render": function (data, type, row) {
+                        data = data || ""
+                        if (data == "" ) {
+                            return '<input class="form-control" id="materielnum"' + row.id + ' type="text" name="materielnum" value="' + row.materielnum + '" size="8" disabled>'
+                        } else {
+                            return '<input class="form-control" id="materielnum"' + row.id + ' type="text" name="materielnum" value=' +(data ? data :"") + ' size="8" disabled>'
+                        }
+                    },
+                    "targets": 2
+                },
+                {
+                    "render": function (data, type, row) {
+                        data = data || ""
+                        if (data == "" ) {
+                            return '<input class="form-control" id="pnr"' + row.id + ' type="text" name="pnr" value="' + row.pnr + '" size="8" disabled>'
+                        } else {
+                            return '<input class="form-control" id="pnr"' + row.id + ' type="text" name="pnr" value=' +( data ? data :"")+ ' size="8" disabled>'
+                        }
+                    },
+                    "targets": 3
+                },
+                {
+                    "render": function (data, type, row) {
+                        data = data || ""
+                        if (data == "" ) {
+                            return '<input class="form-control append" id="sequencenum' + row.id + '" type="text" name="sequencenum" value="' + row.sequencenum + '" size="8" disabled>' + '<input class="form-control append" id="orderid" type="hidden" name="orderid" value="" size="8" disabled>'
+
+                        } else {
+                            return '<input class="form-control append" id="sequencenum' + row.id + '" type="text" name="sequencenum" value='+( data ? data : "")+' size="8" disabled>' + '<input class="form-control append" id="orderid" type="hidden" name="orderid" value="'+row.orderid+'" size="8" disabled>'
+                        }
+                    },
+                    "targets": 4
+                },
+                {
+                    "render": function (data, type, row) {
+                        data = data || ""
+                        if (data == "" ) {
+                            return '<input class="form-control" id="orderstate"' + row.id + ' type="text" name="orderstate" value="' + (row.orderstate ?row.orderstate:"") + '" size="8" disabled>'
+                        } else {
+                            return '<input class="form-control" id="orderstate"' + row.id + ' type="text" name="orderstate" value=' + (data ? data :"") + ' size="8" disabled>'
+                        }
+                    },
+                    "targets": 5
+                },
+                {
+                    "render": function (data, type, row) {
+                        data = data || ""
+                        if (data == "" ) {
+                            return '<input class="form-control" id="sn"' + row.id + ' type="text" name="sn" value="' + (row.sn?row.sn:"") + '" size="8" disabled>'
+                        } else {
+                            return '<input class="form-control" id="sn"' + row.id + ' type="text" name="sn" value=' + (data?data :"") + ' size="8" disabled>'
+                        }
+                    },
+                    "targets": 6
+                },
+                {
+                    "render": function (data, type, row) {
+                        data = data || ""
+                        if (data == "" ) {
+                            return '<input class="form-control" id="batch"' + row.id + ' type="text" name="batch" value="' + (row.batch ? row.batch:"") + '" size="8" disabled>'
+                        } else {
+                            return '<input class="form-control" id="batch"' + row.id + ' type="text" name="batch" value="' +(data ? data :"")+ '" size="8" disabled>'
+                        }
+                    },
+                    "targets": 7
+                },
+                {
+                    "render": function (data, type, row) {
+                        data = data || ""
+                        if (data == "" ){
+                            return '<input class="form-control" id="quantity"' + row.id + ' type="number" name="quantity" value="' + (row.quantity? row.quantity:"") + '" size="8" disabled>'
+                        } else {
+                            return '<input class="form-control" id="quantity"' + row.id + ' type="number" name="quantity" value="' + (data ? data : "")+ '" size="8" disabled>'
+                        }
+                    },
+                    "targets": 8
+                },
+                {
+                    "render": function (data, type, row) {
+                        data = data || ""
+                        if (data == "") {
+                            return '<input class="form-control" id="stock"' + row.id + ' type="text" name="stock" value="' + (row.stock?row.stock:"") + '" size="8" disabled>'
+                        } else {
+                            return '<input class="form-control" id="stock"' + row.id + ' type="text" name="stock" value=' + (data ? data:"") + ' size="8" disabled>'
+                        }
+                    },
+                    "targets": 9
+                },
+                {
+                    "render": function (data, type, row) {
+                            data = data || ""
+                            if (data == "" ) {
+                                return '<input class="form-control" id="location"' + row.id + ' type="text" name="location" value="' + (row.location ? row.location : "") + '" size="8" disabled>'
+                            } else {
+                                return '<input class="form-control" id="location"' + row.id + ' type="text" name="location" value=' + (data ? data : "")+ ' size="8" disabled>'
+                            }
+                    },
+                    "targets": 10
+                },
+                {
+                    "render": function (data, type, row) {
+                        data = data || ""
+                        if (data == "" ) {
+                            return '<input class="form-control" id="msn"' + row.id + ' type="text" name="msn" value="' + (row.msn ? row.msn : "") + '" size="8" disabled>'
+                        } else {
+                            return '<input class="form-control" id="msn"' + row.id + ' type="text" name="msn" value="'+data+'" size="8" disabled>'
+                        }
+                    },
+                    "targets": 11
+                }
+            ]
+        });
+    }
+
+    function getTable(tableID) {
+        var args = $('#editFormEntry').tableToJSON({
+            includeRowId: false,
+            headings: ["materielname", "materielnum", "pnr", "sequencenum", "orderstate", "sn", "batch", "quantity", "stock", "location", "msn"]
+        })
+        return JSON.stringify(args);
+    }
+
+    function removeTableClass() {
+        var datatable_select_Stock = $('#datatable_select_Stock').DataTable();
+        datatable_select_Stock.$('tr.selected').removeClass('selected');
+    }
+
+    $("#startbutton").click(function () {
+        $("#Stockid").val("start")
+    })
+    $("#endbutton").click(function () {
+        $("#Stockid").val("end")
+        removeTableClass()
+    });
+
+    function initdatatable_select_Cus() {
+        if ($('#datatable_select_Cus').hasClass('dataTable')) {
+            var dttable = $('#datatable_select_Cus').dataTable();
+            dttable.fnClearTable(); //清空一下table
+            dttable.fnDestroy(); //还原初始化了的datatable
+        }
+        datatable_select_Cus = $('#datatable_select_Cus').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching": false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/plugins/datatables/cn.json"
+            },
+            "ajax": {
+                "url": "${base}/platform/base/customer/data",
+                "type": "post",
+                "data": function (d) {
+
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "customercode", "bSortable": true},
+                {"data": "customername", "bSortable": true}
+            ],
+            "columnDefs": [
+                {}
+            ]
+        });
+        datatable_select_Cus.on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                datatable_select_Cus.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        $("#name").on('keyup', function () {
+            datatable_select_Cus.ajax.reload();
+        });
+    }
+    function initdatatable_select_Person() {
+        datatable_select_Person = $('#datatable_select_Person').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/plugins/datatables/cn.json"
+            },
+            "ajax": {
+                "url": "${base}/platform/base/person/data",
+                "type": "post",
+                "data": function (d) {
+                    d.keyword=$('#keyword').val();
+                    d.flag = true;
+                }
+            },
+            "order": [[1, "asc"]],
+            "columns": [
+                {"data": "jobNumber", "bSortable": true,"render": function (data, type, row, meta) {
+                        data = data || "";
+                        if(data == ""){
+                            return ""
+                        }else{
+                            return data
+                        }
+                }},
+                {"data": "personname", "bSortable": true,"render": function (data, type, row, meta) {
+                        data = data || ""
+                        if(data == ""){
+                            return "";
+                        }else{
+                            return data;
+                        }
+                }},
+                {"data": "tel", "bSortable": true,"render": function (data, type, row, meta) {
+                        data = data || "";
+                        if(data == ""){return "";}else{return data;}
+                }}
+            ],
+            "columnDefs": [
+                {
+
+                }
+            ]
+        });
+        datatable_select_Person.on('click', 'tr', function () {
+            if ($(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            } else {
+                datatable_select_Person.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        $("#keyword").on("keyup", function (e) {
+            if(e.keyCode == 13) {
+                datatable_select_Person.ajax.reload();
+            }
+        });
+    }
+    function initdatatable_select_Stock(){
+        datatable_select_Stock = $('#datatable_select_Stock').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/plugins/datatables/cn.json"
+            },
+            "ajax": {
+                "url": "${base}/platform/base/place/getPlaceList",
+                "type": "post",
+                "data": function (d) {
+                    d.placecode=$('#placecode').val();
+                }
+            },
+            "order": [[0, "asc"]],
+            "columns": [
+                {"data": "placecode", "bSortable": true,"render": function (data, type, row, meta) {
+                        data = data || "";
+                        if(data == ""){return "";}else{return data;}
+                    }},
+                {"data": "placename", "bSortable": true,"render": function (data, type, row, meta) {
+                        data = data || "";
+                        if(data == ""){return "";}else{return data;}
+                    }},
+                /*
+                {"data": "personname", "bSortable": true,"render": function (data, type, row, meta) {
+                     data = data || "";
+                     if(data == ""){return "";}else{return data;}
+                 }},
+                 {"data": "name", "bSortable": true,"render": function (data, type, row, meta) {
+                     data = data || "";
+                     if(data == ""){return "";}else{return data;}
+                 }},
+                 {"data": "telephone", "bSortable": true,"render": function (data, type, row, meta) {
+                     data = data || "";
+                     if(data == ""){return "";}else{return data;}
+                 }}
+                 */
+            ],
+            /*   "columnDefs": [
+                   {
+                       "render": function (data, type, row) {
+                           data = data || "";
+                           if(data == ""){return "";}else{return data;}
+                       },
+                       "targets": 2
+                   }
+               ]*/
+        });
+        datatable_select_Stock.on('click', 'tr', function () {
+            if ($(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            } else {
+                datatable_select_Stock.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        $("#placecode").on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                datatable_select_Stock.ajax.reload();
+            }
+        });
+    }
+
+    function _selectOn() {
+        var chks = datatable_select_Cus.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable_select_Cus.rows('.selected').data(), function (i, n) {
+                ids.push(this["id"]);
+                ids.push(this["customername"]);
+            });
+            $("#editForm #customerid").val(ids[0])
+            $("#editForm #customername").val(ids[1])
+            $('#dialogCusSelect').modal('hide');
+        } else {
+            Toast.warning("请先选择客户！");
+        }
+    }
+
+    function _selectOnPlace() {
+        var stockid = $("#Stockid").val();
+        var chks = datatable_select_Stock.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(chks, function (i, n) {
+                ids.push(this["id"]);
+                ids.push(this["placename"]);
+                ids.push(this["telephone"])
+            });
+            if (stockid == 'end') {
+                $("#editForm #endstock").val(ids[0]);
+                $("#editForm #endstockname").val(ids[1]);
+                $("#editForm #endstockphone").val(ids[2]);
+                $("#stockid").val("");
+            } else if (stockid == 'start') {
+                $("#editForm #startstock").val(ids[0]);
+                $("#editForm #startstockname").val(ids[1]);
+                $("#editForm #startstockphone").val(ids[2]);
+                $("#stockid").val("");
+            }
+            $('#dialogStockSelect').modal('hide');
+        } else {
+            Toast.warning("请先选择地点！");
+        }
+    }
+
+    function autosearch(id, rows) {
+        $('#materielnum' + rows).autocomplete("${base}/platform/base/airmeterial/autocomplete", {
+            dataType: "json",
+            mustMatch: false,
+            extraParams: {
+                meterialnum: function () {
+                    return $("#materielnum" + rows).val();
+                }
+            },
+            parse: function (data) {
+                return $.map(data, function (row) {
+                    return {
+                        data: row,
+                        value: row.id,
+                        result: row.meterialnum,
+                    }
+                });
+            },
+            formatItem: function (data, i, max) {
+                return data.meterialnum + "|" + data.meterialname;
+            },
+            formatResult: function (data) {
+                return data.meterialnum;
+            },
+            formatMatch: function (data, i, max) {
+                return data.meterialnum + data.meterialname;
+            }
+        }).result(function (event, data, formatted) {
+            var row = $(this).attr("id");
+            row = row.replace($(this).attr("name"), "");
+            if (typeof(data) == "undefined") {
+                $('#materielid' + row).val("");
+            } else {
+                $('#materielid' + row).val(data.id);
+                $('#materielname' + row).val(data.meterialname);
+            }
+        })
+    }
+
+    var rows = 0;
+
+    function append() {
+        var orderid = "${obj.id!}"
+        /*"materielname", "materielnum", "pnr", "sequencenum", "orderstate", "sn", "batch", "quantity", "stock", "location", "msn"*/
+        var strAppend = '<tr id="rows' + rows + '"  style="background: rgb(255, 255, 255) none repeat scroll 0% 0%;">' +
+            '<td><div class="btn-group"><button type="button" id="btnDel" onclick="btdel(this)" class="btn btn-default"><i class="ti-minus"></i></button></div></td>' +
+            '<td><input class="form-control" id="materielname' + rows + '" type="text" name="materielname" value="" size="8"><input class="form-control" id="materielid' + rows + '" type="hidden" name="materielid" value="" size="8"><input class="form-control" id="orderid' + rows + '" type="hidden" name="orderid" value="' + orderid + '" size="8"></td>' +
+            '<td><input class="form-control append" id="materielnum' + rows + '" type="text" name="materielnum" value="" size="8"></td>' +
+            '<td><input class="form-control append" id="pnr' + rows + '" type="text" name="pnr" value="" size="8"></td>' +
+            '<td><input class="form-control" id="sequencenum' + rows + '" type="text" name="sequencenum" value="" size="8"></td>' +
+            '<td><input class="form-control" id="orderstate' + rows + '" type="text" name="orderstate" value="" size="5"></td>' +
+            '<td><input class="form-control" id="sn' + rows + '" type="text" name="sn" value="" size="3"></td>' +
+            '<td><input class="form-control" id="batch' + rows + '" type="text" name="batch" value="" size="8"></td>' +
+            '<td><input class="form-control" id="quantity' + rows + '" type="text" name="quantity" value="" size="8"></td>' +
+            '<td><input class="form-control" id="stock' + rows + '" type="text" name="stock" value="" size="8"></td>' +
+            '<td><input class="form-control" id="location' + rows + '" type="text" name="location" value="" size="8"></td>' +
+            '<td><input class="form-control" id="msn' + rows + '" type="text" name="msn" value="" size="8"></td>' +
+            '<tr>';
+        $("#editFormEntry tbody ").append(strAppend);
+        autosearch("append", rows);
+        rows++;
+    }
+    function btdel(clickTd) {
+        var tr = $(clickTd).parent().parent();
+        tr.remove();
+    }
+   /* function btdel(clickTd) {
+        var id = $(clickTd).attr("id")
+        var tr = $(clickTd).parent().parent().parent();
+        if (id == "btnDel") {
+            tr.remove();
+        } else {
+            $.post("${base}/platform/logistics/orderentry/delete/" + id, {}, function (data) {
+                console.debug(data)
+                if (data.code == 0) {
+                    tr.remove();
+                } else {
+                    Toast.error(data.msg);
+                }
+            }, "json");
+        }
+    }*/
+    function _selectOnPerson() {
+        var chks = datatable_select_Person.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable_select_Person.rows('.selected').data(), function (i, n) {
+                ids.push(this["id"]);
+                ids.push(this["personname"]);
+            });
+            $("#editForm #personid").val(ids[0])
+            $("#editForm #personname").val(ids[1])
+            $("#dialogPersonSelect").modal('hide');
+        } else {
+            Toast.warning("请先选择员工！");
+        }
+    }
+
+    $(document).ready(function () {
+        initdatatable_select_Cus();
+        initdatatable_select_Stock();
+        initdatatable_select_Person();
+        var lorderno = "${lorderno!}"
+        var ordertype = lorderno.match(/^[a-z|A-Z]+/gi)[0]
+        var l_orderno = lorderno.match(/\d+$/gi)[0]
+        $("#ordertype option[value="+ordertype+"]").prop("selected",true)
+        $("#l_orderno").val(l_orderno)
+        bindVehicleDDL("运输类型", "transporttype", "transportname", "transporttype", "${obj.transporttype}");
+        $("#transportname").on("change", function () {
+            $("#transporttype").val($(this).val());
+        });
+        bindVehicleDDL("航线运输", "btype.hxys", "btypename", "btype", "${obj.btype}");
+        $("#btypename").on("change", function () {
+            $("#btype").val($(this).val());
+        });
+        bindVehicleDDL("航材类型", "hctype", "hctypename", "hctype", "${obj.hctype}");
+        $("#hctypename").on("change", function () {
+            $("#hctype").val($(this).val());
+        });
+        bindVehicleDDL("紧急程度", "emergency", "emergencyname", "emergency", "${obj.emergency}");
+        $("#emergencyname").on("change", function () {
+            $("#emergency").val($(this).val());
+        });
+
+        var tabledata = '${obj.logistics_orderentry}'
+        tabledata = eval(tabledata)
+        var rows = tabledata.length;
+        if (rows != 0) {
+            initDatatable_Entry(tabledata);
+            $.each(tabledata, function (i, data) {
+                autosearch("append", data.id);
+            });
+        }
+        var otype = "${obj.otype}";
+
+        if (otype == "true") {
+            $('#otype').attr("checked", true);
+        } else {
+            $('#otype').attr("checked", false);
+        }
+        var isAOG = "${obj.isAOG}"
+        if (isAOG == "true") {
+            $('#isAOG').attr("checked", true)
+        } else {
+            $('#isAOG').attr("checked", false)
+        }
+        var isSpecial = "${obj.isSpecial}"
+        if (isSpecial == "true") {
+            $('#isSpecial').attr("checked", true)
+        } else {
+            $('#isSpecial').attr("checked", false)
+        }
+
+        /* $('[name="otype"]').bootstrapSwitch({
+             onText:"内",
+             offText:"外",
+             onColor:"primary",
+             offColor:"danger",
+             size:"norma",
+             onSwitchChange:function(event,state){
+             }
+         });*/
+//    $('[name="isPackage"]').bootstrapSwitch({
+//        onText:"是",
+//        offText:"否",
+//        onColor:"primary",
+//        offColor:"danger",
+//        size:"norma",
+//        onSwitchChange:function(event,state){
+//        }
+//    });
+        $('[name="isSpecial"]').bootstrapSwitch({
+            onText: "是",
+            offText: "否",
+            onColor: "primary",
+            offColor: "danger",
+            size: "norma",
+            onSwitchChange: function (event, state) {
+            }
+        });
+        $('[name="isAOG"]').bootstrapSwitch({
+            onText: "是",
+            offText: "否",
+            onColor: "primary",
+            offColor: "danger",
+            size: "norma",
+            onSwitchChange: function (event, state) {
+            }
+        });
+        $('.form_datetime').datetimepicker({
+            language: 'zh-CN',
+            format: 'yyyy-mm-dd hh:ii',
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0,
+            showMeridian: 1
+        });
+
+        $("#startstockname").autocomplete("${base}/platform/base/place/autocomplete", {
+            dataType: "json",
+            mustMatch: true,
+            matchSubset: true,
+            cacheLength: 10,
+            delay: 400,
+            extraParams: {
+                placename: function () {
+                    return $('#startstockname').val();
+                }
+            },
+            parse: function (data) {
+                return $.map(data, function (row) {
+                    return {
+                        data: row,
+                        value: row.placename,
+                        result: row.placename
+                    }
+                });
+            },
+            formatItem: function (data, i, max) {
+                return data.placecode + "|" + data.placename + "|" + data.telephone;
+            },
+            formatResult: function (data) {
+                return data.placename;
+            },
+            formatMatch: function (data, i, max) {
+                return data.id + data.placename;
+            }
+        }).result(function (event, data, formatted) {
+            if ((data.id) == "") {
+                $('#editForm #startstock').val("");
+                $('#editForm #startstockname').val("");
+                $('#editForm #startstockphone').val("");
+            } else {
+                $('#editForm #startstock').val(data.id);
+                $('#editForm #startstockphone').val(data.telephone);
+            }
+        });
+
+        $("#endstockname").autocomplete("${base}/platform/base/place/autocomplete", {
+            dataType: "json",
+            mustMatch: true,
+            matchSubset: true,
+            cacheLength: 10,
+            delay: 400,
+            extraParams: {
+                placename: function () {
+                    return $('#endstockname').val();
+                }
+            },
+            parse: function (data) {
+
+                return $.map(data, function (row) {
+                    return {
+                        data: row,
+                        value: row.placename,
+                        result: row.placename
+                    }
+                });
+
+            },
+            formatItem: function (data, i, max) {
+                return data.placecode + "|" + data.placename + "|" + data.telephone;
+            },
+            formatResult: function (data) {
+                return data.placename;
+            },
+            formatMatch: function (data, i, max) {
+                return data.id + data.placename;
+            }
+        }).result(function (event, data, formatted) {
+            if (data.id == "") {
+                $('#editForm #startstockname').val("");
+                $('#editForm #endstock').val("");
+                $('#editForm #endstockphone').val("");
+            } else {
+
+                $('#editForm #endstock').val(data.id);
+                $('#editForm #endstockphone').val(data.telephone);
+            }
+        });
+    });
+
+
+</script>
+
+<%}%>
+
+

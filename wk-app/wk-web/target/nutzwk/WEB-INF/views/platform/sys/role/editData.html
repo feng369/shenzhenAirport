@@ -1,0 +1,149 @@
+<%
+layout("/layouts/platform.html"){
+%>
+
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <!-- 左按钮区 -->
+        <div class="btn-group tool-button">
+            <a class="btn btn-primary navbar-btn" href="${base}/platform/sys/role" data-pjax id="goback"><i class="ti-angle-left"></i> 返回</a>
+        </div>
+
+    </header>
+    <div class="content-wrap">
+        <div class="wrapper">
+            <div class="row mb15">
+                <div class="col-lg-12">
+                    <form id="editRoleDataForm"  class="form-horizontal stepy" method="post" action="${base}/platform/sys/role/editDataDo">
+                        <input name="id" type="hidden" value="${obj.id}">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-1 control-label">角色名称</label>
+
+                            <div class="col-sm-11">
+                                <input type="text" class="form-control" id="name" name="name" validate="true" placeholder="角色名称"
+                                       maxlength="20" value="${obj.name}" readonly>
+                            </div>
+                        </div>
+        <div class="form-group">
+            <label for="isSelf"  class="col-sm-1 control-label">数据权限</label>
+
+            <div class="col-sm-11">
+
+                <input type="checkbox" class="check-box-table-cell"   id="isSelf" name="isSelf" validate="false" value="<%if(!isEmpty(obj)){%>${obj.isSelf}<%}%>" checked><label>个人</label>
+
+                <input type="checkbox" class="check-box-table-cell"   id="isDept" name="isDept" validate="false" value="<%if(!isEmpty(obj)){%>${obj.isDept}<%}%>"><label>部门</label>
+
+                <input type="checkbox" class="check-box-table-cell"   id="isUnit" name="isUnit" validate="false" value="<%if(!isEmpty(obj)){%>${obj.isUnit}<%}%>"><label>组织</label>
+                <!--<input type="hidden" name="id" value="${obj.id!}">-->
+
+                </div>
+        </div>
+                        <div class="col-lg-3"></div>
+                        <div class="col-lg-6">
+                            <div class="form-group text-center">
+                                <label></label>
+
+                                <div>
+                                    <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+    </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script language="JavaScript">
+
+
+    $(document).ready(function () {
+
+//       var a=$("#isSelf").val();
+//       var b=$("#isDept").val();
+//       var c=$("#isUnit").val();
+//       alert(a+b+c);
+        if($("#isDept").val()=="1")
+        {
+            $("#isDept").prop("checked",true);
+        }
+        if($("#isUnit").val()=="1")
+        {
+            $("#isUnit").prop("checked",true);
+        }
+
+        $("#isSelf").change(function(){
+            $("#isSelf").val("1");
+            if(!$("#isSelf").is(":checked"))
+            {
+                //alert(1);
+                $("#isSelf").prop("checked","checked");
+            }
+
+
+            //alert($("#isSelf").val());
+        });
+
+        $("#isDept").change(function(){
+            if($("#isDept").is(':checked')){
+                $("#isDept").val("1");
+                $("#isSelf").val("1");
+            }
+
+            else{
+                $("#isDept").val("0");
+                $("#isUnit").val("0");
+                $("#isUnit").prop("checked",false);
+            }
+
+
+            //alert($("#isSelf").val());
+        });
+
+        $("#isUnit").change(function(){
+            if($("#isUnit").is(':checked')){
+                $("#isUnit").val("1");
+                $("#isDept").val("1");
+                $("#isSelf").val("1");
+                $("#isDept").prop("checked",true);
+            }
+
+            else{
+                $("#isUnit").val("0");
+
+            }
+
+
+            //alert($("#isSelf").val());
+        });
+
+        $('#editRoleDataForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+
+
+
+    });
+
+
+
+</script>
+
+<%}%>

@@ -1,0 +1,91 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                      <!--  <a href="javascript:;" class="h4 show no-m pt5">航材信息</a>-->
+                        <small>航材信息</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                                                        <tr>
+                                <td>${msg['base.airmeterial.column.meterialnum']}</td><td><%if(!isEmpty(obj)){%>${obj.meterialnum}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.airmeterial.column.meterialname']}</td><td><%if(!isEmpty(obj)){%>${obj.meterialname}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.airmeterial.column.meterialtypeId']}</td><td><%if(!isEmpty(obj.meterialtype)){%>${obj.meterialtype.name}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.airmeterial.column.manufactor']}</td><td><%if(!isEmpty(obj)){%>${obj.manufactor}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.airmeterial.column.meterialmodel']}</td><td><%if(!isEmpty(obj)){%>${obj.meterialmodel}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.airmeterial.column.meteritalunit']}</td><td><%if(!isEmpty(obj)){%>${obj.meteritalunit}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.airmeterial.column.meteritalspec']}</td><td><%if(!isEmpty(obj)){%>${obj.meteritalspec}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.airmeterial.column.meteritallength']}</td><td><%if(!isEmpty(obj)){%>${obj.meteritallength}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.airmeterial.column.meteritalwidth']}</td><td><%if(!isEmpty(obj)){%>${obj.meteritalwidth}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.airmeterial.column.meteritalhigh']}</td><td><%if(!isEmpty(obj)){%>${obj.meteritalhigh}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.airmeterial.column.meteritalweight']}</td><td><%if(!isEmpty(obj)){%>${obj.meteritalweight}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.airmeterial.column.haspack']}</td><td><%if(!isEmpty(obj.pack)){%>${obj.pack.name}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.airmeterial.column.capacity']}</td><td><%if(!isEmpty(obj)){%>${obj.capacity}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.airmeterial.column.mincarrier']}</td><td><%if(!isEmpty(obj)){%>${obj.mincarrier}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.airmeterial.column.singlecarrynum']}</td><td><%if(!isEmpty(obj)){%>${obj.singlecarrynum}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.airmeterial.column.singleloading']}</td><td><%if(!isEmpty(obj)){%>${obj.singleloading}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.airmeterial.column.singleunloading']}</td><td><%if(!isEmpty(obj)){%>${obj.singleunloading}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.airmeterial.column.vehicletypeId']}</td><td><%if(!isEmpty(obj.vehicletype)){%>${obj.vehicletype.name}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.airmeterial.column.hasforklift']}</td><td><%if(!isEmpty(obj.forklift)){%>${obj.forklift.name}<%}%></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.airmeterial.column.describ']}</td><td><%if(!isEmpty(obj)){%>${obj.describ}<%}%></td>
+                            </tr>
+
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>
+<script type="application/javascript">
+    $(document).ready(function () {
+        $("#mincarrier").val(parseInt("${obj.mincarrier}"));
+        $("#singlecarrynum").val(parseFloat("${obj.singlecarrynum}"));
+        $("#createTime").html(dataformatint("${obj.createTime}"));
+    });
+</script>

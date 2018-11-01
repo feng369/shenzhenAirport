@@ -1,0 +1,264 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">logistics_sendapproval</a>
+                        <small>查看合同</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <ul id="myTab" class="nav nav-tabs">
+
+                    </ul>
+                    <div id="myTabContent" class="tab-content">
+
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>
+<script language="JavaScript">
+    var planID="${obj.planID}";
+    var url="${base}/platform/logistics/sendgoods/getSendgoodsByPlanID";
+    var param={"planid":planID};
+    $.post(url,param,function(d){
+        if(d){
+            //如果d有多行，说明此计划有多个合同，则需要建立多个tab
+            for(var i=0;i<d.length;i++){
+                structTab(d[i].contractcode,i);
+                structView(d[i],i);
+            }
+
+        }
+    });
+
+    function structView(data,num){
+        var content=document.getElementById("myTabContent");
+        var div=document.createElement("div");
+        //<div class="tab-pane fade in active" id="dvlist">
+        if(num==0)
+            div.setAttribute("class","tab-pane fade in active");
+        else
+            div.setAttribute("class","tab-pane fade");
+        div.setAttribute("style","padding-left:20px;padding-right:20px;");
+        div.setAttribute("id","tab"+num);
+        var table=document.createElement("table");
+//        table.className="table table-bordered table-striped mg-t datatable";
+        table.setAttribute("class","table table-bordered table-striped mg-t datatable");
+        table.setAttribute("id","table"+num);
+        var tbody=document.createElement("tbody");
+        var tr1=document.createElement("tr");
+        var tdaa=document.createElement("td");
+        tdaa.innerHTML="单据编号";
+        var tdab=document.createElement("td");
+        if(data.sendnum)
+            tdab.innerHTML=data.sendnum;
+        tr1.appendChild(tdaa);
+        tr1.appendChild(tdab);
+        var tr2=document.createElement("tr");
+        var tdba=document.createElement("td");
+        tdba.innerHTML="合同编号";
+        var tdbb=document.createElement("td");
+        if(data.contractcode)
+        tdbb.innerHTML=data.contractcode;
+        tr2.appendChild(tdba);
+        tr2.appendChild(tdbb);
+        var tr3=document.createElement("tr");
+        var tdca=document.createElement("td");
+        tdca.innerHTML="件号";
+        var tdcb=document.createElement("td");
+        if(data.partnum)
+        tdcb.innerHTML=data.partnum;
+        tr3.appendChild(tdca);
+        tr3.appendChild(tdcb);
+        var tr4=document.createElement("tr");
+        var tdda=document.createElement("td");
+        tdda.innerHTML="序号";
+        var tddb=document.createElement("td");
+        if(data.serialnum)
+        tddb.innerHTML=data.serialnum;
+        tr4.appendChild(tdda);
+        tr4.appendChild(tddb);
+        var tr5=document.createElement("tr");
+        var tdea=document.createElement("td");
+        tdea.innerHTML="数量";
+        var tdeb=document.createElement("td");
+        if(data.number)
+        tdeb.innerHTML=data.number;
+        tr5.appendChild(tdea);
+        tr5.appendChild(tdeb);
+        var tr6=document.createElement("tr");
+        var tdfa=document.createElement("td");
+        tdfa.innerHTML="架位";
+        var tdfb=document.createElement("td");
+        if(data.shelf)
+        tdfb.innerHTML=data.shelf;
+        tr6.appendChild(tdfa);
+        tr6.appendChild(tdfb);
+        var tr7=document.createElement("tr");
+        var tdga=document.createElement("td");
+        tdga.innerHTML="批次号";
+        var tdgb=document.createElement("td");
+        if(data.batchnum)
+        tdgb.innerHTML=data.batchnum;
+        tr7.appendChild(tdga);
+        tr7.appendChild(tdgb);
+        var tr8=document.createElement("tr");
+        var tdha=document.createElement("td");
+        tdha.innerHTML="发料类型";
+        var tdhb=document.createElement("td");
+        if(data.issuetype)
+        tdhb.innerHTML=data.issuetype;
+        tr8.appendChild(tdha);
+        tr8.appendChild(tdhb);
+        var tr9=document.createElement("tr");
+        var tdia=document.createElement("td");
+        tdia.innerHTML="运输类型";
+        var tdib=document.createElement("td");
+        if(!$.isEmptyObject(data.transport))
+            tdib.innerHTML=data.transport.name;
+        tr9.appendChild(tdia);
+        tr9.appendChild(tdib);
+        var tr10=document.createElement("tr");
+        var tdja=document.createElement("td");
+        tdja.innerHTML="毛重";
+        var tdjb=document.createElement("td");
+        if(data.rough)
+        tdjb.innerHTML=data.rough;
+        tr10.appendChild(tdja);
+        tr10.appendChild(tdjb);
+        var tr11=document.createElement("tr");
+        var tdka=document.createElement("td");
+        tdka.innerHTML="库存地";
+        var tdkb=document.createElement("td");
+        if(!$.isEmptyObject(data.warehouse))
+            tdkb.innerHTML=data.warehouse.warehousename;
+        tr11.appendChild(tdka);
+        tr11.appendChild(tdkb);
+        var tr12=document.createElement("tr");
+        var tdla=document.createElement("td");
+        tdla.innerHTML="优先级";
+        var tdlb=document.createElement("td");
+        if(!$.isEmptyObject(data.priority))
+        tdlb.innerHTML=data.priority.name;
+        tr12.appendChild(tdla);
+        tr12.appendChild(tdlb);
+        var tr13=document.createElement("tr");
+        var tdma=document.createElement("td");
+        tdma.innerHTML="状态";
+        var tdmb=document.createElement("td");
+        if(!$.isEmptyObject(data.pstatus))
+            tdmb.innerHTML=data.pstatus=="1"?"新合同":(data.pstatus=="2"?"发料":(data.pstatus=="3"?"核料":(data.pstatus=="4"?"包装":(data.pstatus=="5"?"计划":(data.pstatus=="6"?"审批":(data.pstatus=="7"?"发货":(data.pstatus=="8"?"交货":"完成")))))));
+        tr13.appendChild(tdma);
+        tr13.appendChild(tdmb);
+        var tr14=document.createElement("tr");
+        var tdna=document.createElement("td");
+        tdna.innerHTML="备注";
+        var tdnb=document.createElement("td");
+        if(data.note)
+        tdnb.innerHTML=data.note;
+        tr14.appendChild(tdna);
+        tr14.appendChild(tdnb);
+        var tr15=document.createElement("tr");
+        var tdoa=document.createElement("td");
+        tdoa.innerHTML="收货方";
+        var tdob=document.createElement("td");
+        if(data.receivename)
+        tdob.innerHTML=data.receivename;
+        tr15.appendChild(tdoa);
+        tr15.appendChild(tdob);
+        var tr16=document.createElement("tr");
+        var tdpa=document.createElement("td");
+        tdpa.innerHTML="收货地址";
+        var tdpb=document.createElement("td");
+        if(data.receiveaddress)
+        tdpb.innerHTML=data.receiveaddress;
+        tr16.appendChild(tdpa);
+        tr16.appendChild(tdpb);
+        var tr17=document.createElement("tr");
+        var tdqa=document.createElement("td");
+        tdqa.innerHTML="联系电话";
+        var tdqb=document.createElement("td");
+        if(data.tel)
+        tdqb.innerHTML=data.tel;
+        tr17.appendChild(tdqa);
+        tr17.appendChild(tdqb);
+        var tr18=document.createElement("tr");
+        var tdra=document.createElement("td");
+        tdra.innerHTML="发货日期";
+        var tdrb=document.createElement("td");
+        if(data.senddate)
+        tdrb.innerHTML=data.senddate;
+        tr18.appendChild(tdra);
+        tr18.appendChild(tdrb);
+        var tr19=document.createElement("tr");
+        var tdsa=document.createElement("td");
+        tdsa.innerHTML="发货人";
+        var tdsb=document.createElement("td");
+        if(!$.isEmptyObject(data.person))
+            tdsb.innerHTML=data.person.personname;
+        tr19.appendChild(tdsa);
+        tr19.appendChild(tdsb);
+        var tr20=document.createElement("tr");
+        var tdta=document.createElement("td");
+        tdta.innerHTML="运单号";
+        var tdtb=document.createElement("td");
+        if(data.billnum)
+        tdtb.innerHTML=data.billnum;
+        tr20.appendChild(tdta);
+        tr20.appendChild(tdtb);
+//        var tr21=document.createElement("tr");
+//        var tdua=document.createElement("td");
+//        tdua.innerHTML="包装人";
+//        var tdub=document.createElement("td");
+//        if(!$.isEmptyObject(data.pack))
+//            tdub.innerHTML=data.pack.packer;
+//        tr21.appendChild(tdua);
+//        tr21.appendChild(tdub);
+        tbody.appendChild(tr1);
+        tbody.appendChild(tr2);
+        tbody.appendChild(tr3);
+        tbody.appendChild(tr4);
+        tbody.appendChild(tr5);
+        tbody.appendChild(tr6);
+        tbody.appendChild(tr7);
+        tbody.appendChild(tr8);
+        tbody.appendChild(tr9);
+        tbody.appendChild(tr10);
+        tbody.appendChild(tr11);
+        tbody.appendChild(tr12);
+        tbody.appendChild(tr13);
+        tbody.appendChild(tr14);
+        tbody.appendChild(tr15);
+        tbody.appendChild(tr16);
+        tbody.appendChild(tr17);
+        tbody.appendChild(tr18);
+        tbody.appendChild(tr19);
+        tbody.appendChild(tr20);
+        table.appendChild(tbody);
+        div.appendChild(table);
+        content.appendChild(div);
+    }
+
+    function structTab(contractcode,num){
+
+        var myTab=document.getElementById("myTab");
+        var li=document.createElement("li");
+        if(num==0){
+            li.setAttribute("class","active");
+        }
+        var a=document.createElement("a");
+        a.setAttribute("id","#tab"+num);
+        a.setAttribute("href","#tab"+num);
+        a.setAttribute("data-toggle","tab");
+        a.innerHTML=contractcode;
+        li.appendChild(a);
+        myTab.appendChild(li);
+    }
+</script>

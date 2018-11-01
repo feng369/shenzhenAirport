@@ -1,0 +1,210 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/logistics/sendgoods" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/logistics/sendgoods/editDo" method="post">
+                <input name="id" type="hidden" value="${obj.id}">
+                <div class="row mb10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="sendnum" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.sendnum']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="sendnum" class="form-control" name="sendnum" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.sendnum']}" value="${obj.sendnum}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contractcode" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.contractcode']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="contractcode" class="form-control" name="contractcode" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.contractcode']}" value="${obj.contractcode}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="partnum" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.partnum']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="partnum" class="form-control" name="partnum" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.partnum']}" value="${obj.partnum}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="serialnum" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.serialnum']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="serialnum" class="form-control" name="serialnum" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.serialnum']}" value="${obj.serialnum}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="number" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.number']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="number" class="form-control" name="number" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.number']}" value="${obj.number}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="shelf" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.shelf']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="shelf" class="form-control" name="shelf" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.shelf']}" value="${obj.shelf}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="batchnum" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.batchnum']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="batchnum" class="form-control" name="batchnum" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.batchnum']}" value="${obj.batchnum}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="issuetype" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.issuetype']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="issuetype" class="form-control" name="issuetype" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.issuetype']}" value="${obj.issuetype}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="tansporttype" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.tansporttype']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="tansporttype" class="form-control" name="tansporttype" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.tansporttype']}" value="${obj.tansporttype}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="rough" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.rough']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="rough" class="form-control" name="rough" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.rough']}" value="${obj.rough}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="warehouseID" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.warehouseID']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="warehouseID" class="form-control" name="warehouseID" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.warehouseID']}" value="${obj.warehouseID}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="prioritylv" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.prioritylv']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="prioritylv" class="form-control" name="prioritylv" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.prioritylv']}" value="${obj.prioritylv}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="pstatus" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.pstatus']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="pstatus" class="form-control" name="pstatus" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.pstatus']}" value="${obj.pstatus}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="note" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.note']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="note" class="form-control" name="note" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.note']}" value="${obj.note}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="receivename" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.receivename']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="receivename" class="form-control" name="receivename" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.receivename']}" value="${obj.receivename}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="receiveaddress" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.receiveaddress']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="receiveaddress" class="form-control" name="receiveaddress" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.receiveaddress']}" value="${obj.receiveaddress}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="tel" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.tel']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="tel" class="form-control" name="tel" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.tel']}" value="${obj.tel}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="senddate" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.senddate']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="senddate" class="form-control" name="senddate" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.senddate']}" value="${obj.senddate}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sender" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.sender']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="sender" class="form-control" name="sender" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.sender']}" value="${obj.sender}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="billnum" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.billnum']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="billnum" class="form-control" name="billnum" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.billnum']}" value="${obj.billnum}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="packID" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.packID']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="packID" class="form-control" name="packID" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.packID']}" value="${obj.packID}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="planID" class="col-sm-2 control-label">${msg['logistics.sendgoods.column.planID']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="planID" class="form-control" name="planID" data-parsley-required="true"
+                                       placeholder="${msg['logistics.sendgoods.column.planID']}" value="${obj.planID}" >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+    </div>
+</div>
+<script language="JavaScript">
+    $(document).ready(function () {
+        $('#editForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+<%}%>

@@ -1,0 +1,134 @@
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <input type="hidden" id="orderid" name="orderid" value="${orderid!}">
+        <div class="pull-right offscreen-right btn-group tool-button">
+            <a class="btn btn-primary navbar-btn"  onclick="_selectOn()">确定</a>
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border" style="padding-top: 5px;" >
+            <input id="unitid" type="hidden">
+            <table id="datatable_select" class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>姓名</th>
+                    <th>状态</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</section>
+<script>
+    $(function () {
+        initdatatable_select();
+
+    })
+    var datatable_select;
+    function initdatatable_select() {
+        datatable_select = $('#datatable_select').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/plugins/datatables/cn.json"
+            },
+            "ajax": {
+                "url": "${base}/platform/base/personpool/persondata",
+                "type": "post",
+                "data": function (d) {
+
+                }
+            },
+            "order": [[2, "desc"]],
+            "columns": [
+                {"data": "personnum", "bSortable": true,"render": function (data, type, row) {
+                      return data ? data :"";
+                }},
+                {"data": "personname", "bSortable": true,"render": function (data, type, row) {
+                        return data ? data :"";
+                    }},
+                {"data": "personstatus", "bSortable": true}
+            ],
+            "columnDefs": [
+                {
+
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (data==0) {
+                            return '<i id="disable_' + row.id + '" class="fa fa-circle text-success ml5"></i>空闲';
+                        } else {
+                            return '<i id="disable_' + row.id + '" class="fa fa-circle text-danger ml5"></i>忙碌';
+                        }
+                    },
+                    "targets": 2
+                }
+            ]
+        });
+        datatable_select.on('click', 'tr', function () {
+            if ($(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            } else {
+                datatable_select.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        $("#name").on('keyup', function () {
+            datatable_select.ajax.reload();
+        });
+    }
+    function _selectOn() {
+        var chks = datatable_select.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable_select.rows('.selected').data(), function (i, n) {
+                ids.push(this["personid"]);
+            });
+            var orderid = $('#orderid').val();
+            $.post("${base}/platform/logistics/order/reassignment",{orderid:orderid,personid:ids.toString()},function(data){
+                if (data.code == 0) {
+
+                    var activeTab = $("#myTab",window.parent.document).children(".active").find("a").attr("id");
+                    var pstatus=[];
+                    if(activeTab=="#dvsave"){
+                        pstatus=[];
+                        pstatus.push(0);
+                        parent.panelInfo("dvsaveform",pstatus);
+                    }else if(activeTab=="#dvwait"){
+                        pstatus=[];
+                        pstatus.push(1);
+                        parent.panelInfo("dvwaitform",pstatus);
+                    }else if(activeTab=="#dvre"){
+                        pstatus=[];
+                        pstatus.push(2);
+                        parent.panelInfo("dvreform",pstatus);
+                    }else if(activeTab=="#dvlist"){
+                        pstatus=[];
+                        parent.panelInfo("dvlistform",[3,4,5,6]);
+                    }else if(activeTab=="#dvrefuse"){
+                        pstatus=[];
+                        pstatus.push(99);
+                        parent.panelInfo("dvrefuseform",pstatus);
+                    }
+                    $("#dialogDetail",window.parent.document).modal("hide");
+                    $("#dialogDetail",window.parent.document).on('hidden.bs.modal', '.modal', function () {
+                        $(this).removeData('bs.modal');
+                    });
+                    window.parent.getcount();
+                    Toast.success(data.msg);
+
+                } else {
+                    Toast.error(data.msg);
+                }
+            });
+            $('#dialogCusSelect').modal('hide');
+        } else {
+            Toast.warning("请先选择人员！");
+        }
+    }
+
+</script>

@@ -1,0 +1,42 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <!--<a href="javascript:;" class="h4 show no-m pt5">base_customer</a>-->
+                        <!--20181142zhf0227-->
+                        <small>客户信息</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                                                        <tr>
+                                <td>${msg['base.customer.column.customername']}</td><td>${obj.customername}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.customer.column.customercode']}</td><td>${obj.customercode}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.customer.column.customeraddress']}</td><td>${obj.customeraddress}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.customer.column.customertel']}</td><td>${obj.customertel}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.customer.column.cusnum']}</td><td>${obj.cusnum}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['base.customer.column.customerdecrib']}</td><td>${obj.customerdecrib}</td>
+                            </tr>
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

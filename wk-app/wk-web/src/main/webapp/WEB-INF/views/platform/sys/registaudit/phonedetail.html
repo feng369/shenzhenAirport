@@ -1,0 +1,131 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">人员查看</a>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <div class="list-group" id="collapseOne" class="panel-collapse collapse in">
+                        <div style="width: 100%;border-bottom: 1px solid #C9C5C5;opacity: 0.6  ">注册信息</div>
+                        <br>
+                        <table class="table table-bordered table-striped mg-t datatable">
+                            <tbody>
+                            <tr>
+                                <td>用户名称</td>
+                                <td>${tempuser.loginname!}</td>
+                            </tr>
+                            <tr>
+                                <td>真实姓名</td>
+                                <td>${tempuser.username!}</td>
+                            </tr>
+                            <tr>
+                                <td>联系电话</td>
+                                <td>${tempuser.tel!}</td>
+                            </tr>
+                            <tr>
+                                <td>微信号</td>
+                                <td>${tempuser.wxNumber!}</td>
+                            </tr>
+                            <tr>
+                                <td>单位名称</td>
+                                <td>${unitName!}</td>
+                            </tr>
+                            <tr>
+                                <td>分配角色</td>
+                                <td id="code"></td>
+                            </tr>
+                            <tr>
+                                <td>注册时间</td>
+                                <td>
+                                    ${sysRegistaudit.registTime!}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>员工图片</td>
+                                <td>
+                                    <div class="col-sm-8" id="imgpath">
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div style="width: 100%;border-bottom: 1px solid #C9C5C5;opacity: 0.6  ">审核信息</div>
+                        <br>
+                        <table class="table table-bordered table-striped mg-t datatable">
+                            <tbody>
+
+                            <tr>
+                                <td>审核人</td>
+                                <td>${auditor.username!}</td>
+                            </tr>
+                            <tr>
+                                <td>审核时间</td>
+                                <td id="auditTime"></td>
+                            </tr>
+                            <tr>
+                                <td>审核结果</td>
+                                <td id="result"></td>
+                            </tr>
+
+                            <tr>
+                                <td>审核意见</td>
+                                <td id="suggestion">${sysRegistaudit.suggestion}</td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>
+<script language="JavaScript">
+
+
+    var code = "${tempuser.roleCode!}";
+    var result = "${sysRegistaudit.result!}";
+    var auditTime = "${sysRegistaudit.auditTime!}";
+    var pic = "${imgPath!}";
+    $(function () {
+        var imgtmp = "";
+        if (pic) {
+            var img = pic.split(',');
+            img.forEach(function (data) {
+                imgtmp = imgtmp + "<img src='" + data + "' class='img-rounded' data-action='zoom' style='max-height: 100px'>&nbsp;&nbsp;"
+            })
+            $('#imgpath').html(imgtmp)
+        }
+        //处理时间
+        $("#auditTime").html(auditTime.replace(/\+/g, " "));
+        //处理审核结果
+        if (result === "-1") {
+            $("#result").html("待审核");
+        } else if (result === "1") {
+            $("#result").html("退回");
+        } else {
+            $("#result").html("通过");
+        }
+
+        $.ajax({
+            url: "${base!}/platform/sys/role/data",
+            type: "POST",
+            data: {unitid: "${tempuser.unitid!}"},
+            // data:{unitid:"root"},
+            success: function (data) {
+                $.each(data.data, function (index, ele) {
+                    if (ele.code === code) {
+                        $("#code").html(ele.name);
+                    }
+
+                })
+            }
+        })
+    });
+</script>

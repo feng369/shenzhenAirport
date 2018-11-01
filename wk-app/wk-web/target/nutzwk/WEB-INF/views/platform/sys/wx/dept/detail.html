@@ -1,0 +1,38 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">企业微信部门表</a>
+                        <small>${obj.id}</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                                                        <tr>
+                                <td>${msg['sys.wx.dept.column.corpid']}</td><td>${obj.corpid}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['sys.wx.dept.column.deptid']}</td><td>${obj.deptid}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['sys.wx.dept.column.name']}</td><td>${obj.name}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['sys.wx.dept.column.parentid']}</td><td>${obj.parentid}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['sys.wx.dept.column.orderNum']}</td><td>${obj.orderNum}</td>
+                            </tr>
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

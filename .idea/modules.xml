@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/wk-app/wk-app.iml" filepath="$PROJECT_DIR$/wk-app/wk-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wk-framework/wk-framework.iml" filepath="$PROJECT_DIR$/wk-framework/wk-framework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wk-parent.iml" filepath="$PROJECT_DIR$/wk-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wk-app/wk-web/wk-web.iml" filepath="$PROJECT_DIR$/wk-app/wk-web/wk-web.iml" />
+    </modules>
+  </component>
+</project>

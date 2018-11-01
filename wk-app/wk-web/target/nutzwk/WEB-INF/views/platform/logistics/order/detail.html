@@ -1,0 +1,389 @@
+<section class="panel panel-form">
+    <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate>
+        <!--action="${base}/platform/logistics/order/addDo" method="post">-->
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion"
+                     href="#collapseOne">
+                    <h4 class="panel-title">
+                        <a>
+                            基础信息<input type="hidden" >
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div class="row mb10">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">订单编号</label>
+                                    <div class="col-sm-3" style="vertical-align: middle;">
+                                        <input type="text"  class="form-control" disabled
+                                               value="${obj.ordernum!}">
+                                    </div>
+                                    <div class="has-feedback">
+                                        <label class="col-sm-2 control-label">客户名称</label>
+                                        <div class="col-sm-3 ">
+                                            <input type="text"  class="form-control"
+                                                    disabled value="${obj.customer.customername!}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="has-feedback" style="top: -6px;">
+                                        <label class="col-sm-2 control-label">需求所属人</label>
+                                        <div class="col-sm-3 ">
+                                            <input type="text"  class="form-control"
+                                                   disabled value="${obj.person.personname!}">
+                                        </div>
+                                    </div>
+                                    <div class="has-feedback" style="top: -6px;">
+                                        <label class="col-sm-2 control-label">航线收货人</label>
+                                        <div class="col-sm-3 ">
+                                            <input type="text" id="" class="form-control" disabled
+                                                   value="${obj.receivePerson.personname!}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="has-feedback" style="top: -6px;">
+                                        <label class="col-sm-2 control-label">业务类型</label>
+                                        <div class="col-sm-3">
+                                            <input type="text"  class="form-control" disabled
+                                                   value="${obj.dict_btype.name!}">
+                                        </div>
+                                        <label class="col-sm-2 control-label">紧急程度</label>
+                                        <div class="col-sm-3">
+                                            <input type="text" class="form-control"
+                                                   disabled value="${obj.dict_emergency.name!}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--  <div class="form-group">
+                                      <label for="startstockphone" class="col-sm-2 control-label">出发地联系电话</label>
+                                      <div class="col-sm-3">
+                                          <input type="text" id="startstockphone" class="form-control" name="startstockphone" disabled value="${obj.startstockphone!}">
+                                      </div>
+                                  </div>-->
+                                <div class="form-group" style="top: 6px;">
+                                    <div class="has-feedback" style="top: -6px;">
+                                        <label class="col-sm-2 control-label">航材类型</label>
+                                        <div class="col-sm-3">
+                                            <input type="text" class="form-control" disabled
+                                                   value="${obj.dict_hctype.name!}">
+                                        </div>
+                                        <label  class="col-sm-2 control-label">登记时间</label>
+                                        <div class="col-sm-3">
+                                            <input type="text"  readonly class="form-control"
+                                                   value="${obj.intime!}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="has-feedback" style="top: -6px;">
+                                        <label class="col-sm-2 control-label">目的地</label>
+                                        <div class="col-sm-3">
+                                            <div class="input-group">
+                                                <input type="text"  class="form-control"
+                                                       disabled value="${obj.place_endstock.placename!}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <label  class="col-sm-2 control-label">${msg['logistics.order.column.endstockphone']}</label>
+                                    <div class="col-sm-3">
+                                        <input type="text"  class="form-control"
+                                               disabled value="${obj.endstockphone!}">
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group" style="top: 6px;">
+                                    <div class="has-feedback" style="top: -6px;">
+                                        <label  class="col-sm-2 control-label">时限要求</label>
+                                        <div class="col-sm-4">
+                                            <input type="text"  class="form-control"
+                                                   value="${obj.timerequest!}" disabled>
+                                        </div>
+                                    </div>
+                                    <!--  <label for="estimatetime" class="col-sm-2 control-label">预计送达时间</label>
+                                      <div class="col-sm-4">
+                                          <input type="text" id="estimatetime" name="estimatetime" readonly class="form-control" value="${@date.getDateTime()}" placeholder="预计送达时间">
+                                      </div>-->
+                                </div>
+                                <div class="form-group" style="top: 6px;">
+                                    <div class="has-feedback" style="top: -6px;">
+                                        <label  class="col-sm-2 control-label">备注</label>
+                                        <div class="col-sm-8">
+                                        <textarea type="text" class="form-control" rows="3"
+                                                  value="" disabled>${obj.note!}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion"
+                     href="#collapseTwo">
+                    <h4 class="panel-title">
+                        <a>
+                            其他信息
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseTwo" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="airwaybillno" class="col-sm-2 control-label">${msg['logistics.order.column.airwaybillno']}</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="airwaybillno" class="form-control" name="airwaybillno"
+                                       value="${obj.airwaybillno!}">
+                            </div>
+                            <label for="contractnum" class="col-sm-2 control-label">${msg['logistics.order.column.contractnum']}</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="contractnum" class="form-control" name="contractnum"
+                                       value="${obj.contractnum!}">
+                            </div>
+                            <label for="status" class="col-sm-2 control-label">状态</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="status" class="form-control" name="status" disabled value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="packagesnum" class="col-sm-2 control-label">件数</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="packagesnum" name="packagesnum" readonly class="form-control"
+                                       value="${obj.packagesnum!}">
+                            </div>
+                            <label for="weight" class="col-sm-2 control-label">重量(KG)</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="weight" name="weight" readonly class="form-control"
+                                       value="${obj.weight!}">
+                            </div>
+                            <label for="stockspace" class="col-sm-2 control-label">仓位</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="stockspace" name="stockspace" readonly class="form-control"
+                                       value="${obj.stockspace!}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="estimatetime" class="col-sm-2 control-label">预计送达时间</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="estimatetime" name="estimatetime" readonly class="form-control"
+                                       value="${@date.getDateTime()}" placeholder="预计送达时间">
+                            </div>
+                            <label for="packagetype" class="col-sm-2 control-label">包装方式</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="packagetype" name="packagetype" readonly class="form-control"
+                                       value="${obj.packagetype!}">
+                            </div>
+                            <label for="isAOG" class="col-sm-2 control-label">是否有AOG标签</label>
+                            <div class="col-sm-2">
+                                <input type="checkbox" id="isAOG" name="isAOG">
+                            </div>
+                            <label for="isSpecial" class="col-sm-2 control-label">是否有特殊标志</label>
+                            <div class="col-sm-2">
+                                <input type="checkbox" id="isSpecial" name="isSpecial">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="devicenum" class="col-sm-2 control-label">机号</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="devicenum" name="devicenum" disabled class="form-control"
+                                       value="${obj.devicenum!}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                物料清单
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="widget-content padded clearfix">
+                <table id="infotable" class="table table-bordered table-striped" width="1000px" border="0"
+                       cellspacing="0" cellpadding="0" style="margin: 0 auto">
+                    <thead>
+                    <th>故障号</th>
+                    <th align="center">MR号</th>
+                    <th>锁定件号</th>
+                    <th>预留件号</th>
+                    <th>项次号</th>
+                    <th>单项物料领用状态</th>
+                    <th>预留序号</th>
+                    <th>批次号</th>
+                    <th>需求数量</th>
+                    <th>库房号</th>
+                    <th>架位</th>
+                    <th>飞机号</th>
+
+                    </thead>
+                    <tbody id="mainbody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    $(document).ready(function () {
+        var otype = "${obj.otype}";
+        if (otype == "true") {
+            $('#otype').attr("checked", true);
+        } else {
+            $('#otype').attr("checked", false);
+        }
+        $('[name="otype"]').bootstrapSwitch({
+            onText: "内",
+            offText: "外",
+            onColor: "primary",
+            offColor: "danger",
+            size: "norma",
+        });
+
+        var isPackage = "${obj.isPackage}";
+        if (isPackage == "true") {
+            $('#isPackage').attr("checked", true);
+        } else {
+            $('#isPackage').attr("checked", false);
+        }
+        $('[name="isPackage"]').bootstrapSwitch({
+            onText: "是",
+            offText: "否",
+            onColor: "primary",
+            offColor: "danger",
+            size: "norma",
+            onSwitchChange: function (event, state) {
+            }
+        });
+        var isSpecial = "${obj.isSpecial}";
+        if (isSpecial == "true") {
+            $('#isSpecial').attr("checked", true);
+        } else {
+            $('#isSpecial').attr("checked", false);
+        }
+        $('[name="isSpecial"]').bootstrapSwitch({
+            onText: "是",
+            offText: "否",
+            onColor: "primary",
+            offColor: "danger",
+            size: "norma",
+            onSwitchChange: function (event, state) {
+            }
+        });
+        var isAOG = "${obj.isAOG}";
+        if (isSpecial == "true") {
+            $('#isAOG').attr("checked", true);
+        } else {
+            $('#isAOG').attr("checked", false);
+        }
+        $('[name="isAOG"]').bootstrapSwitch({
+            onText: "是",
+            offText: "否",
+            onColor: "primary",
+            offColor: "danger",
+            size: "norma",
+            onSwitchChange: function (event, state) {
+            }
+        });
+
+        var pstatus = "${obj.pstatus}";
+        $('#status').val(getDisStstus(pstatus));
+        initDetailDatatable();
+    })
+
+    function initDetailDatatable() {
+        var tabledata = '${obj.logistics_orderentry}'
+        console.debug(tabledata)
+        tabledata = eval(tabledata);
+        $('#infotable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching": false,
+            "bPaginate": false, //翻页功能
+            "bInfo": false,//页脚信息
+            "processing": false,
+            "serverSide": false,
+            "select": false,
+            "ordering": false,
+            "data": tabledata,
+            "columns": [
+                {
+                    "data": "lorderno", "bSortable": true, "render": function (data, type, row) {
+                        return data ? data : ""
+                    }
+                },
+                {
+                    "data": "materielname", "bSortable": true, "render": function (data, type, row) {
+                        return data ? data : ""
+                    }
+                },
+                {
+                    "data": "materielnum", "bSortable": true, "render": function (data, type, row) {
+                        return data ? data : ""
+                    }
+                },
+                {
+                    "data": "pnr", "bSortable": true, "render": function (data, type, row) {
+                        return data ? data : ""
+                    }
+                },
+                {
+                    "data": "sequencenum", "bSortable": true, "render": function (data, type, row) {
+                        return data ? data : ""
+                    }
+                },
+                {
+                    "data": "orderstate", "bSortable": true, "render": function (data, type, row) {
+                        return data ? data : ""
+                    }
+                },{
+                    "data": "sn", "bSortable": true, "render": function (data, type, row) {
+
+                        return data ? data : ""
+
+                    }
+                },{
+                    "data": "batch", "bSortable": true, "render": function (data, type, row) {
+                        return data ? data : ""
+                    }
+                },{
+                    "data": "quantity", "bSortable": true, "render": function (data, type, row) {
+                        return data ? data : ""
+                    }
+                },{
+                    "data": "stock", "bSortable": true, "render": function (data, type, row) {
+                        return data ? data : ""
+                    }
+                }, {
+                    "data": "location", "bSortable": true, "render": function (data, type, row) {
+                        return data ? data : ""
+                    }
+                },
+                {
+                    "data": "msn", "bSortable": true, "render": function (data, type, row) {
+                        return data ? data : ""
+                    }
+                },
+            ]
+            ,"fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+                if(aData.sn) {
+                    $(nRow).css("background", "#00CC33");
+                }
+            }
+
+
+        });
+    }
+</script>
+

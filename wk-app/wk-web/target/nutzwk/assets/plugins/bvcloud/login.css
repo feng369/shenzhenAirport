@@ -1,0 +1,238 @@
+body{
+    background:#061C35 url("/assets/img/bvcloud/login_bg@3x.jpg") no-repeat bottom center;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: "Microsoft YaHei", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+}
+
+#container .navbar-default{
+    border-bottom: 1px solid #36465F;
+    background: fixed;
+}
+#container .navbar-brand{
+    background: url("/assets/plugins/bvcloud/logo_login.svg")no-repeat center center;
+    width: 128px;
+    height: 52px;
+    margin-left: 20px;
+    /*filter:alpha(opacity=65);*/
+    /*-moz-opacity:0.65;*/
+    /*opacity:0.65;*/
+}
+
+#container #mobile a{
+    padding:15px 30px;
+    color: #d2d2d2;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+#container #mobile a:hover{
+    color: #FFFFFF;
+}
+
+#wrap .modal .ad{
+    width: 220px;
+    height: 220px;
+    padding-bottom: 10px;
+}
+
+.zh_appname,.eng_appname{
+
+    margin-bottom: 20px;
+    color: #FFFFFF;
+}
+
+.zh_appname h2{
+
+    text-align: left;
+    font-size:30px ;
+    font-weight: 500;
+    color: #FFFFFF;
+    margin:120px 0 30px 0 ;
+    position: relative;
+    white-space:nowrap;
+}
+
+.eng_appname h2{
+
+    text-align: left;
+    font-size:30px ;
+    font-weight: 600;
+    color: #FFFFFF;
+    margin:50px 0 30px 0 ;
+    position: relative;
+    white-space:nowrap;
+}
+
+.zh_appname small{
+    font-size: 12px;
+    font-weight: normal;
+    border: 1px solid #ffffff;
+    border-radius: 12px;
+    color: #FFFFFF;
+    padding:5px 10px 4px 10px;
+    margin: 0;
+    position: absolute;
+    top:-4px;
+    left:280px;
+}
+
+.eng_appname small{
+    font-size: 12px;
+    font-weight: normal;
+    border: 1px solid #ffffff;
+    border-radius: 12px;
+    color: #FFFFFF;
+    padding:5px 10px 4px 10px;
+    margin: 0;
+    position: absolute;
+    top:-4px;
+    left:270px;
+}
+
+.zh_appname p{
+
+    white-space:nowrap;
+    font-size: 14px;
+    font-weight:normal;
+
+}
+.eng_appname p{
+
+    font-size: 14px;
+    font-weight:normal;
+
+}
+
+.zh, .eng{
+    font-size: 24px;
+    color: #4A4A4A;
+    padding: 25px;
+    position:relative;
+    display: block;
+}
+
+.zh span, .eng span{
+    position: absolute;
+    right: 26px;
+    top:22px;
+    width: 130px;
+    height: 40px;
+    line-height: 12px;
+    font-size: 14px;
+    color: #1582DC;
+    cursor: pointer;
+}
+
+.zh span{
+    padding: 9px 0 0 8px;
+}
+
+.eng span{
+    padding: 9px 0 0 12px;
+}
+
+.zh .code, .eng .code{
+    background: url("/assets/plugins/bvcloud/code.svg")no-repeat center center;
+}
+
+.zh .computer, .eng .computer{
+    background: url("/assets/plugins/bvcloud/computer.svg")no-repeat center center;
+    width: 133px;
+    height: 38px;
+}
+
+.qr_code{
+    /*background: url("/assets/img/bvcloud/barcode@3x.png")no-repeat ;*/
+    height: 160px;
+    width: 160px;
+    background-size: cover;
+    position: relative;
+}
+
+#container .qr_code a{
+    cursor: pointer;
+    color: #54A2E5;
+}
+
+.row p{
+    margin: 25px 0;
+}
+
+#container .login_bg2 {
+    filter:alpha(opacity=85);
+    -moz-opacity:0.85;
+    opacity:0.85;
+    /*min-width:360px;*/
+    /*max-width: 420px;*/
+}
+
+section{
+    min-height: 330px;
+}
+
+#container .login_bg2 section,
+#container .login_bg2 section input,
+#container .login_bg2 section button,
+#tip{
+
+    border-radius: 0;
+
+}
+
+#login{
+    font-size: 18px;
+    font-weight: 500;
+}
+
+#bs-example-navbar-collapse-1 ul li a{
+    color: #d2d2d2;
+    padding-right: 50px;
+    padding-left: 50px;
+    line-height: 22px;
+    font-size: 14px;
+    margin: 0;
+
+}
+
+#bs-example-navbar-collapse-1 ul li a:hover,
+#bs-example-navbar-collapse-1 ul li a:focus{
+    background-color: #06142D;
+    color: #FFFFFF;
+}
+
+#bs-example-navbar-collapse-1 ul li ul {
+    background-color: #06142D;
+    margin: 0;
+    border:none;
+}
+
+#bs-example-navbar-collapse-1 ul li ul li {
+    line-height: 26px;
+}
+
+#bs-example-navbar-collapse-1 ul li ul li a:hover{
+    background-color: #1E406F;
+}
+
+#container .navbar-header button{
+    border:none;
+    margin-top: 10px;
+    color: #FFFFFF;
+}
+
+#container .navbar-header button:hover,
+#container .navbar-header button:focus {
+
+    background-color: #FFFFFF;
+
+}
+
+#container .navbar-header .collapsed{
+
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="32px" viewBox="0 0 24 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>map2</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="index1" transform="translate(-1326.000000, -520.000000)">
+            <g id="Group-4" transform="translate(1173.000000, 466.000000)">
+                <g id="map2" transform="translate(153.000000, 54.000000)">
+                    <ellipse id="Oval-4-Copy" fill-opacity="0.496999547" fill="#F6A623" cx="12" cy="30.5" rx="6" ry="1.5"></ellipse>
+                    <circle id="Oval-3" fill="#FFFFFF" cx="12" cy="12" r="6"></circle>
+                    <path d="M2.31308251e-05,12 C7.71273685e-06,11.9921498 0,11.9842978 0,11.976444 C0,5.36203664 5.372583,0 12,0 C18.627417,0 24,5.36203664 24,11.976444 C24,11.9842978 23.9999923,11.9921498 23.9999769,12 L2.14720747e-05,12 Z M12,30 C16.798909,25.2883361 19.9920503,21.7396218 21.5794237,19.3538573 C23.1667972,16.9680927 23.9657685,14.5168069 23.9763378,12 L0.0275237619,12 C0.0275237619,14.7011717 0.818349175,17.1524575 2.4,19.3538573 C3.98165083,21.555257 7.18165083,25.1039713 12,30 Z M12,17.3658439 C14.9823376,17.3658439 17.4,14.9529274 17.4,11.976444 C17.4,8.99996071 14.9823376,6.58704422 12,6.58704422 C9.01766235,6.58704422 6.6,8.99996071 6.6,11.976444 C6.6,14.9529274 9.01766235,17.3658439 12,17.3658439 Z" id="Combined-Shape-Copy" fill="#F67923"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,195 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/base/cnctobj" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/base/cnctobj/editDo" method="post">
+                <input name="id" type="hidden" value="${obj.id}">
+                <div class="row mb10">
+                    <div class="col-lg-12">
+                        <!--<div class="form-group">-->
+                            <!--<label for="userId" class="col-sm-2 control-label">${msg['base.cnctobj.column.userId']}</label>-->
+                            <!--<div class="col-sm-8">-->
+                                <!--<input type="text" id="userId" class="form-control" name="userId" data-parsley-required="true"-->
+                                       <!--placeholder="${msg['base.cnctobj.column.userId']}" value="${obj.userId}" >-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+
+                        <div class="form-group has-feedback">
+                            <label for="uid" class="col-sm-2 control-label">${msg['base.cnctobj.column.userId']}</label>
+
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input id="uid" type="text" class="form-control" placeholder="${msg['base.cnctobj.column.userId']}" disabled
+                                           value="<%if(!isEmpty(obj)){%>${obj.user.username}<%}%>" data-parsley-required="true"/>
+
+                                    <span class="input-group-btn">
+			                             			<a  class="btn btn-primary" data-toggle="modal" href="${base}/platform/base/cnctobj/selectUser"  data-target="#dialogUserSelect"><i class="ti-plus"></i>选择
+                                                    </a> <!--href="${base}/platform/sys/role/selectUser"-->
+
+			                             		</span>
+                                </div>
+                                <input type="hidden" id="userId"  name="userId" value="<%if(!isEmpty(obj)){%>${obj.userId}<%}%>">
+                            </div>
+                        </div>
+
+
+                        <!--<div class="form-group">-->
+                            <!--<label for="personId" class="col-sm-2 control-label">${msg['base.cnctobj.column.personId']}</label>-->
+                            <!--<div class="col-sm-8">-->
+                                <!--<input type="text" id="personId" class="form-control" name="personId" data-parsley-required="true"-->
+                                       <!--placeholder="${msg['base.cnctobj.column.personId']}" value="${obj.personId}" >-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+                        <div class="form-group has-feedback">
+                            <label for="pid" class="col-sm-2 control-label">${msg['base.cnctobj.column.personId']}</label>
+
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input id="pid" type="text" class="form-control" placeholder="${msg['base.cnctobj.column.personId']}" disabled
+                                           value="<%if(!isEmpty(obj)){%>${obj.person.personname}<%}%>" data-parsley-required="false"/>
+
+                                    <span class="input-group-btn">
+			                             			<a class="btn btn-primary" data-toggle="modal" href="${base}/platform/base/cnctobj/selectPerson"
+                                                       data-target="#dialogPersonSelect"><i class="ti-plus"></i>选择
+                                                    </a>
+			                             		</span>
+                                </div>
+                                <input type="hidden" id="personId" name="personId" value="<%if(!isEmpty(obj)){%>${obj.personId}<%}%>">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="etId" class="col-sm-2 control-label">类型</label>
+
+                            <div class="col-sm-8">
+                                <select id="etId" name="type" class="form-control">
+
+                                </select>
+                            </div>
+                            <input type="hidden" id="emptypeId" name="emptypeId" value="<%if(!isEmpty(obj)){%>${obj.emptypeId}<%}%>">
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+    </div>
+</div>
+
+
+<div id="dialogUserSelect" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 700px;">
+        <div class="modal-content" style="width: 700px;">
+
+        </div>
+    </div>
+</div>
+
+<div id="dialogPersonSelect" class="modal fade bs-modal-sm" tabindex="-4" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 700px;">
+        <div class="modal-content" style="width: 700px;">
+
+        </div>
+    </div>
+</div>
+
+
+<script language="JavaScript">
+    var userObj=null;
+    var personObj=null;
+    $(document).ready(function () {
+
+
+        bindEmpType();
+
+        $("#etId").on("change",function(){
+            $("#emptypeId").val($(this).val());
+        });
+
+        $('#editForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+
+        $("#dialogUserSelect").on("hidden.bs.modal", function () {
+
+            $("#uid").val(userObj[0].username);
+            $("#userId").val(userObj[0].id);
+            //alert($("#userId").val());
+            $(this).removeData("bs.modal");
+        });
+
+        $("#dialogPersonSelect").on("hidden.bs.modal", function () {
+
+            $("#pid").val(personObj[0].personname);
+            $("#personId").val(personObj[0].id);
+            //alert($("#userId").val());
+            $(this).removeData("bs.modal");
+        });
+    });
+
+    function bindEmpType(){
+        var url="${base}/platform/base/cnctobj/bindType";
+        var param={"name":"人员类型"};
+        var select="${obj.emptypeId}";
+        $.post(url,param,function(d){
+            // alert(d[0].name);
+            for(var i=0;i<d.length;i++)
+            {
+                if(select==d[i].id)
+                {
+                    $("#etId").append("<option value="+d[i].id+" selected>"+d[i].name+"</option>");
+                }
+                else {
+                    $("#etId").append("<option value="+d[i].id+">"+d[i].name+"</option>");
+                }
+            }
+
+
+
+
+            $("#emptypeId").val($("#etId option:selected").val());
+
+        });
+    }
+
+
+</script>
+<%}%>

@@ -1,0 +1,111 @@
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="pull-left offscreen-left" style="padding-top:15px;">
+            <div class="form-group">
+                <input id="name" type="text" onclick="this.value='';" placeholder="请输入员工姓名">
+            </div>
+        </div>
+        <div class="pull-right offscreen-right btn-group tool-button">
+            <!--<a class="btn btn-primary navbar-btn" onclick="_selectAll()">全选</a>-->
+            <a class="btn btn-primary navbar-btn" onclick="_selectOn()">确定</a>
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border" style="padding-top: 5px;" >
+            <input id="unitid" type="hidden">
+            <table id="datatable_selectperson" class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                <tr>
+                    <th>人员名</th>
+                    <th>电话</th>
+                    <th>微信号</th>
+                    <th>通行证号码</th>
+                    <th>单位</th>
+                    <th>部门</th>
+                    <th>岗位</th>
+                    <th>职务</th>
+            </table>
+        </div>
+    </div>
+</section>
+<script language="JavaScript">
+    var datatable_selectperson;
+    function initdatatable_selectperson() {
+        datatable_selectperson = $('#datatable_selectperson').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/plugins/datatables/cn.json"
+            },
+            "ajax": {
+                "url": "${base}/platform/base/person/selectData",
+                "type": "post",
+                "data": function (d) {
+                    d.name = $('#name').val();
+                }
+
+            },
+            "destroy":"true",
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "personname", "bSortable": true},
+
+                {"data": "tel", "bSortable": true,"render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }},
+                {"data": "wx", "bSortable": true,"render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }},
+                {"data": "permitNumber", "bSortable": true,"render": function (data, type, row, meta) {
+                        return data ? data : "";
+                    }
+                },
+
+                {"data": "unitname", "bSortable": true},
+                {"data": "deptname", "bSortable": true},
+                {"data": "postname", "bSortable": true},
+                {"data": "jobname", "bSortable": true}//,
+//                {"data": "id", "bSortable": true}
+            ]
+        });
+        datatable_selectperson.on('click', 'tr', function () {
+            if($(this).hasClass('selected'))
+                $(this).removeClass('selected');
+            else {
+                 datatable_selectperson.$('tr.selected').removeClass('selected');
+                 $(this).addClass('selected');
+            }
+
+
+        });
+        $("#name").on('keyup', function () {
+            datatable_selectperson.ajax.reload();
+        });
+    }
+    function _selectAll() {
+        $("#datatable_selectperson").find("tr").each(function () {
+            if (!$(this).hasClass('selected'))
+                $(this).addClass('selected');
+        });
+    }
+    function _selectOn() {
+        var chks = datatable_selectperson.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = datatable_selectperson.rows('.selected').data();
+            //将子页面传值给父页面
+            //alert(ids);
+            this.parent.personObj=ids;
+            $('#dialogPersonSelect').modal('hide');
+        }else{
+            Toast.warning("请先选择人员！");
+        }
+    }
+    $(document).ready(function () {
+        initdatatable_selectperson();
+    });
+
+</script>

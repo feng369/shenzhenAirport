@@ -1,0 +1,733 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<section class="content-wrap bg-white">
+    <ul id="myTab" class="nav nav-tabs">
+        <li>
+            <a id="#dvsave" href="#dvsave" data-toggle="tab">
+                编制中 <span id="dvsavecount" class="badge">0</span>
+            </a>
+        </li>
+        <!--<li>-->
+            <!--<a id="#dvwait" href="#dvwait" data-toggle="tab">-->
+                <!--待派单 <span id="dvwaitcount" class="badge">0</span>-->
+            <!--</a>-->
+        <!--</li>-->
+        <li><a id="#dvre" href="#dvre" data-toggle="tab">
+            已派单，待接单 <span id="dvrecount" class="badge">0</span></a>
+        </li>
+        <li class="active"><a id="#dvlist" href="#dvlist" data-toggle="tab">
+            配送中订单 <span id="dvlistcount" class="badge">0</span></a>
+        </li>
+        <!--<li><a id="#dvrefuse" href="#dvrefuse" data-toggle="tab">-->
+            <!--拒接 <span id="dvrefusecount" class="badge">0</span></a>-->
+        <!--</li>-->
+        <li><a id="#comp" href="#comp" data-toggle="tab">已完成订单
+            <!--<span id="compcount" class="badge">0</span>-->
+        </a></li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade" id="dvsave">
+            <div class=panel-body style="padding-top: 10px;">
+                <div class="table-responsive no-border">
+                    <div class="row" id="dvsaveform">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="dvre">
+            <div class=panel-body style="padding-top: 10px;">
+                <div class="table-responsive no-border">
+                    <div class="row" id="dvreform">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="dvwait">
+            <div class=panel-body style="padding-top: 10px;">
+                <div class="table-responsive no-border">
+                    <div class="row" id="dvwaitform"></div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade in active" id="dvlist">
+            <div class=panel-body style="padding-top: 10px;">
+                <div class="table-responsive no-border">
+                    <div id="dvlistform"></div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="dvrefuse">
+            <div class=panel-body style="padding-top: 10px;">
+                <div class="table-responsive no-border">
+                    <div id="dvrefuseform"></div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="comp">
+            <header class="header navbar bg-white shadow">
+                <div class="btn-group tool-button">
+                    <!--<button id="reorder" type="button" class="btn btn-primary navbar-btn" onclick="reOrder()"><i class="ti-clipboard"></i> 接单</button>-->
+                </div>
+                <div class="pull-right offscreen-right">
+                    <button class="btn btn-primary navbar-btn" onclick="sublime.toggleFilter('.cd-panel')"><i
+                            class="fa fa-sliders"></i> 筛选
+                    </button>
+                </div>
+            </header>
+            <div class=panel-body style="padding-top: 50px;">
+                <div class="table-responsive no-border">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <thead>
+                        <tr>
+                            <th>订单编号</th>
+                            <th style="display: none">客户名称</th>
+                            <th>状态</th>
+                            <th style="display: none">类型</th>
+                            <th>业务类型</th>
+                            <th>紧急程度</th>
+                            <!--<th>出发地</th>-->
+                            <th>目的地</th>
+                            <th>时限要求</th>
+                            <!--   <th>预计送达时间</th>-->
+                            <th>送达时间</th>
+                            <th>订单所属人</th>
+                            <th>订单所属人电话</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</section>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['globals.button.delete']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['globals.button.delete.notice']}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}
+                </button>
+                <button id="okDel" type="button" class="btn btn-primary"
+                        data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 900px">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="cd-panel from-right">
+    <form id="selectForm">
+        <header class="cd-panel-header">
+            <h4>高级筛选</h4>
+        </header>
+        <div class="cd-panel-container">
+            <div class="cd-panel-content shadow">
+                <div class="form-group">
+                    <label for="emergencyname">紧急程度</label>
+                    <select id="emergencyname" name="emergencyname" class="form-control" placeholder="请选择紧急程度">
+                    </select>
+                    <input type="hidden" id="emergency" class="form-control" name="emergency"
+                           data-parsley-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="endstockname">目的地</label>
+                    <input id="endstockname" name="endstockname" type="text" class="form-control" placeholder="目的地"
+                           value=""/>
+                    <input type="hidden" id="endstock" name="endstock" value="">
+                </div>
+                <div class="form-group">
+                    <label for="personname">订单所属人</label>
+                    <input id="personname" name="personname" type="text" class="form-control" placeholder="订单所属人"
+                           value=""/>
+                </div>
+                <div class="form-group">
+                    <label for="orderNum">订单编号</label>
+                    <input id="orderNum" name="ordernum" type="text" class="form-control" placeholder="订单编号"
+                           value=""/>
+                </div>
+                <div class="form-group">
+                    <label for="startTime">下单开始时间</label>
+                    <input id="startTime" name="startTime" type="text" class="form-control" placeholder=""
+                           value=""/>
+                </div>
+                <div class="form-group">
+                    <label for="endTime">下单截止时间</label>
+                    <input id="endTime" name="endTime" type="text" class="form-control" placeholder=""
+                           value=""/>
+                </div>
+                <button id="searchBtn" type="button" class="btn btn-primary">查询</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script language="JavaScript">
+    var datatable;
+
+    function initDatatable() {
+        var OrderCountRef = ${OrderCountRef!}
+            datatable = $('.datatable').DataTable({
+                "dom": '<"toolbar">frtip',
+                "searching": false,
+                "processing": false,
+                "serverSide": true,
+                "select": true,
+                "ordering": true,
+                "destroy": true,
+                "language": {
+                    "url": "${base}/assets/plugins/datatables/${lang}.json"
+                },
+                "preDrawCallback": function () {
+                    sublime.showLoadingbar($(".main-content"));
+                },
+                "drawCallback": function () {
+                    sublime.closeLoadingbar($(".main-content"));
+                },
+                "ajax": {
+                    "url": "${base}/platform/logistics/order/getCheckOrders",
+                    "type": "post",
+                    "data": function (d) {
+                        /*var arr = $('#selectForm').serialize();
+                        arr = decodeURIComponent(arr, true);//防止中文乱码
+                        arr = DataDeal.formToJson(arr);//转化为json
+                        d.selectForm = arr;*/
+                        // var arr = $('#selectForm').serialize();
+                        // arr = decodeURIComponent(arr, true);//防止中文乱码
+                        // arr = DataDeal.formToJson(arr);//转化为json
+                        // d.otype = "72dd55d2c3cc42799c4e014745db2cdb"
+                        // d.selectForm=arr
+                        // d.completeValue=2
+                        // d.pstatus=8
+                        // d.personname = $("#personname").val()
+                        d.emergency = $("#emergency").val();
+                        d.endstockname = $("#endstockname").val();
+                        d.personname = $("#personname").val();
+                        d.ordernum = $("#orderNum").val();
+                        d.startTime = $("#startTime").val();
+                        d.endTime = $("#endTime").val();
+                        d.otype = "72dd55d2c3cc42799c4e014745db2cdb"
+                    }
+                },
+                "order": [[0, "desc"]],
+                "columns": [
+                    {
+                        "data": "ordernum", "bSortable": true, "render": function (data, type, row, meta) {
+                            return data ? data : "";
+                        }
+                    },
+                    /*  {
+                          "data": "customer.customername",
+                          "bSortable": false,
+                          "bVisible": false,
+                          "render": function (data, type, row, meta) {
+                              data = data || "";
+                              if (data == "") {
+                                  return "";
+                              } else {
+                                  return data;
+                              }
+                          }
+                      },*/
+                    {
+                        "data": "pstatus", "bSortable": true, "render": function (data, type, row, meta) {
+                            return getDisStstus(data);
+                        }
+                    },
+                    /* {
+                         "data": "otname",
+                         "bSortable": false,
+                         "bVisible": false,
+                         "render": function (data, type, row, meta) {
+                             return data ? data : "";
+
+                         }
+                     },*/
+                    {
+                        "data": "btypename", "bSortable": false, "render": function (data, type, row, meta) {
+                            return data ? data : "";
+                        }
+                    },
+                    {
+                        "data": "emername", "bSortable": false, "render": function (data, type, row, meta) {
+                            return data ? data : "";
+                        }
+                    },
+                    // {"data": "place_startstock.placename", "bSortable": false,"render": function (data, type, row, meta) {
+                    //     data = data || "";
+                    //     if(data == ""){return "";}else{return data;}
+                    // }},
+                    {
+                        "data": "endstockname", "bSortable": false, "render": function (data, type, row, meta) {
+                            data = data || "";
+                            if (data == "") {
+                                return "";
+                            } else {
+                                return data;
+                            }
+                        }
+                    },
+                    {
+                        "data": "timerequest", "bSortable": true, "render": function (data, type, row, meta) {
+                            return data ? data : "";
+                        }
+                    },
+                    /*   {"data": "estimatetime", "bSortable": true,"render": function (data, type, row, meta) {
+                               return data ? data :"";
+                           }},*/
+                    {
+                        "data": "operatetime", "bSortable": true, "render": function (data, type, row, meta) {
+                            return data ? data : "";
+                        }
+                    },
+                    {
+                        "data": "personname", "bSortable": true, "render": function (data, type, row, meta) {
+                            return data ? data : "";
+                        }
+                    },
+                    {
+                        "data": "tel", "bSortable": true, "render": function (data, type, row, meta) {
+                            return data ? data : "";
+                        }
+                    },
+                ],
+                "columnDefs": [
+                    {
+                        "render": function (data, type, row) {
+                            var url = "${base}/platform/logistics/Deliveryorderentry/detail/" + row.id;
+                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                                ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                                '<li><a href="${base}/platform/logistics/order/detail/' + row.id + '" data-toggle="modal" data-target="#dialogDetail">${msg["globals.button.detail"]}</a></li>' +
+                                '<li><a href="' + url + '" >跟踪记录</a></li>' +
+                                '</ul></div>';
+                        },
+                        "targets": 9
+                    }
+                ]
+            });
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+        setInterval(function () {
+            datatable.ajax.reload(null, false); // 刷新表格数据，分页信息不会重置
+        }, 1000 * OrderCountRef);
+    }
+
+    function submitOrder(id) {
+        $.ajax({
+            url: "${base}/platform/logistics/order/submitOrderDo/",
+            data: {id: id, status: 1},
+            type: "post",
+            success: function (data) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    datatable.ajax.reload();
+                } else {
+                    Toast.error(data.msg);
+                }
+            }
+        })
+    }
+
+    function reOrder() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            $.ajax({
+                url: "${base}/platform/logistics/Deliveryorder/adddelDo/",
+                data: {orderid: ids.toString()},
+                type: "post",
+                success: function (data) {
+                    if (data.code == 0) {
+                        Toast.success(data.msg);
+                        datatable.ajax.reload();
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                }
+            })
+        }
+    }
+
+    function del(id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#okDel").unbind("click");
+        dialog.find("#okDel").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/platform/logistics/order/delete/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null, false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+
+    function delCheck() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            var dialog = $("#dialogDelete");
+            dialog.modal("show");
+            dialog.find("#okDel").unbind("click");
+            dialog.find("#okDel").bind("click", function (event) {
+                var btn = $(this);
+                btn.button("loading");
+                $.post("${base}/platform/logistics/order/delete", {ids: ids.toString()}, function (data) {
+                    if (data.code == 0) {
+                        datatable.ajax.reload(null, false);
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                    btn.button("reset");
+                    dialog.modal("hide");
+                }, "json");
+            });
+        } else {
+            Toast.warning("${msg['globals.button.delete.select']}");
+        }
+    }
+
+    /**
+     * 下拉刷新 （自定义实现此方法）
+     * myScroll.refresh(); // 数据加载完成后，调用界面更新方法
+     */
+
+    function panelInfo(form, pstatus) {
+        sublime.showLoadingbar($(".main-content"));
+        var jqxhr = $.post("${base}/platform/logistics/order/getdvorderList", {pstatus: pstatus.toString()}, function (data) {
+            $('#' + form).html("");
+            data.forEach(function (data, i) {
+                //循环获取数据
+                var orderid = data.id;//订单id
+                var ordernum = data.ordernum;//订单编号
+                var emergency = "";//紧急程度
+                var timerequest = data.timerequest;//预计送达时间
+                var sex = data.startstock;
+                var customer = data.customer ? data.customer.customername : "";
+                var corlor = "panel-primary";
+                var person = "";
+                var start = "";
+                var end = "";
+                var dict_btype = "";
+                var detailurl = "";
+                //20171019cw 提发货订单
+                var isTF = data.isTF ? data.isTF : "";
+                var wh = data.warehousename;
+                var rn = data.receivename;
+                var trantype = "";
+                var costtype = "";
+                var tempprice = "";
+                var protocol = "";
+                var free = "";
+
+                var orderPstatus = data.pstatus;
+
+                if (typeof(data.sendplan) != "undefined") {
+                    trantype = gettransname(data.sendplan.tansporttype);
+                    costtype = getcostname(data.sendplan.costtype);
+                    tempprice = data.sendplan.tempprice;
+                    protocol = data.sendplan.protocolnum;
+                    free = data.sendplan.freenum;
+                }
+
+                if (typeof(data.dict_emergency) != "undefined") {
+                    if (data.dict_emergency.code == "emergency.urgent") {
+                        corlor = "panel-warning";
+                    } else if (data.dict_emergency.code == "emergency.aog") {
+                        corlor = "panel-danger";
+                    }
+                    emergency = data.dict_emergency.name;
+                }
+                if (typeof(data.place_startstock) != "undefined") {
+                    start = data.place_startstock.placename;
+                }
+                if (typeof(data.place_endstock) != "undefined") {
+                    end = data.place_endstock.placename;
+                }
+                //20180801zhf1030
+                var sendPersonTel = "";
+                if (typeof(data.logisticsDeliveryorder) != "undefined") {
+                    if (typeof(data.logisticsDeliveryorder.person) != "undefined") {
+                        person = data.logisticsDeliveryorder.person.personname;
+                        sendPersonTel = data.logisticsDeliveryorder.person.tel ?data.logisticsDeliveryorder.person.tel :"";
+                    }
+                }
+
+
+
+                if (typeof(data.dict_btype) != "undefined") {
+                    dict_btype = data.dict_btype.name;
+                }
+                dict_otype = data.otype;
+
+                if (dict_otype == "72dd55d2c3cc42799c4e014745db2cdb") {
+                    detailurl = "${base}/platform/logistics/order/detail/" + data.id;
+                } else if (dict_otype == "36a3a69fab514290bd4256c5def05a48") {
+                    detailurl = "${base}/platform/logistics/order/jsdetail/" + data.id;
+                }
+
+                var temp = "<div class=\"col-sm-6 col-md-4 col-lg-3\"><div  class=\"panel " + corlor + " \">" +
+                    "<div class=\"panel-heading\">" + customer + " &nbsp;&nbsp;<span id='" + data.id + "' class='label label-success pull-right'></span></div>" +
+                    "<div class=\"panel-body\">" +
+                    "<p><label>订单编号：</label>" + ordernum + "</p>" +
+                    // (isTF == "" ? "<p><label>出发地：</label>" + start + "</p>" : "") +
+                    "<p><label>目的地：</label>" + (isTF == "" ? end : rn) + "</p>" +
+                    "<p><label>业务类型：</label>" + (isTF == "" ? dict_btype : (isTF == "0" ? "发货" : "提货")) + "</p>" +
+                    (isTF == "" ? "" : "<p><label>运输方式：</label>" + trantype + "</p>") +
+                    (isTF == "" ? "<p><label>紧急程度：</label>" + emergency + "</p>" : "<p><label>运输费用类型：</label>" + costtype + "</p>") +
+                    (isTF == "" ? "<p><label>预计送达时间：</label>" + (timerequest?timerequest:"") + "</p>" : (costtype == "临时报价" ? "<p><label>临时报价：</label>" + tempprice + "</p>" : (costtype == "协议" ? "<p><label>协议号：</label>" + protocol + "</p>" : "<p><label>免费号：</label>" + free + "</p>")))
+                    + (orderPstatus >= 3 ? "<p><label>配送员：</label>" + person + "</p>" +
+                        "<p><label>配送员电话：</label>" + sendPersonTel + "</p>":"")
+                    +
+                    "</div><div class='panel-footer text-right'><div class='btn-group'>";
+
+                if (isTF == "") {
+                    temp += "<a href='" + detailurl + " ' class='btn btn-link'  data-toggle='modal' data-target='#dialogDetail' title='查看详情'><i class='ti-eye'></i></a>" +
+                        "<a href='${base}/platform/logistics/Deliveryorderentry/detail/" + data.id + " ' class='btn btn-link'   title='跟踪记录'><i class='ti-time'></i></a>" +
+                        "<a href='${base}/platform/base/personpool/ppool/" + data.id + " ' class='btn btn-link'  data-toggle='modal' data-target='#dialogDetail' title='改派'><i class='ti-user'></i></a>";
+
+                } else {
+                    temp += "<a href='" + detailurl + " ' class='btn btn-link'  data-toggle='modal' data-target='#dialogDetail' title='查看详情'><i class='ti-eye'></i></a>" +
+                        "<a href='${base}/platform/logistics/Deliveryorderentry/detail/" + data.id + " ' class='btn btn-link'   title='跟踪记录'><i class='ti-time'></i></a>";
+                }
+                temp += "</div></div></div></div>";
+                $('#' + form).append(temp);
+                var datanow = new Date();
+                if(timerequest){
+                    timerequest = new Date(timerequest);
+                    var timeout = (timerequest.getTime() - datanow.getTime()) / 1000
+                    if(timeout <= 0){
+                        $("#" + data.id).html(" 已超时 ");
+                        $("#" + data.id).toggleClass("label label-danger")
+                    } else if ( timeout < 600) {
+                        //10分钟
+                        $("#" + data.id).toggleClass("label-warning")
+                        $("#" + data.id).countDown(timeout);
+                    }else{
+                        $("#" + data.id).countDown(timeout);
+                    }
+                }else{
+                    $("#" + data.id).html("待派单");
+                }
+            });
+        }, "json");
+        jqxhr.complete(function () {
+            sublime.closeLoadingbar($(".main-content"));
+        });
+
+    }
+
+    function gettransname(transid) {
+//        var name="";
+//        $.ajaxSettings.async=false;
+//        $.post("${base}/platform/sys/dict/getNamebyId",{"id":transid},function(d){
+////            alert(d);
+//            name=d;
+//        });
+//        return name;
+        if (transid == "0") {
+            return "空运";
+        }
+        else if (transid == "1") {
+            return "陆运";
+        }
+        else {
+            return "上门自提";
+        }
+    }
+
+    function getcostname(costid) {
+        var name = "";
+        $.ajaxSettings.async = false;
+        $.post("${base}/platform/sys/dict/getNamebyId", {"id": costid}, function (d) {
+//            alert(d);
+            name = d;
+        });
+        return name;
+    }
+
+    function reload() {
+        sublime.showLoadingbar($(".main-content"));
+        var pstatus = [];
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            // 获取已激活的标签页的名称
+            var activeTab = $(e.target).attr("id");
+            if (activeTab == "#comp") {
+                initDatatable();
+            } else if (activeTab == "#dvsave") {
+                pstatus = [];
+                pstatus.push(0);
+                panelInfo("dvsaveform", pstatus);
+            } else if (activeTab == "#dvwait") {
+                pstatus = [];
+                pstatus.push(1);
+                panelInfo("dvwaitform", pstatus);
+            } else if (activeTab == "#dvre") {
+                pstatus = [];
+                pstatus.push(2);
+                panelInfo("dvreform", pstatus);
+            } else if (activeTab == "#dvlist") {
+                pstatus = [];
+                panelInfo("dvlistform",[3, 4, 5, 6,7])
+            } else if (activeTab == "#dvrefuse") {
+                pstatus = [];
+                pstatus.push(99);
+                panelInfo("dvrefuseform", pstatus);
+            }
+
+        });
+        sublime.closeLoadingbar($(".main-content"));
+    }
+    $(function () {
+        $("#endstockname").autocomplete("${base}/platform/base/place/autocomplete", {
+            dataType: "json",
+            mustMatch: true,
+            extraParams: {
+                placename: function () {
+                    return $('#endstockname').val();
+                }
+            },
+            parse: function (data) {
+                return $.map(data, function (row) {
+                    return {
+                        data: row,
+                        value: row.id,
+                        result: row.placename
+                    }
+                });
+            },
+            formatItem: function (data, i, max) {
+                return data.placecode + "|" + data.placename + "|" + data.telephone;
+            },
+            formatResult: function (data) {
+                return data.placename;
+            },
+            formatMatch: function (data, i, max) {
+                return data.id + data.placename;
+            }
+        }).result(function (event, data, formatted) {
+            if (typeof(data) == "undefined") {
+                $('#endstock').val("");
+            } else {
+                $('#endstock').val(data.id);
+
+            }
+        });
+        bindVehicleDDL("紧急程度", "emergency", "emergencyname", "emergency")
+        getcount();
+        var OrderCountRef = ${OrderCountRef!}
+            setInterval(getcount, 1000 * OrderCountRef);
+        var temp = "";
+        var pstatus = [];
+        pstatus.push(3);
+        pstatus.push(4);
+        pstatus.push(5);
+        pstatus.push(6);
+        panelInfo("dvlistform", pstatus);
+        reload();
+
+    });
+
+    $("#emergencyname").change(function () {
+        $("#emergency").val($(this).val());
+    });
+    var getcount = function () {
+        //获取编制中订单数据
+        $.post("${base}/platform/logistics/order/getordercount", {pstatus: 0}, function (data) {
+            $('#dvsavecount').html(data);
+        })
+        // $.post("${base}/platform/logistics/order/getordercount", {pstatus: 1}, function (data) {
+        //     var count = $('#dvwaitcount').html()
+        //     if (parseInt(count) != parseInt(data)) {
+        //         $('#dvwaitcount').html(data);
+        //         pstatus = [];
+        //         pstatus.push(1);
+        //         panelInfo("dvwaitform", pstatus);
+        //     }
+        // })
+        $.post("${base}/platform/logistics/order/getordercount", {pstatus: 2}, function (data) {
+            var count = $('#dvrecount').html()
+            if (parseInt(count) != parseInt(data)) {
+                pstatus = [];
+                pstatus.push(2);
+                panelInfo("dvreform", pstatus);
+            }
+            $('#dvrecount').html(data);
+        })
+
+        $.post("${base}/platform/logistics/order/getordercount", {pstatus: [3, 4, 5, 6,7].toString()}, function (data) {
+            var count = $('#dvlistcount').html()
+            if (parseInt(count) != parseInt(data)) {
+                panelInfo("dvlistform", [3, 4, 5, 6,7]);
+            }
+            $('#dvlistcount').html(data);
+        })
+        // $.post("${base}/platform/logistics/order/getordercount", {pstatus: [99].toString()}, function (data) {
+        //     var count = $('#dvrefusecount').html()
+        //     if (parseInt(count) != parseInt(data)) {
+        //         panelInfo("dvrefuseform", [99]);
+        //     }
+        //     $('#dvrefusecount').html(data);
+        // })
+        // $.post("${base}/platform/logistics/order/getordercount", {pstatus: [8].toString()}, function (data) {
+        //     $('#compcount').html(data);
+        // })
+        $("#startTime").datetimepicker({
+            format: 'yyyy-mm-dd hh:ii',      /*此属性是显示顺序，还有显示顺序是mm-dd-yyyy*/
+            language:'zh-CN',
+            autoclose: true
+        });
+        $("#endTime").datetimepicker({
+            format: 'yyyy-mm-dd hh:ii',      /*此属性是显示顺序，还有显示顺序是mm-dd-yyyy*/
+            language:'zh-CN',
+            autoclose: true
+        });
+        var nowDate = new Date();
+        var oneDay=  24*60*60*1000;
+        beginDate = new Date(nowDate.getTime() - oneDay);
+        beginDate.setHours(0)
+        beginDate.setMinutes(0)
+        var format = "yyyy-MM-dd hh:mm"
+        $("#startTime").val(beginDate.format(format))
+        endDate = new Date();
+        endDate.setHours(23)
+        endDate.setMinutes(59)
+        $("#endTime").val(endDate.format(format));
+    }
+</script>
+
+<%}%>

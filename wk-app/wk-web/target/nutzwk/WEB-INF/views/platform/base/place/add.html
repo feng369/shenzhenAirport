@@ -1,0 +1,403 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/base/place" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+
+            <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/base/place/addDo" method="post">
+                <div class="row mb10">
+                    <div class="col-lg-12">
+                        <div class="form-group has-feedback">
+                            <label for="parentid" class="col-sm-2 control-label">父级编码</label>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input id="parentid" type="text" class="form-control" placeholder="选择上级" disabled
+                                           data-parsley-required="false"/>
+                                    <span class="input-group-btn">
+			                             			<button type="button" class="btn btn-primary" data-toggle="modal"
+                                                            data-target="#dialogSelectParentPlace"><i class="ti-plus"></i>选择
+                                                    </button>
+			                             		</span>
+                                </div>
+                                <input type="hidden" name="parentId" >
+                            </div>
+                            <label for="placecode" class="col-sm-2 control-label">${msg['base.place.column.placecode']}</label>
+                            <div class="col-sm-4" id="numDiv">
+                                <input type="text" id="placecode" class="form-control" name="placecode" data-parsley-required="false" validate="true" placeholder="${msg['base.place.column.placecode']}">
+                                <span style="color: red" hidden>该编码已经存在</span>
+                            </div>
+                            <img src="/assets/img/loading.gif" hidden>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label for="airport" class="col-sm-2 control-label">机场</label>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input id="airport" name="airports" type="text" class="form-control" placeholder="选择机场"
+                                           value="" data-parsley-required="false" validate="true" readonly/>
+                                    <span class="input-group-btn">
+			                             			<button type="button" class="btn btn-primary" data-toggle="modal" href="${base}/platform/base/place/selectAirport"
+                                                            data-target="#dialogSelectAirport"><i class="ti-plus"></i>选择
+                                                    </button>
+			                             		</span>
+                                </div>
+                                <input type="hidden" id="airportId" name="airportId" value="">
+                            </div>
+                            <label for="customer" class="col-sm-2 control-label">单位</label>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input id="customer" name="customers" type="text" class="form-control" placeholder="选择单位" readonly
+                                           value="" data-parsley-required="false" validate="true"/>
+
+                                    <span class="input-group-btn">
+			                             			<button type="button" class="btn btn-primary" data-toggle="modal" href="${base}/platform/base/place/selectCustomer"
+                                                            data-target="#dialogSelectCustomer"><i class="ti-plus"></i>选择
+                                                    </button>
+			                             		</span>
+                                </div>
+                                <input type="hidden" id="customerId" name="customerId" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="areaid" class="col-sm-2 control-label">区域</label>
+                            <div class="col-sm-4">
+                                <select id="areaname" name="areaname" class="form-control">
+                                </select>
+                            </div>
+                            <input type="hidden" id="areaid" name="areaid" value="<%if(!isEmpty(obj)){%>${obj.id}<%}%>">
+                            <label for="typeid" class="col-sm-2 control-label">类型</label>
+                            <div class="col-sm-4">
+                                <select id="typename" name="typename" class="form-control">
+                                </select>
+                            </div>
+                            <input type="hidden" id="typeid" name="typeid" value="<%if(!isEmpty(obj)){%>${obj.id}<%}%>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="placename" class="col-sm-2 control-label">${msg['base.place.column.placename']}</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="placename" class="form-control" name="placename" data-parsley-required="false" validate="true" placeholder="${msg['base.place.column.placename']}">
+                            </div>
+                            <label for="ctrlid" class="col-sm-2 control-label">管控点</label>
+                            <div class="col-sm-4">
+                                <select id="ctrlname" name="ctrlname" class="form-control">
+                                </select>
+                            </div>
+                            <input type="hidden" id="ctrlid" name="ctrlId" value="">
+                        </div>
+
+                        <div class="form-group has-feedback">
+                            <label for="person" class="col-sm-2 control-label">负责人</label>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input id="person" type="text" class="form-control" placeholder="选择负责人" disabled
+                                           value="" data-parsley-required="false"/>
+                                    <span class="input-group-btn">
+			                             			<button type="button" class="btn btn-primary" data-toggle="modal" href="${base}/platform/base/place/selectPerson"
+                                                            data-target="#dialogSelectPerson"><i class="ti-plus"></i>选择
+                                                    </button>
+			                             		</span>
+                                </div>
+                                <input type="hidden" id="personId" name="personId" value="">
+                            </div>
+                            <label for="telephone" class="col-sm-2 control-label">${msg['base.place.column.telephone']}</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="telephone" class="form-control" name="telephone" data-parsley-required="false" validate="true" placeholder="${msg['base.place.column.telephone']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="describ" class="col-sm-2 control-label">${msg['base.place.column.describ']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="describ" class="form-control" name="describ" data-parsley-required="false" placeholder="${msg['base.place.column.describ']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="address" class="col-sm-2 control-label">${msg['base.place.column.address']}</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="address" class="form-control" name="address" data-parsley-required="false" placeholder="${msg['base.place.column.address']}">
+                            </div>
+                            <label for="position" class="col-sm-2 control-label">地理位置</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="position" class="form-control" name="position" data-parsley-required="false" placeholder="地理位置">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tipinput" class="col-sm-2 control-label">搜索地址</label>
+                            <div class="col-sm-8">
+                                <input class="form-control" id="tipinput"/>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="modal-body" id="maps" style="height:400px;width: 800px"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"><div class='stepy-errors text-left' ></div></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+                        <div>
+                            <button class="stepy-finish btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+
+
+<div id="dialogSelectAirport" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 700px;">
+        <div class="modal-content" style="width: 700px;">
+
+        </div>
+    </div>
+</div>
+
+<div id="dialogSelectCustomer" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 700px;">
+        <div class="modal-content" style="width: 700px;">
+
+        </div>
+    </div>
+</div>
+
+<div id="dialogSelectPerson" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 700px;">
+        <div class="modal-content" style="width: 700px;">
+
+        </div>
+    </div>
+</div>
+
+<div id="dialogSelectParentPlace" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">选择上级</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeParentPlace" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-success" data-dismiss="modal" onclick="selectFirstMenu()">设为顶级</button>
+                </div>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                <button type="button" class="btn btn-primary" onclick="selectParentMenu()">确认选择</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script language="JavaScript">
+    //20180402zhf1441
+    var flag = false;
+    $("#numDiv input").blur(function () {
+        var numVal = $(this).val();
+        $.ajax({
+            url:"${base}/platform/base/place/countByNum",
+            data:{num:numVal},
+            type:"POST",
+            beforeSend:function () {
+                $("#numDiv").next("img").show()
+            },
+            success:function (data) {
+                if(data > 0){
+                    flag = true;
+                    $("#numDiv").addClass("has-error");
+                    $("#numDiv span").show();
+                }else{
+                    flag = false;
+                    $("#numDiv span").hide();
+                    $("#numDiv").removeClass("has-error")
+                }
+            },
+            complete:function () {
+                $("#numDiv").next("img").hide()
+            }
+        });
+    });
+    function initTreeView() {
+        $("#jsTreeParentPlace").jstree({
+            plugins: ["wholerow", "json_data"],
+            core: {
+                data: {
+                    dataType: "json",
+                    url: function (node) {
+                        return node.id === "#" ? "${base}/platform/base/place/tree" : "${base}/platform/base/place/tree?pid=" + node.id
+                    }
+                },
+                multiple: false
+            }
+        }).on("dblclick.jstree", function (node) {
+            selectParentMenu();
+        });
+    }
+
+    //选择父菜单
+    function selectParentMenu() {
+        var tree = $.jstree.reference("#jsTreeParentPlace");
+        var node = tree.get_selected(true);
+        $("#addForm #parentid").val(node[0].text);
+        $("#addForm input[name='parentId']").val(node[0].id);
+        $("#dialogSelectParentPlace").modal("hide");
+    }
+
+    function selectFirstMenu() {
+        $("#addForm #parentid").val("顶级部门");
+        $("#addForm input[name='parentId']").val("");
+        $("#dialogSelectParentPlace").modal("hide");
+    }
+
+
+
+
+
+    var airportObj=null;
+    var customerObj=null;
+    var personObj=null;
+    $(document).ready(function () {
+
+        bindVehicleDDL("区域","area","areaname","areaid");
+
+        bindVehicleDDL("地点类型","areaType","typename","typeid");
+
+        bindVehicleDDL("管控点","ctrlPt","ctrlname","ctrlid");
+
+        $("#areaid").on("change",function(){
+            $("#areaId").val($(this).val());
+        });
+
+        $("#typeid").on("change",function(){
+            $("#typeId").val($(this).val());
+        });
+
+        $("#ctrlid").on("change",function(){
+            $("#ctrlId").val($(this).val());
+        });
+
+        initTreeView();
+
+
+
+        $('#addForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                if(flag){
+                    $("#numDiv input").focus();
+                    $("#numDiv").addClass("has-error");
+                    $("#numDiv span").show();
+                    Toast.warning("该编码已经存在")
+                    return false;
+                }else{
+                    $("#numDiv").removeClass("has-error")
+                }
+                form.find("button:submit").button("loading");
+                //alert($("#ctrlId").val());
+            },
+            success: function (data, statusText, xhr, form) {
+                //alert(1);
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    form.resetForm();
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+
+
+        $("#dialogSelectAirport").on("hidden.bs.modal", function () {
+
+            $("#airport").val(airportObj[0].airportname);
+            $("#airportId").val(airportObj[0].id);
+
+            $(this).removeData("bs.modal");
+            //alert($("#airportId").val());
+        });
+
+        $("#dialogSelectCustomer").on("hidden.bs.modal", function () {
+
+            $("#customer").val(customerObj[0].customername);
+            $("#customerId").val(customerObj[0].id);
+
+            $(this).removeData("bs.modal");
+            //alert($("#airportId").val());
+        });
+
+        $("#dialogSelectPerson").on("hidden.bs.modal", function () {
+
+            $("#person").val(personObj[0].personname);
+            $("#personId").val(personObj[0].id);
+
+            $(this).removeData("bs.modal");
+            //alert($("#airportId").val());
+        });
+
+        jQuery.validator.addMethod("isPhone", function(value,element) {
+            var length = value.length;
+            var mobile = /^(((13[0-9]{1})|(15[0-9]{1}))+\d{8})$/;
+            var tel = /^\d{3,4}-?\d{7,9}$/;
+            return this.optional(element) || (tel.test(value) || mobile.test(value));
+
+        });
+    });
+</script>
+<!--高德地图-->
+<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=de8519526746616cb6dfaed57aee2f17&callback=init"></script>
+<script type="text/javascript">
+    var init=function () {
+        var map = new AMap.Map('maps', {
+            resizeEnable: true,
+            zoom:17
+        });
+        map.plugin(["AMap.ToolBar"], function() {
+            map.addControl(new AMap.ToolBar());
+        });
+        var clickEventListener = map.on('click', function(e) {
+            document.getElementById("position").value = e.lnglat.getLng() + ',' + e.lnglat.getLat()
+        });
+        map.plugin('AMap.Autocomplete',function(){//回调函数
+            //实例化Autocomplete
+            var autoOptions = {
+                city: "", //城市，默认全国
+                input:"tipinput"//使用联想输入的input的id
+            };
+            autocomplete= new AMap.Autocomplete(autoOptions);
+            AMap.event.addListener(autocomplete, "select", select);
+            //TODO: 使用autocomplete对象调用相关功能
+        })
+        function select(e) {
+            if (e.poi && e.poi.location) {
+                map.setZoom(15);
+                map.setCenter(e.poi.location);
+            }
+        }
+    }
+
+
+</script>
+<%}%>
+
+

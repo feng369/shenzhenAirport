@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.nutz:nutz-plugins-mock:1.r.62-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.m2/repository/org/nutz/nutz-plugins-mock/1.r.62-SNAPSHOT/nutz-plugins-mock-1.r.62-20170717.145139-85.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.m2/repository/org/nutz/nutz-plugins-mock/1.r.62-SNAPSHOT/nutz-plugins-mock-1.r.62-20170717.145139-85-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.m2/repository/org/nutz/nutz-plugins-mock/1.r.62-SNAPSHOT/nutz-plugins-mock-1.r.62-20170717.145139-85-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

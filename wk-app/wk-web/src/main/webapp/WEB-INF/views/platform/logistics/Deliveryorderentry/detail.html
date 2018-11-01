@@ -1,0 +1,104 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="javascript:history.back(-1);" id="goBack" data-pjax><i class="ti-angle-left"></i> ${msg['globals.button.back']}</a>
+    </div>
+</header>
+<div class="content-wrap" >
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form" >
+            <div class="container" >
+                <div class="main">
+                    <ul class="cbp_tmtimeline" id="ul">
+
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script language="JavaScript">
+    var sendPersonName  = "";
+    var sendTel = ""
+    $(document).ready(function () {
+        $('#ul').html("");
+        var orderid = "${id!}";
+        $.post("${base}/platform/logistics/Deliveryorderentry/getDeliInfo", {orderid:orderid}, function (data) {
+            data.forEach(function(data) {
+                var stepname = data.stepname;
+                var content = data.content;
+                var operatetime =data.operatetime;
+                var stepNum = data.step;
+                var stepTel = "";
+                var stepPersonname = "";
+                if(data.stepPerson){
+                    stepPersonname = data.stepPerson.personname;
+                    stepTel = data.stepPerson.tel
+                }
+                if(stepNum == 3){
+                    sendPersonName = stepPersonname
+                    sendTel = stepTel
+                }
+                var status=data.pstatus;
+                var pic = data.pic;
+                var time="";
+                var tdata=""
+                var acl="cbp_tmicon1";
+                var tel="cbp_tmlabel2";
+                var tmtime = "cbp_tmtime1";
+                if(status==1){
+                    status="已完成";
+                    acl="cbp_tmicon2";
+                    tel="cbp_tmlabel1"
+                }else{
+                    status="未开始"
+                }
+
+                if(typeof(operatetime) == 'undefined' ){
+                    tdata ="未开始";
+                }else{
+                    tdata= new Date(operatetime).format("MM/dd/yy")
+                    time=new Date(operatetime).format("hh:mm:ss")
+                }
+
+                if(typeof(content) == 'undefined' ){
+                    content ="";
+                }
+                var imgtmp="";
+                if(typeof(pic) !="undefined" && pic!=""){
+                    var img=new Array();
+                    img=pic.split(',');
+                    img.forEach(function(data) {
+                        imgtmp=imgtmp+"<img src='"+data+"' class='img-rounded' data-action='zoom' style='max-height: 100px'>&nbsp;&nbsp;"
+                    })
+
+                }
+
+                var stepHtml = ""
+                if(stepNum == 8){
+                    stepHtml = "<div>收货人:"+stepPersonname+"&nbsp;&nbsp;&nbsp;&nbsp;电话:"+stepTel+"</div>"
+                }else if(stepNum >= 3 && stepNum < 8){
+                    stepHtml = "<div>配送员:"+sendPersonName+"&nbsp;&nbsp;&nbsp;&nbsp;电话:"+sendTel+"</div>"
+                }else{
+                    stepHtml = "<div>订单所属人:"+data.orderPersonName+"&nbsp;&nbsp;&nbsp;&nbsp;电话:"+data.orderPersonTel+"</div>"
+                }
+                // (stepname == "确认收货"?"<div>收货人:"+stepPersonname+"</div>" :'')
+                if(stepNum >0){
+                    var temp="<li>" +
+                        "<time class='"+tmtime+"' datetime='"+operatetime+"'><span>"+tdata+"</span><span>"+time+"</span></time>" +
+                        "<i class='"+acl+" ti-time' ></i> <div class='"+tel+"'> " +
+                        "<h2>"+stepname+"("+status+")</h2> <div>"+content+"</div>"+stepHtml+"<div style='padding-top: 10px'>"+imgtmp+"</div></div></li>";
+                    $('#ul').append(temp);
+                }
+
+            });
+        }, "json");
+
+    })
+
+</script>
+
+<%}%>

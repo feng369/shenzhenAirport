@@ -1,0 +1,86 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">logistics_sendgoods</a>
+                        <small>发货信息明细</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                                                        <tr>
+                                <td>${msg['logistics.sendgoods.column.sendnum']}</td><td>${obj.sendnum}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendgoods.column.contractcode']}</td><td>${obj.contractcode}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendgoods.column.partnum']}</td><td>${obj.partnum}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendgoods.column.serialnum']}</td><td>${obj.serialnum}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendgoods.column.number']}</td><td>${obj.number}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendgoods.column.shelf']}</td><td>${obj.shelf}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendgoods.column.batchnum']}</td><td>${obj.batchnum}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendgoods.column.issuetype']}</td><td>${obj.issuetype}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendgoods.column.tansporttype']}</td><td>${obj.transport.name!}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendgoods.column.rough']}</td><td>${obj.rough}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendgoods.column.warehouseID']}</td><td>${obj.warehouse.warehousename!}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendgoods.column.prioritylv']}</td><td>${obj.priority.name!}</td>
+                            </tr>
+                                                        <tr>
+                                <td>状态</td><td>${obj.stausType}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendgoods.column.note']}</td><td>${obj.note}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendgoods.column.receivename']}</td><td>${obj.receivename}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendgoods.column.receiveaddress']}</td><td>${obj.receiveaddress}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendgoods.column.tel']}</td><td>${obj.tel}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendgoods.column.senddate']}</td><td>${obj.senddate}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendgoods.column.sender']}</td><td>${obj.person.personname!}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['logistics.sendgoods.column.billnum']}</td><td>${obj.billnum}</td>
+                            </tr>
+                                                        <tr>
+                                <td>包装人</td><td>${unplan.person.personname!}</td>
+                            </tr>
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

@@ -1,0 +1,175 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/sys/wx/user" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/sys/wx/user/editDo" method="post">
+                <input name="id" type="hidden" value="${obj.id}">
+                <div class="row mb10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="corpid" class="col-sm-2 control-label">${msg['sys.wx.user.column.corpid']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="corpid" class="form-control" name="corpid" data-parsley-required="true"
+                                       placeholder="${msg['sys.wx.user.column.corpid']}" value="${obj.corpid}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="userid" class="col-sm-2 control-label">${msg['sys.wx.user.column.userid']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="userid" class="form-control" name="userid" data-parsley-required="true"
+                                       placeholder="${msg['sys.wx.user.column.userid']}" value="${obj.userid}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">${msg['sys.wx.user.column.name']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="name" class="form-control" name="name" data-parsley-required="true"
+                                       placeholder="${msg['sys.wx.user.column.name']}" value="${obj.name}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="department" class="col-sm-2 control-label">${msg['sys.wx.user.column.department']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="department" class="form-control" name="department" data-parsley-required="true"
+                                       placeholder="${msg['sys.wx.user.column.department']}" value="${obj.department}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="orderNum" class="col-sm-2 control-label">${msg['sys.wx.user.column.orderNum']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="orderNum" class="form-control" name="orderNum" data-parsley-required="true"
+                                       placeholder="${msg['sys.wx.user.column.orderNum']}" value="${obj.orderNum}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="position" class="col-sm-2 control-label">${msg['sys.wx.user.column.position']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="position" class="form-control" name="position" data-parsley-required="true"
+                                       placeholder="${msg['sys.wx.user.column.position']}" value="${obj.position}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile" class="col-sm-2 control-label">${msg['sys.wx.user.column.mobile']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="mobile" class="form-control" name="mobile" data-parsley-required="true"
+                                       placeholder="${msg['sys.wx.user.column.mobile']}" value="${obj.mobile}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender" class="col-sm-2 control-label">${msg['sys.wx.user.column.gender']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="gender" class="form-control" name="gender" data-parsley-required="true"
+                                       placeholder="${msg['sys.wx.user.column.gender']}" value="${obj.gender}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">${msg['sys.wx.user.column.email']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="email" class="form-control" name="email" data-parsley-required="true"
+                                       placeholder="${msg['sys.wx.user.column.email']}" value="${obj.email}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="isleader" class="col-sm-2 control-label">${msg['sys.wx.user.column.isleader']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="isleader" class="form-control" name="isleader" data-parsley-required="true"
+                                       placeholder="${msg['sys.wx.user.column.isleader']}" value="${obj.isleader}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="avatar" class="col-sm-2 control-label">${msg['sys.wx.user.column.avatar']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="avatar" class="form-control" name="avatar" data-parsley-required="true"
+                                       placeholder="${msg['sys.wx.user.column.avatar']}" value="${obj.avatar}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="telephone" class="col-sm-2 control-label">${msg['sys.wx.user.column.telephone']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="telephone" class="form-control" name="telephone" data-parsley-required="true"
+                                       placeholder="${msg['sys.wx.user.column.telephone']}" value="${obj.telephone}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="english_name" class="col-sm-2 control-label">${msg['sys.wx.user.column.english_name']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="english_name" class="form-control" name="english_name" data-parsley-required="true"
+                                       placeholder="${msg['sys.wx.user.column.english_name']}" value="${obj.english_name}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="status" class="col-sm-2 control-label">${msg['sys.wx.user.column.status']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="status" class="form-control" name="status" data-parsley-required="true"
+                                       placeholder="${msg['sys.wx.user.column.status']}" value="${obj.status}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="extattr" class="col-sm-2 control-label">${msg['sys.wx.user.column.extattr']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="extattr" class="form-control" name="extattr" data-parsley-required="true"
+                                       placeholder="${msg['sys.wx.user.column.extattr']}" value="${obj.extattr}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="openid" class="col-sm-2 control-label">${msg['sys.wx.user.column.openid']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="openid" class="form-control" name="openid" data-parsley-required="true"
+                                       placeholder="${msg['sys.wx.user.column.openid']}" value="${obj.openid}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="bindPerson" class="col-sm-2 control-label">${msg['sys.wx.user.column.bindPerson']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="bindPerson" class="form-control" name="bindPerson" data-parsley-required="true"
+                                       placeholder="${msg['sys.wx.user.column.bindPerson']}" value="${obj.bindPerson}" >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+    </div>
+</div>
+<script language="JavaScript">
+    $(document).ready(function () {
+        $('#editForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+<%}%>

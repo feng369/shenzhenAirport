@@ -1,0 +1,273 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/base/dept" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/base/dept/editDo" method="post">
+                <input name="id" type="hidden" value="${obj.id}">
+                <input type="hidden" id="hasChildren" name="hasChildren" value="${obj.hasChildren!}">
+                <div class="row mb10">
+                    <div class="col-lg-12">
+                        <div class="form-group has-feedback">
+                            <label for="parentId" class="col-sm-2 control-label">所属组织</label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input id="unitparentId" type="text" class="form-control" placeholder="不选择默认为顶级单位" disabled
+                                           value="<%if(!isEmpty(unit)){%>${unit.name}<%}%>"/>
+
+                                    <span class="input-group-btn">
+			                             			<button type="button" class="btn btn-primary" data-toggle="modal"
+                                                            data-target="#dialogSelectParentUnit"><i class="ti-plus"></i>选择
+                                                    </button>
+			                             		</span>
+                                </div>
+                                <input type="hidden" name="unitid" value="<%if(!isEmpty(unit)){%>${unit.id}<%}%>">
+                            </div>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label for="parentId" class="col-sm-2 control-label">上级部门</label>
+
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input id="parentId" type="text" class="form-control" placeholder="不选择默认为顶级部门" disabled
+                                           value="<%if(!isEmpty(parentDept)){%>${parentDept.deptname}<%}%>"/>
+
+                                    <span class="input-group-btn">
+			                             			<button type="button" class="btn btn-primary" data-toggle="modal"
+                                                            data-target="#dialogSelectParentDept"><i class="ti-plus"></i>选择
+                                                    </button>
+			                             		</span>
+                                </div>
+                                <input type="hidden" name="parentId" value="<%if(!isEmpty(parentDept)){%>${parentDept.id}<%}%>">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="deptnum" class="col-sm-2 control-label">${msg['base.dept.column.deptnum']}</label>
+                            <div class="col-sm-8" id="numDiv">
+                                <input type="text" id="deptnum" class="form-control" name="deptnum" data-parsley-required="true"
+                                       placeholder="${msg['base.dept.column.deptnum']}" value="${obj.deptnum}" >
+                                <span style="color: red" hidden>该编码已经存在</span>
+                            </div>
+                            <img src="/assets/img/loading.gif" hidden>
+                        </div>
+                        <div class="form-group">
+                            <label for="deptname" class="col-sm-2 control-label">${msg['base.dept.column.deptname']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="deptname" class="form-control" name="deptname" data-parsley-required="true"
+                                       placeholder="${msg['base.dept.column.deptname']}" value="${obj.deptname}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="creater" class="col-sm-2 control-label">创建人</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="creater" class="form-control" name="creater" data-parsley-required="true"
+                                       placeholder="创建人" disabled value="<%if(!isEmpty(creater)){%>${creater.username}<%}%>" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="createtime" class="col-sm-2 control-label">创建时间</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="createtime" class="form-control" name="createtime" data-parsley-required="true"
+                                       placeholder="创建时间" disabled value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="opby" class="col-sm-2 control-label">最后操作人</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="opby" class="form-control" name="opby" data-parsley-required="true"
+                                       placeholder="最后操作人" disabled value="<%if(!isEmpty(opby)){%>${opby.username}<%}%>" data-format="YYYY-MM-DD HH:mm:ss">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="opat" class="col-sm-2 control-label">最后操作时间</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="opat" class="form-control" name="opat" data-parsley-required="true"
+                                       placeholder="最后操作时间" disabled value="" >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+    </div>
+</div>
+<!-- 选择上级部门 -->
+<div id="dialogSelectParentDept" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">选择上级部门</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeParentDept" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-success" data-dismiss="modal" onclick="selectFirstMenu()">设为顶级部门</button>
+                </div>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                <button type="button" class="btn btn-primary" onclick="selectParentMenu()">确认选择</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 选择组织 -->
+<div id="dialogSelectParentUnit" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">选择上级单位</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeParentUnit" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                <button type="button" class="btn btn-primary" onclick="selectParentUnitMenu()">确认选择</button>
+            </div>
+        </div>
+    </div>
+</div>
+<a class="exit-offscreen"></a>
+<script language="JavaScript">
+    //20180402zhf1441
+    var editNum = "${obj.deptnum!}";
+    var flag = false;
+    $("#numDiv input").blur(function () {
+        var numVal = $(this).val();
+        $.ajax({
+            url:"${base}/platform/base/dept/countByNum",
+            data:{num:numVal},
+            type:"POST",
+            beforeSend:function () {
+                $("#numDiv").next("img").show()
+            },
+            success:function (data) {
+                if(data > 0 && numVal != editNum){
+                    flag = true;
+                    $("#numDiv").addClass("has-error");
+                    $("#numDiv span").show();
+                }else{
+                    flag = false;
+                    $("#numDiv span").hide();
+                    $("#numDiv").removeClass("has-error")
+                }
+            },
+            complete:function () {
+                $("#numDiv").next("img").hide()
+            }
+        });
+    });
+
+    function initTreeView() {
+        $("#editForm #createtime").val(dataformatint("${obj.createTime}"));
+        $("#editForm #opat").val(dataformatint("${obj.opAt}"));
+        $("#jsTreeParentDept").jstree({
+            plugins: ["wholerow", "json_data"],
+            core: {
+                data: {
+                    dataType: "json",
+                    url: function (node) {
+                        return node.id === "#" ? "${base}/platform/base/dept/tree" : "${base}/platform/base/dept/tree?pid=" + node.id
+                    }
+                },
+                multiple: false
+            }
+        }).on("dblclick.jstree", function (node) {
+            selectParentMenu();
+        });
+        $("#jsTreeParentUnit").jstree({
+            plugins: ["wholerow", "json_data"],
+            core: {
+                data: {
+                    dataType: "json",
+                    url: function (node) {
+                        return node.id === "#" ? "${base}/platform/sys/unit/tree" : "${base}/platform/sys/unit/tree?pid=" + node.id
+                    }
+                },
+                multiple: false
+            }
+        }).on("dblclick.jstree", function (node) {
+            selectParentUnitMenu();
+        });
+    }
+    //选择父菜单
+    function selectParentMenu() {
+        var tree = $.jstree.reference("#jsTreeParentDept");
+        var node = tree.get_selected(true);
+        $("#editForm #parentId").val(node[0].text);
+        $("#editForm input[name='parentId']").val(node[0].id);
+        $("#dialogSelectParentDept").modal("hide");
+    }
+    function selectParentUnitMenu() {
+        var tree = $.jstree.reference("#jsTreeParentUnit");
+        var node = tree.get_selected(true);
+        $("#editForm #unitparentId").val(node[0].text);
+        $("#editForm input[name='unitid']").val(node[0].id);
+        $("#dialogSelectParentUnit").modal("hide");
+    }
+    function selectFirstMenu() {
+        $("#editForm #parentId").val("顶级部门");
+        $("#editForm input[name='parentId']").val("");
+        $("#dialogSelectParentDept").modal("hide");
+    }
+    $(document).ready(function () {
+        initTreeView();
+        $('#editForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                if(flag){
+                    $("#numDiv input").focus();
+                    $("#numDiv").addClass("has-error");
+                    $("#numDiv span").show();
+                    Toast.warning("该编码已经存在")
+                    return false;
+                }else{
+                    $("#numDiv").removeClass("has-error")
+                }
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+<%}%>

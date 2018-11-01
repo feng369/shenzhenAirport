@@ -1,0 +1,53 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                       <!-- <a href="javascript:;" class="h4 show no-m pt5">职务</a>-->
+                        <small>职务明细</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                            <tr>
+                                <td>所属组织</td><td><%if(!isEmpty(unit)){%>${unit.name}<%}%></td>
+                            </tr>
+                            <tr>
+                                <td>上级职务</td><td><%if(!isEmpty(parentDept)){%>${parentJob.jobname}<%}%></td>
+                            </tr>
+                            <tr>
+                                <td>${msg['base.job.column.jobnum']}</td><td>${obj.jobnum}</td>
+                            </tr>
+                            <tr>
+                                <td>${msg['base.job.column.jobname']}</td><td>${obj.jobname}</td>
+                            </tr>
+                            <tr>
+                                <td>创建人</td><td><%if(!isEmpty(creater)){%>${creater.username}<%}%></td>
+                            </tr>
+                            <tr>
+                                <td>创建时间</td><td id="createTime"></td>
+                            </tr>
+                            <tr>
+                                <td>最后操作人</td><td><%if(!isEmpty(opby)){%>${opby.username}<%}%></td>
+                            </tr>
+                            <tr>
+                                <td>最后操作时间</td><td id="opAt"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>
+<script language="JavaScript">
+    $(document).ready(function () {
+        $("#createTime").html(dataformatint("${obj.createTime}"));
+        $("#opAt").html(dataformatint("${obj.opAt}"));
+    })
+</script>

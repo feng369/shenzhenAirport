@@ -1,0 +1,291 @@
+<%
+layout("/layouts/platform.html"){
+%>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/sys/registaudit" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/sys/registaudit/phoneauditDo" method="post">
+                <div class="col-lg-12">
+                    <input name="id" type="hidden" value="${sysRegistaudit.id!}">
+                    <input name="way" type="hidden" value="${tempuser.way!}">
+                    <div style="width: 100%;border-bottom: 1px solid #C9C5C5;opacity: 0.6  ">注冊信息</div>
+                    <br/>
+
+                                <div class="row mb10">
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <label for="loginname" class="col-sm-2 control-label">用户名称</label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="loginname" class="form-control"
+
+                                                       placeholder="用户名称" value="${tempuser.loginname!}" readonly>
+                                            </div>
+                                            <label for="username" class="col-sm-2 control-label">真实姓名</label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="username" class="form-control"
+
+                                                       placeholder="真实姓名" value="${tempuser.username!}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="tel" class="col-sm-2 control-label">联系电话</label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="tel" class="form-control"
+                                                       placeholder="联系电话" value="${tempuser.tel!}" readonly>
+                                            </div>
+                                            <label for="wxNumber" class="col-sm-2 control-label">微信号</label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="wxNumber" class="form-control"
+                                                       placeholder="微信号" value="${tempuser.wxNumber!}" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="unitName" class="col-sm-2 control-label">所属公司</label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="unitName" class="form-control"
+                                                       placeholder="所属公司" value="${unitName!}" readonly>
+                                            </div>
+                                            <label for="roleName" class="col-sm-2 control-label">分配角色</label>
+                                            <div class="col-sm-2">
+                                                <select id="roleName" class="form-control" name="roleCode" data-parsley-required="true">
+                                                    <option value="">请选择</option>
+                                                    <script type="application/javascript">
+                                                        var roleCode = "${tempuser.roleCode!}";
+                                                        $.ajax({
+                                                            url: "${base!}/platform/sys/role/data",
+                                                            type: "POST",
+                                                            data: {unitid: "${tempuser.unitid!}"},
+                                                            // data:{unitid:"root"},
+                                                            success: function (data) {
+                                                                $.each(data.data, function (index, ele) {
+                                                                    if(ele.code === roleCode){
+                                                                        $("#roleName").append("<option value='" + ele.code + "'  selected='selected'>" + ele.name + "</option>");
+                                                                    }else{
+                                                                        $("#roleName").append("<option value='" + ele.code + "'  >" + ele.name + "</option>");
+                                                                    }
+
+                                                                })
+                                                            }
+
+                                                        })
+
+                                                    </script>
+
+
+                                                </select>
+                                                <span id="roleInfo" style="color: red" hidden>请分配角色</span>
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">员工图片</label>
+                                            <div class="col-xs-4 zoom" id="zoom">
+                                                <img src="${imgPath!}"  alt="员工/证件图片" style=" width: 100px;height: 100px;" data-action="zoom">
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3"></div>
+                </div>
+               <!-- <div class="col-lg-12">
+                    <div style="width: 100%;border-bottom: 1px solid #C9C5C5;opacity: 0.6  ">审批记录</div>
+                    &lt;!&ndash;<div class="panel-body" style="padding-top: 0px;">&ndash;&gt;
+                    <div class="table-responsive no-border">
+                        <table class="table table-bordered table-striped mg-t optiondatatable">
+                            <thead>
+                            <tr>
+                                <th>审批人</th>
+                                <th>审批时间</th>
+                                <th>审批结果</th>
+                                <th>下一步处理人</th>
+                                <th>审批意见</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>-->
+                <!--</div>-->
+
+                <!--<div class="row mb10" style="border-top:1px solid #ebebeb; padding-top: 20px;">-->
+                <div class="col-lg-12">
+                    <div style="width: 100%;border-bottom: 1px solid #C9C5C5;opacity: 0.6  ">审批信息</div>
+                    <br/>
+                    <div class="form-group">
+                        <label for="auditorId" class="col-sm-2 control-label">${msg['sys.registaudit.column.auditorId']}</label>
+                        <div class="col-sm-2">
+                            <input type="text" id="auditorId" class="form-control"
+                                   data-parsley-required="true"
+                                   placeholder="${msg['sys.registaudit.column.auditorId']}"
+                                   value="${sysRegistaudit.auditor.username!}" readonly>
+                        </div>
+                        <input type="text" name="auditorId" value="${sysRegistaudit.auditorId!}"
+                               hidden>
+                        <label for="auditTime" class="col-sm-2 control-label">${msg['sys.registaudit.column.auditTime']}</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="auditTime" class="form-control" name="auditTime"
+                                   data-parsley-required="true"
+                                   placeholder="${msg['sys.registaudit.column.auditTime']}"
+                                   value="${sysRegistaudit.auditTime!}" readonly>
+                        </div>
+                    </div>
+                    <!-- <div class="form-group">
+                         <label for="pstatus" class="col-sm-2 control-label">${msg['sys.registaudit.column.pstatus']}</label>
+                         <div class="col-sm-8">
+                             <input type="text" id="pstatus" class="form-control" name="pstatus" data-parsley-required="true"
+                                    placeholder="${msg['sys.registaudit.column.pstatus']}" value="" readonly>
+                         </div>
+                     </div>-->
+                    <div class="form-group">
+                        <label for="result" class="col-sm-2 control-label">审批结果</label>
+                        <div class="col-sm-2">
+                            <select id="result" name="result" class="form-control">
+                                <option value="0">通过</option>
+                                <option value="1">退回</option>
+                               <!-- <option value="2">转 交</option>-->
+                            </select>
+                        </div>
+                     <!--   <div class="col-sm-4">
+                            <div class="input-group" id="transotheruserDiv" style="display:none">
+                                <input id="transotheruserid" type="text" class="form-control" placeholder="选择被转交人" disabled/>
+                                <span class="input-group-btn">
+                                    <a id="selectTransOtherUser" class="btn btn-primary" href="${base}/platform/msg/assign/selectUser2" data-toggle="modal" data-target="#handlerDialogUserSelect2"><i class="ti-plus"></i>选择</a>
+                                </span>
+                            </div>
+                        </div>-->
+                    </div>
+                    <div class="form-group">
+                        <label for="suggestion" class="col-sm-2 control-label">审批意见</label>
+                        <div class="col-sm-8">
+                            <textarea rows=3 id="suggestion" name="suggestion" class="form-control" data-parsley-required="true" data-parsley-maxlength="255">同意</textarea>
+                        </div>
+                    </div>
+              <!--      <div class="form-group">
+                        <label for="nexthandleruserid" class="col-sm-2 control-label">指定下一步处理人<input id='nextuser' type="checkbox" value="" onclick="showNextUser()"/></label>
+                        <div class="col-sm-8">
+                            <div class="input-group" id="nextuserDiv" style="display:none">
+                                <input id="nexthandleruserid" type="text" class="form-control" placeholder="选择下一步处理人" disabled/>
+                                <span class="input-group-btn">
+                                    <a id="selectNextHandlerUser" class="btn btn-primary" href="${base}/platform/msg/assign/selectUser" data-toggle="modal" data-target="#handlerDialogUserSelect"><i class="ti-plus"></i>选择</a>
+                                </span>
+                            </div>
+                            <input type="hidden" id="option_nextHandlerId"  name="option.nextHandlerId" value="">
+                        </div>
+                    </div>-->
+                </div>
+                <!--</div>-->
+
+                <div class="col-lg-8 col-lg-offset-2">
+                    <div class="form-group text-center">
+                        <label></label>
+                        <div>
+                            <button id="btn" class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">提交</button>
+                        </div>
+                        <br/>
+
+                        <br/>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+    </div>
+</div>
+<script language="JavaScript">
+        var imgPath = "${imgPath!}";
+        var imgHtml = ""
+        $("#result").change(function () {
+            $("#suggestion").val($("#result option:selected").html());
+        });
+    $(document).ready(function () {
+        if(imgPath){
+            var imgs = imgPath.split(",")
+            imgs.forEach(function (data) {
+                imgHtml += "<img src='" + data + "'  alt='员工/证件图片' style='width: 100px;height: 100px;' data-action='zoom'>&nbsp;&nbsp;"
+            })
+            $("#zoom").html(imgHtml);
+        }
+
+
+        $("#suggestion").val($("#result option:selected").html());
+
+        //审核意见默认与审核结果一致
+        $('#editForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                if ($("#result").val() == 1 && $("#roleName").val() == "") {
+                    $("#roleName").focus();
+                    $("#roleInfo").show();
+                    Toast.warning("请先分配角色!");
+                    return false;
+                }
+                var res;
+                if ($("#result").val() == 0) {
+                    res = confirm("确定[通过]这条注册信息吗?");
+                } else if ($("#result").val() == 1) {
+                    res = confirm("确定[退回]这条注册信息吗?");
+                }
+                if (res) {
+                    form.find("button:submit").button("loading");
+                }
+                return res;
+            },
+            success: function (data, statusText, xhr, form) {
+                console.debug(data)
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+/*        $("#btn").ajaxSubmit({
+            type: 'post', // 提交方式 get/post
+            url: '${base}/platform/sys/registaudit/phoneauditDo', // 需要提交的 url
+            beforeSubmit: function (arr, form, options) {
+                if ($("#result").val() == 1 && $("#roleName").val() == "") {
+                    $("#roleName").focus();
+                    $("#roleInfo").show();
+                    Toast.warning("请先分配角色!");
+                    return false;
+                }
+                var res;
+                if ($("#result").val() == 0) {
+                    res = confirm("确定[通过]这条注册信息吗?");
+                } else if ($("#result").val() == 1) {
+                    res = confirm("确定[退回]这条注册信息吗?");
+                }
+                if (res) {
+                    form.find("button:submit").button("loading");
+                }
+                return res;
+            },
+            success: function (data, statusText, xhr, form) {
+                console.debug(data)
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });*/
+    });
+</script>
+<%}%>
